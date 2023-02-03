@@ -1,0 +1,6 @@
+*.o
+*.swp
+obj/
+libft/libft.a
+minishell
+.vscode
