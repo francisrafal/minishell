@@ -12,15 +12,15 @@ echo ""
 USER=celgert
 echo "USER=celgert: echo \"\$USER\":"
 echo "$USER"
-echo "USER=celgert: echo \"\$USER\":"
+echo "USER=celgert: echo \'\$USER\':"
 echo '$USER'
 echo ""
 
 echo "Also check what happens with echo \"\'\$USER\'\" or echo \'\"\$USER\"\'"
 USER=frafal
-echo "USER=celgert: echo \"\'\$USER\'\":"
+echo "USER=frafal: echo \"\'\$USER\'\":"
 echo "'$USER'"
-echo "USER=celgert: echo \'\"\$USER\"\':"
+echo "USER=frafal: echo \'\"\$USER\"\':"
 echo '"$USER"'
 echo ""
 
