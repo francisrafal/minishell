@@ -9,7 +9,8 @@ HEADLIST		:= minishell.h
 HEADERS			:= $(addprefix ${HEADDIR}, ${HEADLIST})
 
 SRCSDIR			:= ./src/
-SRCSLIST		:= main.c 
+SRCSLIST		:= main.c \
+					prompt.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR			:= ./obj/
@@ -19,7 +20,7 @@ OBJS			:= $(addprefix ${OBJSDIR}, ${OBJSLIST})
 LIBFTDIR		:= ./libft/
 LIBFT			:= ${LIBFTDIR}libft.a
 
-LIBS			:= -L${LIBFTDIR} -lft 
+LIBS			:= -L${LIBFTDIR} -lft -lreadline
 INCS			:= -I${HEADDIR} -I${LIBFTDIR} 
 
 CYAN			:= \033[0;36m
@@ -30,7 +31,7 @@ ${NAME}:		${LIBFT} ${OBJSDIR} ${OBJS}
 				@echo "${CYAN}Compiling ${NAME} ...${RESET}"
 				${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME} ${LIBS} ${INCS}
 				@echo ""
-				@echo "${CYAN}$(NAME) Created${RESET}"
+				@echo "${CYAN}${NAME} Created${RESET}"
 
 ${LIBFT}:
 				make -C ${LIBFTDIR}
@@ -53,13 +54,13 @@ all:			${NAME}
 
 clean:
 				@echo ""
-				@echo "${CYAN}Deleting $(NAME) Objects ...${RESET}"
+				@echo "${CYAN}Deleting ${NAME} Objects ...${RESET}"
 				${RM} -r ${OBJSDIR}
 				make -C ${LIBFTDIR} clean
 
 fclean:			clean
 				@echo ""
-				@echo "${CYAN}Deleting $(NAME) Executable ...${RESET}"
+				@echo "${CYAN}Deleting ${NAME} Executable ...${RESET}"
 				${RM} ${NAME}
 				make -C ${LIBFTDIR} fclean
 
@@ -67,3 +68,12 @@ re:				fclean all
 
 test:			all
 				./${NAME} 
+
+val:			all
+				valgrind \
+				--leak-check=full \
+				--track-fds=yes \
+				--show-leak-kinds=all \
+				--suppressions=.ignore_readline_leaks \
+				-s \
+				./${NAME}
