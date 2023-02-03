@@ -21,4 +21,7 @@
 /* prompt.c */
 char	*get_cmd_line(void);
 
+/* builtins.c */
+int	echo(char **cmd_args);
+
 #endif
