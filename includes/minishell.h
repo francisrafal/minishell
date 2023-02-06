@@ -33,7 +33,9 @@ typedef struct s_cmd
 	int			read_in;
 	char		*delim;
 	int			re_out_app;
-	t_cmds		lst_cmds;
+	int			fd_in;
+	int			fd_out;
+	t_cmds		**lst_cmds;
 }		t_cmd;
 
 /* Functions */
