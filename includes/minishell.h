@@ -34,4 +34,6 @@ t_cmds	*ft_lstnew(int fd);
 void	ft_lstadd_back(t_cmds **lst, t_cmds *new);
 //void	ft_display_lst(t_cmds *lst);
 void	free_lst(t_cmds **lst);
+
+/*commands in files_utils*/
 #endif
