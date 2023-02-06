@@ -50,6 +50,8 @@ int	echo(char **cmd_args);
 t_cmds	*ft_lstnew(int fd);
 void	ft_lstadd_back(t_cmds **lst, t_cmds *new);
 //void	ft_display_lst(t_cmds *lst);
+void	free_arr(char **arr);
+void	free_null(void *ptr);
 void	free_lst(t_cmds **lst);
 
 /* files_utils.c */

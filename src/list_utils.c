@@ -65,15 +65,24 @@ void	ft_lstadd_back(t_cmds **lst, t_cmds *new)
 	}
 }
 */
-static void	free_arr(char **arr)
+void	free_arr(char **arr)
 {
 	int	i;
 
 	i = 0;
 	while (arr[i])
-		free(arr[i++]);
+		free_null(arr[i++]);
 	if (arr)
-		free(arr);
+		free_null(arr);
+}
+
+void	free_null(void *ptr)
+{
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
 }
 
 void	free_lst(t_cmds **lst)
@@ -89,7 +98,7 @@ void	free_lst(t_cmds **lst)
 			next = node->next;
 			free_arr(node->path);
 			free_arr(node->opt);
-			free(node);
+			free_null(node);
 			node = next;
 		}
 	}

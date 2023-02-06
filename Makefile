@@ -11,7 +11,7 @@ HEADERS			:= $(addprefix ${HEADDIR}, ${HEADLIST})
 SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \
 					prompt.c \
-					builtins.c\
+					builtins.c \
 					list_utils.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
