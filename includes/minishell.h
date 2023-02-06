@@ -71,6 +71,12 @@ void	free_arr(char **arr);
 void	free_null(void *ptr);
 void	free_lst(t_cmds **lst);
 
+/* split_input_cmd.c*/
+void	free_cmd(t_cmd *cmd);
+void	split_line(t_cmd *cmd, char *str);
+t_cmd	*split_input_cmd(char *line, char **envp);
+int     get_end_quote(char *line, char c);
+
 /* files_utils.c */
 
 /* error.c */
