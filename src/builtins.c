@@ -1,13 +1,15 @@
-// **cmd_args must be a null-terminated string-array
-// cmd_args[0] is the command name "echo"
-// cmd_args[1] and higher are the args to the cmd "echo" which are separated by blanks (spaces/tabs)
-// cmd_args[1] can also be "-n"
-// Example:
-// echo This is a test string.
-// Output:
-// This is a test string.
-
 #include "minishell.h"
+
+int	exec_builtin(char **cmd_args)
+{
+	if (ft_strncmp(cmd_args[0], "echo", 5) == 0)
+		echo(cmd_args);
+	else if (ft_strncmp(cmd_args[0], "pwd", 4) == 0)
+		pwd(cmd_args);
+	else if (ft_strncmp(cmd_args[0], "cd", 3) == 0)
+		cd(cmd_args);
+	return (0);
+}
 
 int	echo(char **cmd_args)
 {
@@ -47,16 +49,16 @@ int	pwd(char **cmd_args)
 
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
-		perror_exit("getcwd: ");
+		perror_exit("getcwd");
 	printf("%s\n", cwd);
 	return (0);
 }
 
-int	exec_builtin(char **cmd_args)
+int	cd(char **cmd_args)
 {
-	if (ft_strncmp(cmd_args[0], "echo", 5) == 0)
-		echo(cmd_args);
-	else if (ft_strncmp(cmd_args[0], "pwd", 4) == 0)
-		pwd(cmd_args);
+	if (cmd_args[1] == NULL)
+		return (0);
+	if (chdir(cmd_args[1]) == -1)
+		perror_exit("chdir");
 	return (0);
 }
