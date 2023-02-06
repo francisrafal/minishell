@@ -17,7 +17,10 @@ int	echo(char **cmd_args)
 	new_line = 1;
 	i = 1;
 	if (cmd_args[i] == NULL)
+	{
+		printf("\n");
 		return (0);
+	}	
 	if (ft_strncmp(cmd_args[i], "-n", 3) == 0)
 	{
 		new_line = 0;
