@@ -45,9 +45,10 @@ typedef struct s_cmd
 char	*get_cmd_line(void);
 
 /* builtins.c */
+int	exec_builtin(char **cmd_args);
 int	echo(char **cmd_args);
 int	pwd(char **cmd_args);
-int	exec_builtin(char **cmd_args);
+int	cd(char **cmd_args);
 
 /* list_utils.c */
 t_cmds	*ft_lstnew(int fd);
