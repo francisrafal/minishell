@@ -8,6 +8,8 @@
 # include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 /* Project Headers */
 # include "libft.h"
@@ -16,8 +18,18 @@
 # define BOLDYELLOW "\e[1;33m"
 # define RESET "\e[0m"
 # define PROMPT "minishell$ "
+# define SHELL_EXIT 255
 
-/*struct for list of cmds*/
+/* Structs */
+
+/* Struct For Shell State */
+typedef	struct s_shell
+{
+	int	exit;
+	int	wstatus;
+}	t_shell;
+
+/* Struct For List Of Cmds */
 typedef struct s_lst_cmds
 {
 	char	**path;
@@ -26,7 +38,7 @@ typedef struct s_lst_cmds
 	struct s_lst_cmds	*next;
 }		t_cmds;
 
-/*struct for new command from minishell*/
+/* Struct For New Command From Minishell */
 typedef struct s_cmd
 {
 	int			re_in;
@@ -45,10 +57,11 @@ typedef struct s_cmd
 char	*get_cmd_line(void);
 
 /* builtins.c */
-int	exec_builtin(char **cmd_args);
-int	echo(char **cmd_args);
-int	pwd(char **cmd_args);
-int	cd(char **cmd_args);
+void	exec_builtin(char **cmd_args);
+int		echo(char **cmd_args);
+int		pwd(char **cmd_args);
+int		cd(char **cmd_args);
+int		exit_shell(char **cmd_args);
 
 /* list_utils.c */
 t_cmds	*ft_lstnew(int fd);
