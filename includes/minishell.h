@@ -5,6 +5,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -45,6 +46,8 @@ char	*get_cmd_line(void);
 
 /* builtins.c */
 int	echo(char **cmd_args);
+int	pwd(char **cmd_args);
+int	exec_builtin(char **cmd_args);
 
 /* list_utils.c */
 t_cmds	*ft_lstnew(int fd);
@@ -55,5 +58,8 @@ void	free_null(void *ptr);
 void	free_lst(t_cmds **lst);
 
 /* files_utils.c */
+
+/* error.c */
+void	perror_exit(char *err);
 
 #endif

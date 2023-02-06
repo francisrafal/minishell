@@ -39,3 +39,24 @@ int	echo(char **cmd_args)
 		printf("\n");
 	return (0);
 }
+
+int	pwd(char **cmd_args)
+{
+	(void)cmd_args;
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (cwd == NULL)
+		perror_exit("getcwd: ");
+	printf("%s\n", cwd);
+	return (0);
+}
+
+int	exec_builtin(char **cmd_args)
+{
+	if (ft_strncmp(cmd_args[0], "echo", 5) == 0)
+		echo(cmd_args);
+	else if (ft_strncmp(cmd_args[0], "pwd", 4) == 0)
+		pwd(cmd_args);
+	return (0);
+}
