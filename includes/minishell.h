@@ -25,8 +25,9 @@
 /* Struct For Shell State */
 typedef	struct s_shell
 {
-	int	exit;
-	int	wstatus;
+	int		exit;
+	int		wstatus;
+	char	**env;
 }	t_shell;
 
 /* Struct For List Of Cmds */
@@ -57,11 +58,12 @@ typedef struct s_cmd
 char	*get_cmd_line(void);
 
 /* builtins.c */
-void	exec_builtin(char **cmd_args);
-int		echo(char **cmd_args);
-int		pwd(char **cmd_args);
-int		cd(char **cmd_args);
-int		exit_shell(char **cmd_args);
+void	exec_builtin(char **cmd_args, char **env);
+int		echo(char **cmd_args, char **env);
+int		pwd(char **cmd_args, char **env);
+int		cd(char **cmd_args, char **env);
+int		exit_shell(char **cmd_args, char **env);
+int		env(char **cmd_args, char **env);
 
 /* list_utils.c */
 t_cmds	*ft_lstnew(int fd);
@@ -81,5 +83,8 @@ int     get_end_quote(char *line, char c);
 
 /* error.c */
 void	perror_exit(char *err);
+
+/* env.c */
+char	**copy_env(char **envp);
 
 #endif
