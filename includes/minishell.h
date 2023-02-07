@@ -84,11 +84,17 @@ void	free_arr(char **arr);
 void	free_null(void *ptr);
 void	free_lst(t_cmds **lst);
 
-/* split_input_cmd.c */
+/* split_input.c */
 void	free_cmd(t_cmd *cmd);
 void	split_line(t_cmd *cmd, char *str);
 t_cmd	*split_input_cmd(char *line, char **envp);
+
+/* split_input_utils.c */
 int     get_end_quote(char *line, char c);
+int     count_cmds(char *line);
+char    *fill_cmds(char *line, int len);
+void    init_idx(int *arr, int len);
+char    **split_pipes(char *line);
 
 /* files_utils.c */
 

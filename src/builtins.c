@@ -83,7 +83,6 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 		}
 		if (argc == 1)
 		{
-			printf("%s\n", sh->env[0]);
 			free_arr(cmd_args);
 			free_data(sh);
 			exit(EXIT_SUCCESS);
