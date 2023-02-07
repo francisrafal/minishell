@@ -30,6 +30,7 @@ void	free_cmd(t_cmd *cmd)
 	}
 	cmd = NULL;
 }
+*/
 
 void	split_line(t_cmd *cmd, char *str)
 {
@@ -61,7 +62,7 @@ void	split_line(t_cmd *cmd, char *str)
 		i++;		
 	}
 }
-*/
+
 
 t_cmd   *split_input_cmd(char *line, char **envp)
 {
@@ -84,7 +85,7 @@ t_cmd   *split_input_cmd(char *line, char **envp)
 	
         split_line(comd, line);
 //      free_cmd(comd);*/
-
+	free_arr(cmds);
         return (comd);
 
 }
