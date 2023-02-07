@@ -6,29 +6,31 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	char	*cmd_line;
 	char	**test_cmd; 
-	t_shell	sh;
+	int		num_cmds;
+	t_shell	*sh;
+	t_cmd	*cmd;
 
-	sh.env = copy_env(envp);
-	sh.exit = 0;
+	sh = init_shell(envp);
+	num_cmds = 1;
+	cmd = NULL;
 	while (1)
 	{		
 		cmd_line = get_cmd_line();
 		test_cmd = ft_split(cmd_line, ' ');
 		free(cmd_line);
-		if (fork() == 0)
-			exec_builtin(test_cmd, sh.env);
+		if (num_cmds == 1)
+			exec_single_cmd(test_cmd, sh);
 		else
-		{	
-			free_arr(test_cmd);	
-			wait(&sh.wstatus);
-			if (WEXITSTATUS(sh.wstatus) == SHELL_EXIT)
-				sh.exit = 1;
-		}
-		if (sh.exit)
+			exec_pipeline(cmd, sh);
+		free_arr(test_cmd);	
+		/*
+		if (sh->exit)
 		{
-			free_arr(sh.env);
+			free_arr(sh->env);
+			free_null(sh);
 			exit(EXIT_SUCCESS);
 		}
+		*/
 	}
 	return (0);
 }

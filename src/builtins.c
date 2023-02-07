@@ -1,21 +1,9 @@
 #include "minishell.h"
 
-void	exec_builtin(char **cmd_args, char **env)
-{
-	if (ft_strncmp(cmd_args[0], "echo", 5) == 0)
-		echo(cmd_args, env);
-	else if (ft_strncmp(cmd_args[0], "pwd", 4) == 0)
-		pwd(cmd_args, env);
-	else if (ft_strncmp(cmd_args[0], "cd", 3) == 0)
-		cd(cmd_args, env);
-	else if (ft_strncmp(cmd_args[0], "exit", 5) == 0)
-		exit_shell(cmd_args, env);
-	exit(EXIT_SUCCESS);
-}
-
-int	echo(char **cmd_args, char **env)
+int	bi_echo(char **cmd_args, char **env, int mode)
 {
 	(void)env;
+	(void)mode;
 	int	i;
 	int	new_line;
 
@@ -45,10 +33,11 @@ int	echo(char **cmd_args, char **env)
 	return (0);
 }
 
-int	pwd(char **cmd_args, char **env)
+int	bi_pwd(char **cmd_args, char **env, int mode)
 {
 	(void)cmd_args;
 	(void)env;
+	(void)mode;
 	char	*cwd;
 
 	cwd = getcwd(NULL, 0);
@@ -58,24 +47,62 @@ int	pwd(char **cmd_args, char **env)
 	return (0);
 }
 
-int	cd(char **cmd_args, char **env)
+int	bi_cd(char **cmd_args, char **env, int mode)
 {
 	(void)env;
+	(void)mode;
 
-	printf("%s\n", cmd_args[1]);
 	if (cmd_args[1] == NULL)
 		return (0);
 	if (chdir(cmd_args[1]) == -1)
 		perror_exit("chdir");
-	// fix: cd alone should run in parent and not in child
-	// cd in a pipeline runs in child
 	return (0);
 }
 
-int	exit_shell(char **cmd_args, char **env)
+int	bi_exit(char **cmd_args, char **env, int mode)
 {
+	if (mode == EXEC_AS_PARENT)
+	{
+		ft_putstr_fd("exit\n", 2);
+		if (calc_argc(cmd_args) > 3)
+		{
+			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+			return (1);
+			// this should not exit the shell
+		}
+	}
+	if (calc_argc(cmd_args) > 3)
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		exit(EXIT_FAILURE);
+	}
+	/*
+	if (mode == EXEC_AS_PARENT)
+	else
+	{j
+*/	
 	free_arr(cmd_args);
 	free_arr(env);
-	printf("exit\n");
+/*	if (
+
+*/
 	exit(SHELL_EXIT);
 }
+
+
+// Case in pipe:
+// - don't print exit in any case
+// - print too many arguments if argc is not correct
+// - exit code with argument is argument
+// - exit code without argument is exit code of last pipeline
+// - exit code with wrong number of arguments is 1
+
+// Case in single command:
+// print exit in any case
+// print too many arguments if argc is not correct and don't exit
+// exit code if too many arguments is 1
+// Exit code if no argument is 0
+// Exit code if 1 argument is argument
+// Exit shell only if correct num of arguments
+
+// free args at exit

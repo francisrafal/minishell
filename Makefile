@@ -12,10 +12,13 @@ SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \
 					prompt.c \
 					builtins.c \
+					builtin_utils.c \
 					list_utils.c \
 					split_input_cmd.c \
 					error.c \
-					env.c
+					env.c \
+					init.c \
+					exec.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR			:= ./obj/
@@ -80,5 +83,4 @@ val:			all
 				--track-fds=yes \
 				--show-leak-kinds=all \
 				--suppressions=.ignore_readline_leaks \
-				-s \
 				./${NAME}
