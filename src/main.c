@@ -4,30 +4,26 @@ int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-	(void)envp;
 	char	*cmd_line;
 	char	**test_cmd; 
-	t_shell	sh;
+	int		num_cmds;
+	t_shell	*sh;
+	t_cmd	*cmd;
 
-	sh.exit = 0;
+	sh = init_shell(envp);
+	num_cmds = 1;
+	cmd = NULL;
 	while (1)
 	{		
 		cmd_line = get_cmd_line();
 		split_input_cmd(cmd_line, envp);
 		test_cmd = ft_split(cmd_line, ' ');
 		free(cmd_line);
-		if (fork() == 0)
-			//exec_builtin(test_cmd);
-			printf("execute commands\n");
+		if (num_cmds == 1)
+			exec_single_cmd(test_cmd, sh);
 		else
-		{	
-			free_arr(test_cmd);	
-			wait(&sh.wstatus);
-			if (WEXITSTATUS(sh.wstatus) == SHELL_EXIT)
-				sh.exit = 1;
-		}
-		if (sh.exit)
-			exit(EXIT_SUCCESS);
+			exec_pipeline(cmd, sh);
+		free_arr(test_cmd);	
 	}
 	return (0);
 }

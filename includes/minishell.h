@@ -18,15 +18,18 @@
 # define BOLDYELLOW "\e[1;33m"
 # define RESET "\e[0m"
 # define PROMPT "minishell$ "
-# define SHELL_EXIT 255
+# define EXIT_NO_ARG 79
+# define EXEC_AS_PARENT 1
+# define EXEC_AS_CHILD 2
 
 /* Structs */
 
 /* Struct For Shell State */
 typedef	struct s_shell
 {
-	int	exit;
-	int	wstatus;
+	int		exit;
+	int		wstatus;
+	char	**env;
 }	t_shell;
 
 /* Struct For List Of Cmds */
@@ -57,11 +60,21 @@ typedef struct s_cmd
 char	*get_cmd_line(void);
 
 /* builtins.c */
-void	exec_builtin(char **cmd_args);
-int		echo(char **cmd_args);
-int		pwd(char **cmd_args);
-int		cd(char **cmd_args);
-int		exit_shell(char **cmd_args);
+int		bi_echo(char **cmd_args, t_shell *sh, int mode);
+int		bi_pwd(char **cmd_args, t_shell *sh, int mode);
+int		bi_cd(char **cmd_args, t_shell *sh, int mode);
+int		bi_exit(char **cmd_args, t_shell *sh, int mode);
+//int		bi_env(char **cmd_args, char **env, int mode);
+
+/* builtin_utils.c */
+int		calc_argc(char **cmd_args);
+
+/* exec.c */
+void	exec_builtin(char **cmd_args, t_shell *sh, int mode);
+void	exec_as_parent(char **cmd_args, t_shell *sh);
+void	exec_as_child(char **cmd_args, t_shell *sh);
+void	exec_single_cmd(char **cmd_args, t_shell *sh);
+void	exec_pipeline(t_cmd *cmd, t_shell *sh);
 
 /* list_utils.c */
 t_cmds	*ft_lstnew(int fd);
@@ -71,7 +84,7 @@ void	free_arr(char **arr);
 void	free_null(void *ptr);
 void	free_lst(t_cmds **lst);
 
-/* split_input.c*/
+/* split_input.c */
 void	free_cmd(t_cmd *cmd);
 void	split_line(t_cmd *cmd, char *str);
 t_cmd	*split_input_cmd(char *line, char **envp);
@@ -87,5 +100,14 @@ char    **split_pipes(char *line);
 
 /* error.c */
 void	perror_exit(char *err);
+
+/* env.c */
+char	**copy_env(char **envp);
+
+/* init.c */
+t_shell	*init_shell(char **envp);
+
+/* free.c */
+void	free_data(t_shell *sh);
 
 #endif
