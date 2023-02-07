@@ -14,7 +14,10 @@ char	**copy_env(char **envp)
 		perror_exit("malloc");	
 	i = 0;
 	while (i < size)
-		ft_strdup(envp[i++]);
-	envp[i] = NULL;
+	{
+		env[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	env[i] = NULL;
 	return (env);
 }

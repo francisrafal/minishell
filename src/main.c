@@ -23,14 +23,6 @@ int	main(int argc, char **argv, char **envp)
 		else
 			exec_pipeline(cmd, sh);
 		free_arr(test_cmd);	
-		/*
-		if (sh->exit)
-		{
-			free_arr(sh->env);
-			free_null(sh);
-			exit(EXIT_SUCCESS);
-		}
-		*/
 	}
 	return (0);
 }

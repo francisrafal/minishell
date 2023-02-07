@@ -1,39 +1,37 @@
 #include "minishell.h"
 
-void	exec_builtin(char **cmd_args, char **env, int mode)
+void	exec_builtin(char **cmd_args, t_shell *sh, int mode)
 {
 	if (ft_strncmp(cmd_args[0], "echo", 5) == 0)
-		bi_echo(cmd_args, env, mode);
+		bi_echo(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "pwd", 4) == 0)
-		bi_pwd(cmd_args, env, mode);
+		bi_pwd(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "cd", 3) == 0)
-		bi_cd(cmd_args, env, mode);
+		bi_cd(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "exit", 5) == 0)
-		bi_exit(cmd_args, env, mode);
-	//if (mode == EXEC_AS_CHILD)
-	//	exit(EXIT_SUCCESS);
+		bi_exit(cmd_args, sh, mode);
 }
 
 void	exec_as_parent(char **cmd_args, t_shell *sh)
 {
-	exec_builtin(cmd_args, sh->env, EXEC_AS_PARENT);
+	exec_builtin(cmd_args, sh, EXEC_AS_PARENT);
 }
 
 void	exec_as_child(char **cmd_args, t_shell *sh)
 {
 	if (fork() == 0)
 	{
-		exec_builtin(cmd_args, sh->env, EXEC_AS_CHILD);
+		exec_builtin(cmd_args, sh, EXEC_AS_CHILD);
 		free_arr(cmd_args);
-		free_arr(sh->env);
-		free_null(sh);
+		free_data(sh);
 		exit(EXIT_SUCCESS);
 	}
 	else
 	{	
 		wait(&sh->wstatus);
 		// Replace here with waitpid when we have multiple cmds
-		if (WEXITSTATUS(sh->wstatus) == SHELL_EXIT)
+		// Later: EXIT_NO_ARG is used so that $? is set properly. if EXIT_NO_ARG then $? should remain the value of the last pipeline
+		if (WEXITSTATUS(sh->wstatus) == EXIT_NO_ARG)
 			sh->exit = 1;
 	}
 }

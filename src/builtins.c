@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-int	bi_echo(char **cmd_args, char **env, int mode)
+int	bi_echo(char **cmd_args, t_shell *sh, int mode)
 {
-	(void)env;
+	(void)sh;
 	(void)mode;
 	int	i;
 	int	new_line;
@@ -33,10 +33,10 @@ int	bi_echo(char **cmd_args, char **env, int mode)
 	return (0);
 }
 
-int	bi_pwd(char **cmd_args, char **env, int mode)
+int	bi_pwd(char **cmd_args, t_shell *sh, int mode)
 {
 	(void)cmd_args;
-	(void)env;
+	(void)sh;
 	(void)mode;
 	char	*cwd;
 
@@ -44,12 +44,13 @@ int	bi_pwd(char **cmd_args, char **env, int mode)
 	if (cwd == NULL)
 		perror_exit("getcwd");
 	printf("%s\n", cwd);
+	free(cwd);
 	return (0);
 }
 
-int	bi_cd(char **cmd_args, char **env, int mode)
+int	bi_cd(char **cmd_args, t_shell *sh, int mode)
 {
-	(void)env;
+	(void)sh;
 	(void)mode;
 
 	if (cmd_args[1] == NULL)
@@ -59,50 +60,80 @@ int	bi_cd(char **cmd_args, char **env, int mode)
 	return (0);
 }
 
-int	bi_exit(char **cmd_args, char **env, int mode)
+int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 {
+	int argc;
+	int code;
+
+	argc = calc_argc(cmd_args);
 	if (mode == EXEC_AS_PARENT)
 	{
 		ft_putstr_fd("exit\n", 2);
-		if (calc_argc(cmd_args) > 3)
+		if (argc > 2)
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 			return (1);
-			// this should not exit the shell
+		}
+		if (argc == 2)
+		{
+			code = ft_atoi(cmd_args[1]);
+			free_arr(cmd_args);
+			free_data(sh);
+			exit(code);
+		}
+		if (argc == 1)
+		{
+			printf("%s\n", sh->env[0]);
+			free_arr(cmd_args);
+			free_data(sh);
+			exit(EXIT_SUCCESS);
 		}
 	}
-	if (calc_argc(cmd_args) > 3)
+	if (mode == EXEC_AS_CHILD)
 	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		exit(EXIT_FAILURE);
+		if (calc_argc(cmd_args) > 2)
+		{
+			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+			exit(EXIT_FAILURE);
+		}
+		if (argc == 2)
+		{
+			code = ft_atoi(cmd_args[1]);
+			free_arr(cmd_args);
+			free_data(sh);
+			exit(code);
+		}
+		if (argc == 1)
+		{
+			free_arr(cmd_args);
+			free_data(sh);
+			exit(EXIT_NO_ARG);
+		}
 	}
-	/*
-	if (mode == EXEC_AS_PARENT)
-	else
-	{j
-*/	
-	free_arr(cmd_args);
-	free_arr(env);
-/*	if (
-
-*/
-	exit(SHELL_EXIT);
+	return (0);
 }
 
 
 // Case in pipe:
 // - don't print exit in any case
 // - print too many arguments if argc is not correct
-// - exit code with argument is argument
-// - exit code without argument is exit code of last pipeline
+
+// - exit code with 1 argument is argument
 // - exit code with wrong number of arguments is 1
+// - exit code without argument is exit code of last pipeline
 
 // Case in single command:
 // print exit in any case
 // print too many arguments if argc is not correct and don't exit
-// exit code if too many arguments is 1
+
+// Exit code with 1 argument is argument
+// exit code with wrong number of arguments is 1
 // Exit code if no argument is 0
-// Exit code if 1 argument is argument
+
 // Exit shell only if correct num of arguments
 
 // free args at exit
+// free sh?????????
+
+
+// User Defined Exit Codes From 79-113 are okay
