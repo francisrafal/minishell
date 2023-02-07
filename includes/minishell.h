@@ -76,7 +76,7 @@ void	free_cmd(t_cmd *cmd);
 void	split_line(t_cmd *cmd, char *str);
 t_cmd	*split_input_cmd(char *line, char **envp);
 int     get_end_quote(char *line, char c);
-
+char    **split_pipes(char *line);
 /* files_utils.c */
 
 /* error.c */

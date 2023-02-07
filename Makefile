@@ -13,8 +13,8 @@ SRCSLIST		:= main.c \
 					prompt.c \
 					builtins.c \
 					list_utils.c \
-					error.c
-					split_input_cmd.c
+					error.c\
+					split_input.c split_input_utils.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR			:= ./obj/
