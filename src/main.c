@@ -13,10 +13,12 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{		
 		cmd_line = get_cmd_line();
+		split_input_cmd(cmd_line, envp);
 		test_cmd = ft_split(cmd_line, ' ');
 		free(cmd_line);
 		if (fork() == 0)
-			exec_builtin(test_cmd);
+			//exec_builtin(test_cmd);
+			printf("execute commands\n");
 		else
 		{	
 			free_arr(test_cmd);	
