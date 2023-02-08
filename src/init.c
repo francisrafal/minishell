@@ -7,7 +7,7 @@ t_shell	*init_shell(char **envp)
 	sh = malloc(sizeof (t_shell));
 	if (sh == NULL)
 		perror_exit("malloc");
-	sh->env = copy_env(envp);
+	sh->env = init_env(envp);
 	sh->exit = 0;
 	return (sh);
 }

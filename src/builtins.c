@@ -65,7 +65,7 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	int argc;
 	int code;
 
-	argc = calc_argc(cmd_args);
+	argc = get_arr_size(cmd_args);
 	if (mode == EXEC_AS_PARENT)
 	{
 		ft_putstr_fd("exit\n", 2);
@@ -90,7 +90,7 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	}
 	if (mode == EXEC_AS_CHILD)
 	{
-		if (calc_argc(cmd_args) > 2)
+		if (argc > 2)
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 			exit(EXIT_FAILURE);
@@ -109,6 +109,29 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 			exit(EXIT_NO_ARG);
 		}
 	}
+	return (0);
+}
+
+int	bi_env(char **cmd_args, t_shell *sh, int mode)
+{
+	(void)mode;
+	int	argc;
+	t_env_node	*runner;	
+	
+	argc = get_arr_size(cmd_args);
+	if (argc > 1)
+	{
+		ft_putstr_fd("minishell: env: too many arguments\n", 2);
+		exit(EXIT_FAILURE);
+	}
+	runner = sh->env->head;
+	if (runner == NULL)
+		return (0);
+	while (runner)
+	{
+		printf("%s=%s\n", runner->key, runner->value);
+		runner = runner->next;
+	}	
 	return (0);
 }
 

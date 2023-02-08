@@ -10,6 +10,8 @@ void	exec_builtin(char **cmd_args, t_shell *sh, int mode)
 		bi_cd(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "exit", 5) == 0)
 		bi_exit(cmd_args, sh, mode);
+	else if (ft_strncmp(cmd_args[0], "env", 4) == 0)
+		bi_env(cmd_args, sh, mode);
 }
 
 void	exec_as_parent(char **cmd_args, t_shell *sh)
