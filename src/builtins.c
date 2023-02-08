@@ -65,7 +65,7 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	int argc;
 	int code;
 
-	argc = calc_argc(cmd_args);
+	argc = get_arr_size(cmd_args);
 	if (mode == EXEC_AS_PARENT)
 	{
 		ft_putstr_fd("exit\n", 2);
@@ -90,7 +90,7 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	}
 	if (mode == EXEC_AS_CHILD)
 	{
-		if (calc_argc(cmd_args) > 2)
+		if (argc > 2)
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 			exit(EXIT_FAILURE);

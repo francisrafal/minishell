@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	calc_argc(char **cmd_args)
+int	get_arr_size(char **cmd_args)
 {
 	int argc;
 

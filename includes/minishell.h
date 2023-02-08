@@ -54,6 +54,14 @@ typedef struct s_cmd
 	t_cmds		**lst_cmds;
 }		t_cmd;
 
+/* Struct For Env */
+typedef struct s_env
+{
+	char 			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
 /* Functions */
 
 /* prompt.c */
@@ -67,7 +75,7 @@ int		bi_exit(char **cmd_args, t_shell *sh, int mode);
 //int		bi_env(char **cmd_args, char **env, int mode);
 
 /* builtin_utils.c */
-int		calc_argc(char **cmd_args);
+int		get_arr_size(char **cmd_args);
 
 /* exec.c */
 void	exec_builtin(char **cmd_args, t_shell *sh, int mode);
