@@ -80,6 +80,7 @@ int		bi_pwd(char **cmd_args, t_shell *sh, int mode);
 int		bi_cd(char **cmd_args, t_shell *sh, int mode);
 int		bi_exit(char **cmd_args, t_shell *sh, int mode);
 int		bi_env(char **cmd_args, t_shell *sh, int mode);
+int		bi_export(char **cmd_args, t_shell *sh, int mode);
 
 /* builtin_utils.c */
 int		get_arr_size(char **cmd_args);
@@ -117,12 +118,14 @@ char    **split_pipes(char *line);
 void	perror_exit(char *err);
 
 /* env.c */
-char		**copy_env(char **envp);
+//char		**copy_env(char **envp);
 char 		**get_env(t_env *head);
 t_env		*init_env(char **envp);
 t_env_node	*create_env_node(char *str);
 void		print_env(t_env *env);
 void		append_env(t_env *env, t_env_node *node);
+t_env		*env_dup(t_env *env);
+t_env_node	*env_node_dup(t_env_node *node);
 
 /* init.c */
 t_shell	*init_shell(char **envp);

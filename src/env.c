@@ -1,5 +1,5 @@
 #include "minishell.h"
-
+/*
 char	**copy_env(char **envp)
 {
 	char	**env;
@@ -21,7 +21,7 @@ char	**copy_env(char **envp)
 	env[i] = NULL;
 	return (env);
 }
-
+*/
 char **get_env(t_env *head)
 {
 	(void)head;
@@ -101,4 +101,41 @@ void	append_env(t_env *env, t_env_node *node)
 		runner->next = node;
 	}
 	env->size++;
+}
+
+t_env	*env_dup(t_env *env)
+{
+	t_env 		*env_copy;
+	t_env_node	*runner;
+
+	env_copy = malloc (sizeof (t_env));
+	if (env_copy == NULL)
+		return (NULL);
+	env_copy->head = NULL;
+	env_copy->size = 0;
+	runner = env->head;
+	while (runner)
+	{
+		append_env(env_copy, env_node_dup(runner));
+		runner = runner->next;
+	}
+	return (env_copy);
+}
+
+t_env_node	*env_node_dup(t_env_node *node)
+{
+	t_env_node 	*dup;
+
+	if (node == NULL)
+		return (NULL);
+	dup = malloc(sizeof (t_env_node));
+	if (dup == NULL)
+		return (NULL);
+	dup->key = ft_strdup(node->key);
+	if (node->value == NULL)
+		dup->value = NULL;
+	else
+		dup->value = ft_strdup(node->value);
+	dup->next = NULL;
+	return (dup);
 }
