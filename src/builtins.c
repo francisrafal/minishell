@@ -112,6 +112,29 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	return (0);
 }
 
+int	bi_env(char **cmd_args, t_shell *sh, int mode)
+{
+	(void)mode;
+	int	argc;
+	t_env_node	*runner;	
+	
+	argc = get_arr_size(cmd_args);
+	if (argc > 1)
+	{
+		ft_putstr_fd("minishell: env: too many arguments\n", 2);
+		exit(EXIT_FAILURE);
+	}
+	runner = sh->env->head;
+	if (runner == NULL)
+		return (0);
+	while (runner)
+	{
+		printf("%s=%s\n", runner->key, runner->value);
+		runner = runner->next;
+	}	
+	return (0);
+}
+
 
 // Case in pipe:
 // - don't print exit in any case

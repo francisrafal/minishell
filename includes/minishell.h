@@ -27,9 +27,9 @@
 /* Struct For Shell State */
 typedef	struct s_shell
 {
-	int		exit;
-	int		wstatus;
-	char	**env;
+	int				exit;
+	int				wstatus;
+	struct s_env	*env;
 }	t_shell;
 
 /* Struct For List Of Cmds */
@@ -54,12 +54,19 @@ typedef struct s_cmd
 	t_cmds		**lst_cmds;
 }		t_cmd;
 
-/* Struct For Env */
+/* Struct For Environment Node */
+typedef struct s_env_node
+{
+	char 				*key;
+	char				*value;
+	struct s_env_node	*next;
+}	t_env_node;
+
+/* Struct For Environment List */
 typedef struct s_env
 {
-	char 			*key;
-	char			*value;
-	struct s_env	*next;
+	struct s_env_node	*head;
+	int					size;
 }	t_env;
 
 /* Functions */
@@ -72,7 +79,7 @@ int		bi_echo(char **cmd_args, t_shell *sh, int mode);
 int		bi_pwd(char **cmd_args, t_shell *sh, int mode);
 int		bi_cd(char **cmd_args, t_shell *sh, int mode);
 int		bi_exit(char **cmd_args, t_shell *sh, int mode);
-//int		bi_env(char **cmd_args, char **env, int mode);
+int		bi_env(char **cmd_args, t_shell *sh, int mode);
 
 /* builtin_utils.c */
 int		get_arr_size(char **cmd_args);
@@ -110,12 +117,18 @@ char    **split_pipes(char *line);
 void	perror_exit(char *err);
 
 /* env.c */
-char	**copy_env(char **envp);
+char		**copy_env(char **envp);
+char 		**get_env(t_env *head);
+t_env		*init_env(char **envp);
+t_env_node	*create_env_node(char *str);
+void		print_env(t_env *env);
+void		append_env(t_env *env, t_env_node *node);
 
 /* init.c */
 t_shell	*init_shell(char **envp);
 
 /* free.c */
 void	free_data(t_shell *sh);
+void	free_env(t_env *env);
 
 #endif

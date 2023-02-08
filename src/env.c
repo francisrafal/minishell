@@ -21,3 +21,84 @@ char	**copy_env(char **envp)
 	env[i] = NULL;
 	return (env);
 }
+
+char **get_env(t_env *head)
+{
+	(void)head;
+	return (NULL);
+}
+
+t_env	*init_env(char **envp)
+{
+	t_env	*env;
+	int		i;
+	int		size;
+
+	size = get_arr_size(envp);
+	env = malloc (sizeof (t_env));
+	if (env == NULL)
+		return (NULL);
+	env->head = NULL;
+	env->size = 0;
+	i = 0;
+	while (i < size)
+		append_env(env, create_env_node(envp[i++]));
+	return (env);
+}
+
+void	print_env(t_env *env)
+{
+	t_env_node	*runner;	
+
+	runner = env->head;
+	if (runner == NULL)
+		return ;
+	while (runner)
+	{
+		printf("%s=%s\n", runner->key, runner->value);
+		runner = runner->next;
+	}	
+}
+
+t_env_node	*create_env_node(char *str)
+{
+	t_env_node 	*node;
+	char		*equal_sign;
+	char		*end_of_str;
+
+	if (str == NULL)
+		return (NULL);
+	node = malloc(sizeof (t_env_node));
+	if (node == NULL)
+		return (NULL);
+	equal_sign = ft_strchr(str, '=');
+	end_of_str = ft_strchr(str, '\0');
+	if (equal_sign == NULL)
+	{
+		node->key = ft_strdup(str);
+		node->value = NULL;
+	}
+	else
+	{
+		node->key = ft_substr(str, 0, equal_sign - str);
+		node->value = ft_substr(str, (equal_sign - str) + 1, end_of_str - (equal_sign + 1));
+	}
+	node->next = NULL;
+	return (node);
+}
+
+void	append_env(t_env *env, t_env_node *node)
+{
+	t_env_node	*runner;	
+
+	runner = env->head;
+	if (runner == NULL)
+		env->head = node;
+	else
+	{
+		while (runner->next)
+			runner = runner->next;
+		runner->next = node;
+	}
+	env->size++;
+}
