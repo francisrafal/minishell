@@ -135,6 +135,38 @@ int	bi_env(char **cmd_args, t_shell *sh, int mode)
 	return (0);
 }
 
+int	bi_export(char **cmd_args, t_shell *sh, int mode)
+{
+	(void)mode;
+	int	argc;
+	t_env		*tmp;
+	t_env_node	*runner;	
+	
+	argc = get_arr_size(cmd_args);
+	tmp = env_dup(sh->env);
+	if (argc == 1)
+	{
+		runner = tmp->head;
+		if (runner == NULL)
+			return (0);
+		while (runner)
+		{
+			if (ft_strncmp(runner->key, "_", 2) == 0)
+			{
+				runner = runner->next;
+				continue ;
+			}
+			if (runner->value == NULL)
+				printf("declare -x %s\n", runner->key);
+			else
+				printf("declare -x %s=\"%s\"\n", runner->key, runner->value);
+			runner = runner->next;
+		}	
+		free_env(tmp);
+	}
+	return (0);
+}
+
 
 // Case in pipe:
 // - don't print exit in any case
