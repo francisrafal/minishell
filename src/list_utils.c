@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_cmd	*ft_lstnew(void) //(int fd)
+t_cmd	*ft_lstnew(int ncmds)
 {
 	t_cmd	*elem;
 
@@ -13,6 +13,7 @@ t_cmd	*ft_lstnew(void) //(int fd)
                 elem->delim = NULL;
                 elem->fd_in = 0;
                 elem->fd_out = 1;
+		elem->ncmds = ncmds;
 		elem->next = NULL;
 		elem->path = NULL;
 		elem->opt = NULL;
@@ -45,7 +46,7 @@ void	ft_display_lst(t_cmd *lst)
 	j = 0;
 	while (lst != NULL)
 	{
-		printf("Command %i: \n", j+1); // |%s|\n", lst->opt[0]);
+		printf("Command %i of %i cmds: \n", j+1, lst->ncmds); // |%s|\n", lst->opt[0]);
 		if (!lst->path)
 			printf("No paths!\n");
 		else

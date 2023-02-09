@@ -32,14 +32,14 @@ void	free_cmd(t_cmd *cmd)
 }
 */
 
-void	split_line(t_cmd **lst_cmds, const char *str)
+void	split_line(t_cmd **lst_cmds, const char *str, int ncmds)
 {
 //	int	i;
 	(void)lst_cmds;
 	t_cmd	*cmd;
 	char	*line;
 
-	cmd = ft_lstnew();
+	cmd = ft_lstnew(ncmds);
 	line = ft_strdup(str);
 	printf("%s\n", line);
 	//get_infile(cmd, line);
@@ -79,15 +79,16 @@ t_cmd   *split_input_cmd(char *line, char **envp)
 	char  **cmds;
         (void)envp;
 	int i;
+	int ncmds; 
 	
 	lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
         lst_cmds = NULL;
-	cmds = split_pipes(line);
+	cmds = split_pipes(line, &ncmds);
 	i = 0;
 	while (cmds[i])
 	{
 		//printf("|%s|\n", cmds[i]);
-		split_line(&lst_cmds, cmds[i]);
+		split_line(&lst_cmds, cmds[i], ncmds);
 		i++;
 	}
        //comd= NULL;
