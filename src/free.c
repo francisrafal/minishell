@@ -27,3 +27,58 @@ void	free_env(t_env *env)
 	}	
 	free_null(env);
 }
+
+void	free_arr(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+		free_null(arr[i++]);
+	if (arr)
+		free_null(arr);
+}
+
+void	free_null(void *ptr)
+{
+	if (ptr)
+	{
+		free(ptr);
+		ptr = NULL;
+	}
+}
+
+void	free_lst(t_cmd **lst)
+{
+	t_cmd	*node;
+	t_cmd	*next;
+
+	node = *lst;
+	if (node)
+	{
+		while (node)
+		{
+			next = node->next;
+			if(node->delim)
+				free(node->delim);
+			free_arr(node->path);
+			free_arr(node->opt);
+			free_null(node);
+			node = next;
+		}
+	}
+	*lst = NULL;
+}
+
+/*void    free_cmd(t_cmd *cmd)
+{
+        if(cmd)
+        {
+                if(cmd->delim)
+                        free(cmd->delim);
+                free_lst(cmd->lst_cmds);
+                free_null(cmd);
+
+        }
+        cmd = NULL;
+}*/

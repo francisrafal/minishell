@@ -21,6 +21,7 @@ SRCSLIST		:= main.c \
 					init.c \
 					exec.c \
 					free.c
+
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR			:= ./obj/

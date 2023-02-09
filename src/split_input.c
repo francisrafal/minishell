@@ -32,16 +32,25 @@ void	free_cmd(t_cmd *cmd)
 }
 */
 
-void	split_line(t_cmd *cmd, char *str)
+void	split_line(t_cmd **lst_cmds, const char *str)
 {
-	int	i;
-	(void)cmd;
+//	int	i;
+	(void)lst_cmds;
+	t_cmd	*cmd;
+	char	*line;
 
-	i = 0; 
-	while (str[i])
+	cmd = ft_lstnew();
+	line = ft_strdup(str);
+	printf("%s\n", line);
+	//get_infile(cmd, line);
+	//get_outfile(cmd,line);
+	//get_command(cmd,line);
+	ft_lstadd_back(lst_cmds, cmd);
+/*	i = 0; 
+	while (line[i])
 	{
-		while (str[i] && (str[i] == '\t'  || str[i] == ' '))
-			i++;
+		//while (str[i] && (str[i] == '\t'  || str[i] == ' '))
+		//	i++;
 		if(ft_isalpha(str[i]))
 		{
 			printf("command\n");
@@ -60,33 +69,37 @@ void	split_line(t_cmd *cmd, char *str)
 
 		printf("%c", str[i]);
 		i++;		
-	}
+	}*/
 }
 
 
 t_cmd   *split_input_cmd(char *line, char **envp)
 {
-        t_cmd   *comd;
+        t_cmd   *lst_cmds;
 	char  **cmds;
         (void)envp;
 	int i;
-
-	cmds=split_pipes(line);
+	
+	lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
+        lst_cmds = NULL;
+	cmds = split_pipes(line);
 	i = 0;
 	while (cmds[i])
 	{
-		printf("|%s|\n", cmds[i]);
+		//printf("|%s|\n", cmds[i]);
+		split_line(&lst_cmds, cmds[i]);
 		i++;
 	}
-       comd= NULL;
+       //comd= NULL;
 	/* comd = init_input_cmd();
         if (!comd)
                 free_cmd(comd);
 	
         split_line(comd, line);
 //      free_cmd(comd);*/
+	ft_display_lst(lst_cmds);
 	free_arr(cmds);
-        return (comd);
+        return (lst_cmds);
 
 }
 

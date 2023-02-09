@@ -33,6 +33,8 @@ int 	count_cmds(char *line)
 			i+=get_end_quote(&line[i+1],'\'')+1;
 		else if(line[i] == '|')
 			ncmds +=1;
+		else if(line[i] == '#')
+			return (ncmds);
 	    	if(line[i] && i!=(int)ft_strlen(line))	
 			i++;
 	}
@@ -89,6 +91,8 @@ char	**split_pipes(char *line)
 			idx[2]+=1;
 			idx[1]=idx[0]+1;
 		}
+		else if(line[idx[0]] == '#')
+			break;
   		idx[0]+=1;
 	}
 	cmds[idx[2]]= fill_cmds(&line[idx[1]],idx[0]- idx[1]);
