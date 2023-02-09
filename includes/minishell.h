@@ -85,6 +85,7 @@ int		bi_cd(char **cmd_args, t_shell *sh, int mode);
 int		bi_exit(char **cmd_args, t_shell *sh, int mode);
 int		bi_env(char **cmd_args, t_shell *sh, int mode);
 int		bi_export(char **cmd_args, t_shell *sh, int mode);
+int		bi_unset(char **cmd_args, t_shell *sh, int mode);
 
 /* builtin_utils.c */
 int		get_arr_size(char **cmd_args);
@@ -106,6 +107,9 @@ void	free_arr(char **arr);
 void	free_null(void *ptr);
 void	free_lst(t_cmd **lst);
 //void    free_cmd(t_cmd *cmd);
+void	free_data(t_shell *sh);
+void	free_env(t_env *env);
+void	free_env_node(t_env_node *node);
 
 /* split_input.c*/
 void	split_line(t_cmd **cmd, const char *str);
@@ -132,12 +136,9 @@ void		print_env(t_env *env);
 void		append_env(t_env *env, t_env_node *node);
 t_env		*env_dup(t_env *env);
 t_env_node	*env_node_dup(t_env_node *node);
+void		remove_env_node(t_env *env, char *key);
 
 /* init.c */
 t_shell	*init_shell(char **envp);
-
-/* free.c */
-void	free_data(t_shell *sh);
-void	free_env(t_env *env);
 
 #endif

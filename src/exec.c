@@ -14,6 +14,8 @@ void	exec_builtin(char **cmd_args, t_shell *sh, int mode)
 		bi_env(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "export", 7) == 0)
 		bi_export(cmd_args, sh, mode);
+	else if (ft_strncmp(cmd_args[0], "unset", 6) == 0)
+		bi_unset(cmd_args, sh, mode);
 }
 
 void	exec_as_parent(char **cmd_args, t_shell *sh)
@@ -48,6 +50,8 @@ void	exec_single_cmd(char **cmd_args, t_shell *sh)
 	else if (ft_strncmp(cmd_args[0], "exit", 5) == 0)
 		exec_as_parent(cmd_args, sh);
 	else if (ft_strncmp(cmd_args[0], "export", 7) == 0)
+		exec_as_parent(cmd_args, sh);
+	else if (ft_strncmp(cmd_args[0], "unset", 6) == 0)
 		exec_as_parent(cmd_args, sh);
 	else
 		exec_as_child(cmd_args, sh);

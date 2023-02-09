@@ -122,6 +122,8 @@ int	bi_env(char **cmd_args, t_shell *sh, int mode)
 	if (argc > 1)
 	{
 		ft_putstr_fd("minishell: env: too many arguments\n", 2);
+		free_arr(cmd_args);
+		free_data(sh);
 		exit(EXIT_FAILURE);
 	}
 	runner = sh->env->head;
@@ -163,6 +165,40 @@ int	bi_export(char **cmd_args, t_shell *sh, int mode)
 			runner = runner->next;
 		}	
 		free_env(tmp);
+	}
+// Error if identifier doesn't begin with alphabet or underscore
+	return (0);
+}
+
+int	bi_unset(char **cmd_args, t_shell *sh, int mode)
+{
+	(void)mode;
+	int	argc;
+	int	i;
+	int	error;
+
+	argc = get_arr_size(cmd_args);	
+	error = 0;
+	i = 1;
+	while (i < argc)
+	{
+		if (ft_isalpha(cmd_args[i][0]) || (cmd_args[i][0] == '_'))
+			remove_env_node(sh->env, cmd_args[i]);
+		else
+		{
+			ft_putstr_fd("minishell: unset: `", 2);
+			ft_putchar_fd(cmd_args[i][0], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			error = 1;
+		}
+		i++;
+	}
+	if (error)
+	{
+		free_arr(cmd_args);
+		free_data(sh);
+		exit(EXIT_FAILURE);
+		// this shouldn't exit in parent mode? return a specific exit code
 	}
 	return (0);
 }

@@ -139,3 +139,30 @@ t_env_node	*env_node_dup(t_env_node *node)
 	dup->next = NULL;
 	return (dup);
 }
+
+void	remove_env_node(t_env *env, char *key)
+{
+	t_env_node	*runner;
+	t_env_node	*tmp;
+
+	if (env == NULL)
+		return ;
+	if (env->head == NULL)
+		return ;
+	runner = env->head;
+	if (ft_strncmp(key, runner->key, ft_strlen(runner->key) + 1) == 0)
+	{
+		tmp = runner;
+		env->head = runner->next;
+		free_env_node(runner);
+		return ;
+	}
+	while (runner->next && ft_strncmp(key, runner->next->key, ft_strlen(runner->next->key) + 1))
+		runner = runner->next;
+	if (runner->next)
+	{
+		tmp = runner->next;
+		runner->next = runner->next->next;
+		free_env_node(tmp);
+	}
+}
