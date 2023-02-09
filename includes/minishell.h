@@ -41,7 +41,7 @@ typedef struct s_lst_cmds
 	struct s_lst_cmds	*next;
 }		t_cmds;
 
-/* Struct For New Command From Minishell */
+/* Struct for each command of one pipe */
 typedef struct s_cmd
 {
 	int			re_in;
@@ -51,7 +51,11 @@ typedef struct s_cmd
 	int			re_out_app;
 	int			fd_in;
 	int			fd_out;
-	t_cmds		**lst_cmds;
+	int 			ncmds;
+	char 		**path;
+	char		**opt;
+	struct s_cmd	*next;
+//	t_cmds		**lst_cmds;
 }		t_cmd;
 
 /* Struct For Environment Node */
@@ -93,16 +97,18 @@ void	exec_single_cmd(char **cmd_args, t_shell *sh);
 void	exec_pipeline(t_cmd *cmd, t_shell *sh);
 
 /* list_utils.c */
-t_cmds	*ft_lstnew(int fd);
-void	ft_lstadd_back(t_cmds **lst, t_cmds *new);
-//void	ft_display_lst(t_cmds *lst);
+t_cmd	*ft_lstnew(void); //int fd);
+void	ft_lstadd_back(t_cmd **lst, t_cmd *new);
+void	ft_display_lst(t_cmd *lst);
+
+/* free.c */
 void	free_arr(char **arr);
 void	free_null(void *ptr);
-void	free_lst(t_cmds **lst);
+void	free_lst(t_cmd **lst);
+//void    free_cmd(t_cmd *cmd);
 
-/* split_input.c */
-void	free_cmd(t_cmd *cmd);
-void	split_line(t_cmd *cmd, char *str);
+/* split_input.c*/
+void	split_line(t_cmd **cmd, const char *str);
 t_cmd	*split_input_cmd(char *line, char **envp);
 
 /* split_input_utils.c */

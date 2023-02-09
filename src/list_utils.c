@@ -1,23 +1,29 @@
 #include "minishell.h"
 
-t_cmds	*ft_lstnew(int fd)
+t_cmd	*ft_lstnew(void) //(int fd)
 {
-	t_cmds	*elem;
+	t_cmd	*elem;
 
-	elem = (t_cmds *)malloc(sizeof(t_cmds));
+	elem = (t_cmd *)malloc(sizeof(t_cmd));
 	if (elem)
-	{
+	{	
+		elem->re_in = 0;
+                elem->re_out = 0;
+                elem->read_in = 0;
+                elem->delim = NULL;
+                elem->fd_in = 0;
+                elem->fd_out = 1;
 		elem->next = NULL;
 		elem->path = NULL;
 		elem->opt = NULL;
-		elem->fd = fd;
+		//elem->fd_in = fd;
 	}
 	return (elem);
 }
 
-void	ft_lstadd_back(t_cmds **lst, t_cmds *new)
+void	ft_lstadd_back(t_cmd **lst, t_cmd *new)
 {
-	t_cmds	*node;
+	t_cmd	*node;
 
 	node = *lst;
 	if (node)
@@ -30,14 +36,16 @@ void	ft_lstadd_back(t_cmds **lst, t_cmds *new)
 		*lst = new;
 }
 
-/*void	ft_display_lst(t_cmds *lst)
+void	ft_display_lst(t_cmd *lst)
 {
 	int	i;
+	int	j;
 
 	i = 0;
+	j = 0;
 	while (lst != NULL)
 	{
-		printf("Command: |%s|\n", lst->opt[0]);
+		printf("Command %i: \n", j+1); // |%s|\n", lst->opt[0]);
 		if (!lst->path)
 			printf("No paths!\n");
 		else
@@ -59,13 +67,15 @@ void	ft_lstadd_back(t_cmds **lst, t_cmds *new)
 				i++;
 			}
 		}
-		printf("File descriptor: |%d|\n", lst->fd);
+		printf("File descriptor for input: |%d|\n", lst->fd_in);
+		printf("File descriptor for output: |%d|\n", lst->fd_out);
 		printf("\n");
 		lst = lst->next;
+		j++;
 	}
 }
-*/
-void	free_arr(char **arr)
+
+/*void	free_arr(char **arr)
 {
 	int	i;
 
@@ -85,10 +95,10 @@ void	free_null(void *ptr)
 	}
 }
 
-void	free_lst(t_cmds **lst)
+void	free_lst(t_cmd **lst)
 {
-	t_cmds	*node;
-	t_cmds	*next;
+	t_cmd	*node;
+	t_cmd	*next;
 
 	node = *lst;
 	if (node)
@@ -103,4 +113,4 @@ void	free_lst(t_cmds **lst)
 		}
 	}
 	*lst = NULL;
-}
+}*/
