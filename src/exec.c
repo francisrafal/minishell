@@ -51,6 +51,8 @@ void	exec_single_cmd(char **cmd_args, t_shell *sh)
 		exec_as_parent(cmd_args, sh);
 	else if (ft_strncmp(cmd_args[0], "export", 7) == 0)
 		exec_as_parent(cmd_args, sh);
+	else if (ft_strncmp(cmd_args[0], "unset", 6) == 0)
+		exec_as_parent(cmd_args, sh);
 	else
 		exec_as_child(cmd_args, sh);
 }
