@@ -164,6 +164,21 @@ int	bi_export(char **cmd_args, t_shell *sh, int mode)
 		}	
 		free_env(tmp);
 	}
+// Error if identifier doesn't begin with alphabet or underscore
+	return (0);
+}
+
+int	bi_unset(char **cmd_args, t_shell *sh, int mode)
+{
+	(void)mode;
+	t_env		*tmp;
+	
+// Go through all arguments
+// Print error if not valid identifier but continue with other variables
+	tmp = env_dup(sh->env);
+	remove_env_node(tmp, cmd_args[1]);
+	free_env(tmp);
+// Error if identifier doesn't begin with alphabet or underscore
 	return (0);
 }
 

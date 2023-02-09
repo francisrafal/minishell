@@ -139,3 +139,29 @@ t_env_node	*env_node_dup(t_env_node *node)
 	dup->next = NULL;
 	return (dup);
 }
+
+void	remove_env_node(t_env *env, char *key)
+{
+	t_env_node	*runner;
+	t_env_node	*tmp;
+
+	if (env == NULL)
+		return ;
+	if (env->head == NULL)
+		return ;
+	runner = env->head;
+	while (runner->next && ft_strncmp(key, runner->next->key, ft_strlen(runner->next->key) + 1))
+		runner = runner->next;
+	if (runner->next)
+	{
+		printf("runner->key: %s\n", runner->key);
+		printf("runner->next->key: %s\n", runner->next->key);
+		tmp = runner->next;
+		runner->next = runner->next->next;
+		free_env_node(tmp);
+		printf("runner->key: %s\n", runner->key);
+		if (runner->next)
+			printf("runner->next->key: %s\n", runner->next->key);
+	}
+	// Handle removing first element
+}

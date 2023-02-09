@@ -19,13 +19,18 @@ void	free_env(t_env *env)
 	}
 	while (runner)
 	{
-		free_null(runner->key);
-		free_null(runner->value);
 		tmp = runner;
-		runner = runner->next;
-		free_null(tmp);
+		runner = tmp->next;
+		free_env_node(tmp);
 	}	
 	free_null(env);
+}
+
+void	free_env_node(t_env_node *node)
+{
+	free_null(node->key);
+	free_null(node->value);
+	free_null(node);
 }
 
 void	free_arr(char **arr)
