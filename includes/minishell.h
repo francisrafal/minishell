@@ -29,6 +29,7 @@ typedef	struct s_shell
 {
 	int				exit;
 	int				wstatus;
+	int				last_exit_status;
 	struct s_env	*env;
 }	t_shell;
 
@@ -91,7 +92,7 @@ int		bi_unset(char **cmd_args, t_shell *sh, int mode);
 int		get_arr_size(char **cmd_args);
 
 /* exec.c */
-void	exec_builtin(char **cmd_args, t_shell *sh, int mode);
+int		exec_builtin(char **cmd_args, t_shell *sh, int mode);
 void	exec_as_parent(char **cmd_args, t_shell *sh);
 void	exec_as_child(char **cmd_args, t_shell *sh);
 void	exec_single_cmd(char **cmd_args, t_shell *sh);

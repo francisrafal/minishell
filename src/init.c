@@ -9,5 +9,6 @@ t_shell	*init_shell(char **envp)
 		perror_exit("malloc");
 	sh->env = init_env(envp);
 	sh->exit = 0;
+	sh->last_exit_status = 0;
 	return (sh);
 }
