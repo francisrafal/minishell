@@ -151,6 +151,7 @@ int	bi_export(char **cmd_args, t_shell *sh, int mode)
 	if (argc == 1)
 	{
 		tmp = env_dup(sh->env);
+		sort_env(tmp);
 		runner = tmp->head;
 		if (runner == NULL)
 			return (0);

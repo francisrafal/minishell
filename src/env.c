@@ -89,6 +89,16 @@ void	append_env(t_env *env, t_env_node *node)
 	env->size++;
 }
 
+void	prepend_env(t_env *env, t_env_node *node)
+{
+	t_env_node	*tmp;
+
+	tmp = env->head;
+	env->head = node;
+	node->next = tmp;
+	env->size++;
+}
+
 t_env	*env_dup(t_env *env)
 {
 	t_env 		*env_copy;
@@ -150,6 +160,7 @@ void	remove_env_node(t_env *env, char *key)
 		tmp = runner->next;
 		runner->next = runner->next->next;
 		free_env_node(tmp);
+		env->size--;
 	}
 }
 
@@ -170,5 +181,50 @@ void	insert_env_node_after_key(t_env *env, char *key, t_env_node *node)
 		tmp = runner->next;
 		runner->next = node;
 		node->next = tmp;
+		env->size++;
 	}
+}
+
+void	sort_env(t_env *env)
+{
+	t_env_node	*runner;
+	int			swap;
+
+	if (env == NULL)
+		return ;
+	runner = env->head;
+	if (runner == NULL || runner->next == NULL)
+		return ;
+	swap = 1;
+	while (swap)
+	{
+		swap = 0;
+		while (runner->next)
+		{
+			if (ft_strncmp(runner->key, runner->next->key, ft_strlen(runner->key) + 1) > 0)
+			{
+				runner = env_node_swap(env, runner->key);
+				swap = 1;
+			}
+			runner = runner->next;
+		}
+		runner = env->head;
+	}
+}
+
+t_env_node	*env_node_swap(t_env *env, char *key)
+{
+	t_env_node	*runner;	
+	t_env_node	*new_runner;
+	t_env_node	*tmp;
+
+	runner = env->head;
+	while (runner->next && ft_strncmp(runner->key, key, ft_strlen(key) + 1))
+		runner = runner->next;
+	new_runner = runner->next;
+	tmp = env_node_dup(runner);
+	tmp->next = runner->next;
+	remove_env_node(env, runner->key);
+	insert_env_node_after_key(env, tmp->next->key, tmp);
+	return (new_runner);
 }
