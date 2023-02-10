@@ -133,11 +133,11 @@ void	perror_exit(char *err);
 char 		**get_env(t_env *head);
 t_env		*init_env(char **envp);
 t_env_node	*create_env_node(char *str);
-void		print_env(t_env *env);
 void		append_env(t_env *env, t_env_node *node);
 t_env		*env_dup(t_env *env);
 t_env_node	*env_node_dup(t_env_node *node);
 void		remove_env_node(t_env *env, char *key);
+void		insert_env_node_after_key(t_env *env, char *key, t_env_node *node);
 
 /* init.c */
 t_shell	*init_shell(char **envp);

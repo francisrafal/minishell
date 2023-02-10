@@ -46,20 +46,6 @@ t_env	*init_env(char **envp)
 	return (env);
 }
 
-void	print_env(t_env *env)
-{
-	t_env_node	*runner;	
-
-	runner = env->head;
-	if (runner == NULL)
-		return ;
-	while (runner)
-	{
-		printf("%s=%s\n", runner->key, runner->value);
-		runner = runner->next;
-	}	
-}
-
 t_env_node	*create_env_node(char *str)
 {
 	t_env_node 	*node;
@@ -164,5 +150,25 @@ void	remove_env_node(t_env *env, char *key)
 		tmp = runner->next;
 		runner->next = runner->next->next;
 		free_env_node(tmp);
+	}
+}
+
+void	insert_env_node_after_key(t_env *env, char *key, t_env_node *node)
+{
+	t_env_node	*runner;
+	t_env_node	*tmp;
+
+	if (env == NULL)
+		return ;
+	if (env->head == NULL || key == NULL)
+		return ;
+	runner = env->head;
+	while (runner && ft_strncmp(key, runner->key, ft_strlen(runner->key) + 1))
+		runner = runner->next;
+	if (runner)
+	{
+		tmp = runner->next;
+		runner->next = node;
+		node->next = tmp;
 	}
 }
