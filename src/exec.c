@@ -48,7 +48,7 @@ void	exec_as_child(char **cmd_args, t_shell *sh)
 
 void	exec_single_cmd(char **cmd_args, t_shell *sh)
 {
-	// Change this function later so that it takes t_cmd *cmd as input instead of char **cmd_args
+	// Cgange this function later so that it takes t_cmd *cmd as input instead of char **cmd_args
 	if (ft_strncmp(cmd_args[0], "cd", 3) == 0)
 		exec_as_parent(cmd_args, sh);
 	else if (ft_strncmp(cmd_args[0], "exit", 5) == 0)

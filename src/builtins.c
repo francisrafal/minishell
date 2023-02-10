@@ -131,7 +131,8 @@ int	bi_env(char **cmd_args, t_shell *sh, int mode)
 		return (0);
 	while (runner)
 	{
-		printf("%s=%s\n", runner->key, runner->value);
+		if (runner->value)
+			printf("%s=%s\n", runner->key, runner->value);
 		runner = runner->next;
 	}	
 	return (0);
@@ -140,14 +141,17 @@ int	bi_env(char **cmd_args, t_shell *sh, int mode)
 int	bi_export(char **cmd_args, t_shell *sh, int mode)
 {
 	(void)mode;
-	int	argc;
+	int			argc;
+	int			i;
+	int 		error;
 	t_env		*tmp;
 	t_env_node	*runner;	
 	
 	argc = get_arr_size(cmd_args);
-	tmp = env_dup(sh->env);
 	if (argc == 1)
 	{
+		tmp = env_dup(sh->env);
+		sort_env(tmp);
 		runner = tmp->head;
 		if (runner == NULL)
 			return (0);
@@ -166,8 +170,26 @@ int	bi_export(char **cmd_args, t_shell *sh, int mode)
 		}	
 		free_env(tmp);
 	}
-// Error if identifier doesn't begin with alphabet or underscore
-// Return correct exit codes
+	error = 0;
+	if (argc > 1)
+	{
+		i = 1;
+		while (i < argc)
+		{
+			if (ft_isalpha(cmd_args[i][0]) || (cmd_args[i][0] == '_'))
+				append_env(sh->env, create_env_node(cmd_args[i]));
+			else
+			{
+				ft_putstr_fd("minishell: export: `", 2);
+				ft_putstr_fd(cmd_args[i], 2);
+				ft_putstr_fd("': not a valid identifier\n", 2);
+				error = 1;
+			}
+			i++;
+		}
+		if (error)
+			return (1);
+	}
 	return (0);
 }
 
