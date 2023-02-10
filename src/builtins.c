@@ -167,6 +167,7 @@ int	bi_export(char **cmd_args, t_shell *sh, int mode)
 		free_env(tmp);
 	}
 // Error if identifier doesn't begin with alphabet or underscore
+// Return correct exit codes
 	return (0);
 }
 
@@ -187,19 +188,14 @@ int	bi_unset(char **cmd_args, t_shell *sh, int mode)
 		else
 		{
 			ft_putstr_fd("minishell: unset: `", 2);
-			ft_putchar_fd(cmd_args[i][0], 2);
+			ft_putstr_fd(cmd_args[i], 2);
 			ft_putstr_fd("': not a valid identifier\n", 2);
 			error = 1;
 		}
 		i++;
 	}
 	if (error)
-	{
-		free_arr(cmd_args);
-		free_data(sh);
-		exit(EXIT_FAILURE);
-		// this shouldn't exit in parent mode? return a specific exit code
-	}
+		return (1);
 	return (0);
 }
 
@@ -221,9 +217,5 @@ int	bi_unset(char **cmd_args, t_shell *sh, int mode)
 // Exit code if no argument is 0
 
 // Exit shell only if correct num of arguments
-
-// free args at exit
-// free sh?????????
-
 
 // User Defined Exit Codes From 79-113 are okay

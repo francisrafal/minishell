@@ -1,21 +1,22 @@
 #include "minishell.h"
 
-void	exec_builtin(char **cmd_args, t_shell *sh, int mode)
+int	exec_builtin(char **cmd_args, t_shell *sh, int mode)
 {
 	if (ft_strncmp(cmd_args[0], "echo", 5) == 0)
-		bi_echo(cmd_args, sh, mode);
+		sh->last_exit_status = bi_echo(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "pwd", 4) == 0)
-		bi_pwd(cmd_args, sh, mode);
+		sh->last_exit_status = bi_pwd(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "cd", 3) == 0)
-		bi_cd(cmd_args, sh, mode);
+		sh->last_exit_status = bi_cd(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "exit", 5) == 0)
-		bi_exit(cmd_args, sh, mode);
+		sh->last_exit_status = bi_exit(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "env", 4) == 0)
-		bi_env(cmd_args, sh, mode);
+		sh->last_exit_status = bi_env(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "export", 7) == 0)
-		bi_export(cmd_args, sh, mode);
+		sh->last_exit_status = bi_export(cmd_args, sh, mode);
 	else if (ft_strncmp(cmd_args[0], "unset", 6) == 0)
-		bi_unset(cmd_args, sh, mode);
+		sh->last_exit_status = bi_unset(cmd_args, sh, mode);
+	return (sh->last_exit_status);
 }
 
 void	exec_as_parent(char **cmd_args, t_shell *sh)
@@ -25,17 +26,20 @@ void	exec_as_parent(char **cmd_args, t_shell *sh)
 
 void	exec_as_child(char **cmd_args, t_shell *sh)
 {
+	int	last_exit_status;
 	if (fork() == 0)
 	{
-		exec_builtin(cmd_args, sh, EXEC_AS_CHILD);
+		last_exit_status = exec_builtin(cmd_args, sh, EXEC_AS_CHILD);
 		free_arr(cmd_args);
 		free_data(sh);
-		exit(EXIT_SUCCESS);
+		exit(last_exit_status);
 	}
 	else
 	{	
-		wait(&sh->wstatus);
 		// Replace here with waitpid when we have multiple cmds
+		wait(&sh->wstatus);
+		if (WIFEXITED(sh->wstatus))
+			sh->last_exit_status = WEXITSTATUS(sh->wstatus);
 		// Later: EXIT_NO_ARG is used so that $? is set properly. if EXIT_NO_ARG then $? should remain the value of the last pipeline
 		if (WEXITSTATUS(sh->wstatus) == EXIT_NO_ARG)
 			sh->exit = 1;
