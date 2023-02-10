@@ -228,3 +228,21 @@ t_env_node	*env_node_swap(t_env *env, char *key)
 	insert_env_node_after_key(env, tmp->next->key, tmp);
 	return (new_runner);
 }
+
+t_env_node	*find_env_node(t_env *env, char *key)
+{
+	t_env_node *runner;
+
+	if (env == NULL || env->head == NULL)
+		return (NULL);
+	runner = env->head;
+	while (runner && ft_strncmp(runner->key, key, ft_strlen(key) + 1))
+		runner = runner->next;
+	return (runner);
+}
+
+void	replace_node_value(t_env_node *node, char *value)
+{
+	free_null(node->value);
+	node->value = ft_strdup(value);	
+}
