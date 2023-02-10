@@ -138,59 +138,83 @@ int	bi_env(char **cmd_args, t_shell *sh, int mode)
 	return (0);
 }
 
+int	bi_export_no_args(char **cmd_args, t_shell *sh, int mode)
+{
+	(void)mode;
+	(void)cmd_args;
+	t_env		*tmp;
+	t_env_node	*runner;	
+	
+	tmp = env_dup(sh->env);
+	sort_env(tmp);
+	runner = tmp->head;
+	if (runner == NULL)
+		return (0);
+	while (runner)
+	{
+		if (ft_strncmp(runner->key, "_", 2) == 0)
+		{
+			runner = runner->next;
+			continue ;
+		}
+		if (runner->value == NULL)
+			printf("declare -x %s\n", runner->key);
+		else
+			printf("declare -x %s=\"%s\"\n", runner->key, runner->value);
+		runner = runner->next;
+	}	
+	free_env(tmp);
+	return (0);
+}
+
+int	bi_export_with_args(char **cmd_args, t_shell *sh, int mode, int argc)
+{
+	(void)mode;
+	int			i;
+	int 		error;
+	t_env_node	*new_node;
+	t_env_node	*node;
+	
+	error = 0;
+	i = 1;
+	while (i < argc)
+	{
+		if (ft_isalpha(cmd_args[i][0]) || (cmd_args[i][0] == '_'))
+		{
+			new_node = create_env_node(cmd_args[i]);
+			node = find_env_node(sh->env, new_node->key);
+			if (node != NULL)
+			{
+				replace_node_value(node, new_node->value);
+				free_env_node(new_node);
+			}
+			else
+				append_env(sh->env, new_node);
+		}
+		else
+		{
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(cmd_args[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			error = 1;
+		}
+		i++;
+	}
+	if (error)
+		return (1);
+	return (0);
+}
+
 int	bi_export(char **cmd_args, t_shell *sh, int mode)
 {
 	(void)mode;
 	int			argc;
-	int			i;
-	int 		error;
-	t_env		*tmp;
-	t_env_node	*runner;	
 	
 	argc = get_arr_size(cmd_args);
 	if (argc == 1)
-	{
-		tmp = env_dup(sh->env);
-		sort_env(tmp);
-		runner = tmp->head;
-		if (runner == NULL)
-			return (0);
-		while (runner)
-		{
-			if (ft_strncmp(runner->key, "_", 2) == 0)
-			{
-				runner = runner->next;
-				continue ;
-			}
-			if (runner->value == NULL)
-				printf("declare -x %s\n", runner->key);
-			else
-				printf("declare -x %s=\"%s\"\n", runner->key, runner->value);
-			runner = runner->next;
-		}	
-		free_env(tmp);
-	}
-	error = 0;
-	if (argc > 1)
-	{
-		i = 1;
-		while (i < argc)
-		{
-			if (ft_isalpha(cmd_args[i][0]) || (cmd_args[i][0] == '_'))
-				append_env(sh->env, create_env_node(cmd_args[i]));
-			else
-			{
-				ft_putstr_fd("minishell: export: `", 2);
-				ft_putstr_fd(cmd_args[i], 2);
-				ft_putstr_fd("': not a valid identifier\n", 2);
-				error = 1;
-			}
-			i++;
-		}
-		if (error)
-			return (1);
-	}
-	return (0);
+		return (bi_export_no_args(cmd_args, sh, mode));
+	else
+		return (bi_export_with_args(cmd_args, sh, mode, argc));
 }
 
 int	bi_unset(char **cmd_args, t_shell *sh, int mode)
@@ -222,6 +246,7 @@ int	bi_unset(char **cmd_args, t_shell *sh, int mode)
 }
 
 
+// FOR EXIT Builtin:
 // Case in pipe:
 // - don't print exit in any case
 // - print too many arguments if argc is not correct

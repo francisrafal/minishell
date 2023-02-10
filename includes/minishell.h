@@ -86,6 +86,8 @@ int		bi_cd(char **cmd_args, t_shell *sh, int mode);
 int		bi_exit(char **cmd_args, t_shell *sh, int mode);
 int		bi_env(char **cmd_args, t_shell *sh, int mode);
 int		bi_export(char **cmd_args, t_shell *sh, int mode);
+int		bi_export_no_args(char **cmd_args, t_shell *sh, int mode);
+int		bi_export_with_args(char **cmd_args, t_shell *sh, int mode, int argc);
 int		bi_unset(char **cmd_args, t_shell *sh, int mode);
 
 /* builtin_utils.c */
@@ -141,6 +143,8 @@ void		remove_env_node(t_env *env, char *key);
 void		insert_env_node_after_key(t_env *env, char *key, t_env_node *node);
 void		sort_env(t_env *env);
 t_env_node	*env_node_swap(t_env *env, char *key);
+t_env_node	*find_env_node(t_env *env, char *key);
+void		replace_node_value(t_env_node *node, char *value);
 
 /* init.c */
 t_shell	*init_shell(char **envp);
