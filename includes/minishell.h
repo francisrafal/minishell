@@ -148,5 +148,6 @@ void		replace_node_value(t_env_node *node, char *value);
 
 /* init.c */
 t_shell	*init_shell(char **envp);
+void	increase_shell_level(t_env *env);
 
 #endif
