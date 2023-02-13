@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-int	get_arr_size(char **cmd_args)
+int	get_arr_size(char **arr)
 {
 	int argc;
 
 	argc = 0;
-	while (cmd_args[argc] != NULL)
+	while (arr[argc] != NULL)
 		argc++;
 	return (argc);
 }

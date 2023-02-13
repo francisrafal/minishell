@@ -126,6 +126,8 @@ int	bi_env(char **cmd_args, t_shell *sh, int mode)
 		free_data(sh);
 		exit(EXIT_FAILURE);
 	}
+	if (sh->env == NULL)
+		return (0);
 	runner = sh->env->head;
 	if (runner == NULL)
 		return (0);

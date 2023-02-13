@@ -91,7 +91,7 @@ int		bi_export_with_args(char **cmd_args, t_shell *sh, int mode, int argc);
 int		bi_unset(char **cmd_args, t_shell *sh, int mode);
 
 /* builtin_utils.c */
-int		get_arr_size(char **cmd_args);
+int		get_arr_size(char **arr);
 
 /* exec.c */
 int		exec_builtin(char **cmd_args, t_shell *sh, int mode);
@@ -132,7 +132,7 @@ void	perror_exit(char *err);
 
 /* env.c */
 //char		**copy_env(char **envp);
-char 		**get_env(t_env *head);
+char 		**get_env_arr(t_env *env);
 t_env		*init_env(char **envp);
 t_env_node	*create_env_node(char *str);
 void		append_env(t_env *env, t_env_node *node);
@@ -145,6 +145,7 @@ void		sort_env(t_env *env);
 t_env_node	*env_node_swap(t_env *env, char *key);
 t_env_node	*find_env_node(t_env *env, char *key);
 void		replace_node_value(t_env_node *node, char *value);
+void		print_arr(char **arr);
 
 /* init.c */
 t_shell	*init_shell(char **envp);

@@ -22,10 +22,56 @@ char	**copy_env(char **envp)
 	return (env);
 }
 */
-char **get_env(t_env *head)
+char **get_env_arr(t_env *env)
 {
-	(void)head;
-	return (NULL);
+	t_env_node	*runner;
+	char		**env_arr;
+	char		*tmp;
+	int			env_size;
+	int			i;
+
+	if (env == NULL || env->head == NULL)
+		return (NULL);
+	env_size = 0;
+	runner = env->head;
+	while (runner)
+	{
+		if (runner->value)
+			env_size++;
+		runner = runner->next;
+	}
+	env_arr = malloc((env_size + 1) * sizeof (char *));
+	if (env_arr == NULL)
+		return (NULL);
+	runner = env->head;
+	i = 0;
+	while (runner)
+	{
+		if (runner->value)
+		{
+			tmp = ft_strjoin(runner->key, "=");
+			env_arr[i] = ft_strjoin(tmp, runner->value);
+			free(tmp);
+			i++;
+		}
+		runner = runner->next;
+	}
+	return (env_arr);
+}
+
+void	print_arr(char **arr)
+{
+	int	i;
+
+	if (arr == NULL)
+		return ;
+	i = 0;
+	printf("----\n");
+	while (arr[i])
+	{
+		printf("%s\n", arr[i]);
+		i++;
+	}	
 }
 
 t_env	*init_env(char **envp)
@@ -34,6 +80,8 @@ t_env	*init_env(char **envp)
 	int		i;
 	int		size;
 
+	if (envp == NULL)
+		return (NULL);
 	size = get_arr_size(envp);
 	env = malloc (sizeof (t_env));
 	if (env == NULL)
