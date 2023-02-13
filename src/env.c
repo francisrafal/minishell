@@ -79,10 +79,13 @@ t_env	*init_env(char **envp)
 	t_env	*env;
 	int		i;
 	int		size;
+	char	*pwd;
+	char	*cwd;
 
 	if (envp == NULL)
-		return (NULL);
-	size = get_arr_size(envp);
+		size = 0;
+	else
+		size = get_arr_size(envp);
 	env = malloc (sizeof (t_env));
 	if (env == NULL)
 		return (NULL);
@@ -91,6 +94,16 @@ t_env	*init_env(char **envp)
 	i = 0;
 	while (i < size)
 		append_env(env, create_env_node(envp[i++]));
+	if (size == 0)
+	{
+		cwd = getcwd(NULL, 0);
+		if (cwd == NULL)
+			perror_exit("getcwd");
+		pwd = ft_strjoin("PWD=", cwd);
+		free(cwd);
+		append_env(env, create_env_node(pwd));
+		free(pwd);
+	}
 	return (env);
 }
 
@@ -121,7 +134,7 @@ t_env_node	*create_env_node(char *str)
 	return (node);
 }
 
-void	append_env(t_env *env, t_env_node *node)
+t_env_node	*append_env(t_env *env, t_env_node *node)
 {
 	t_env_node	*runner;	
 
@@ -135,6 +148,7 @@ void	append_env(t_env *env, t_env_node *node)
 		runner->next = node;
 	}
 	env->size++;
+	return (node);
 }
 
 void	prepend_env(t_env *env, t_env_node *node)
@@ -289,8 +303,11 @@ t_env_node	*find_env_node(t_env *env, char *key)
 	return (runner);
 }
 
-void	replace_node_value(t_env_node *node, char *value)
+t_env_node	*replace_node_value(t_env_node *node, char *value)
 {
+	if (node == NULL)
+		return (NULL);
 	free_null(node->value);
 	node->value = ft_strdup(value);	
+	return (node);
 }

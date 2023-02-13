@@ -52,11 +52,32 @@ int	bi_cd(char **cmd_args, t_shell *sh, int mode)
 {
 	(void)sh;
 	(void)mode;
+	char	*cwd;
+	char	*tmp;
+	t_env_node	*oldpwd;
+	t_env_node	*pwd;
 
 	if (cmd_args[1] == NULL)
 		return (0);
 	if (chdir(cmd_args[1]) == -1)
 		perror_exit("chdir");
+	// Handle if PWD node doesn't exist yet
+	oldpwd = find_env_node(sh->env, "OLDPWD");
+	if (oldpwd == NULL)
+		oldpwd = append_env(sh->env, create_env_node("OLDPWD="));
+	cwd = getcwd(NULL, 0);
+	if (cwd == NULL)
+		perror_exit("getcwd");
+	pwd = find_env_node(sh->env, "PWD");
+	if (pwd == NULL)
+	{
+		tmp = ft_strjoin("PWD=", cwd);
+		pwd = append_env(sh->env, create_env_node(tmp));
+		free(tmp);
+	}
+	replace_node_value(oldpwd, pwd->value);
+	replace_node_value(pwd, cwd);
+	free(cwd);
 	return (0);
 }
 

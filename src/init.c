@@ -26,4 +26,9 @@ void	increase_shell_level(t_env *env)
 		replace_node_value(node, new_shell_level);
 		free_null(new_shell_level);
 	}
+	else
+	{
+		new_shell_level = "SHLVL=1";	
+		append_env(env, create_env_node(new_shell_level));
+	}
 }
