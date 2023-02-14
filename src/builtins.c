@@ -89,10 +89,10 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	argc = get_arr_size(cmd_args);
 	if (mode == EXEC_AS_PARENT)
 	{
-		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd("exit\n", STDERR_FILENO);
 		if (argc > 2)
 		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 			return (1);
 		}
 		if (argc == 2)
@@ -113,7 +113,7 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	{
 		if (argc > 2)
 		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 			exit(EXIT_FAILURE);
 		}
 		if (argc == 2)
@@ -142,7 +142,7 @@ int	bi_env(char **cmd_args, t_shell *sh, int mode)
 	argc = get_arr_size(cmd_args);
 	if (argc > 1)
 	{
-		ft_putstr_fd("minishell: env: too many arguments\n", 2);
+		ft_putstr_fd("minishell: env: too many arguments\n", STDERR_FILENO);
 		free_arr(cmd_args);
 		free_data(sh);
 		exit(EXIT_FAILURE);
@@ -216,9 +216,9 @@ int	bi_export_with_args(char **cmd_args, t_shell *sh, int mode, int argc)
 		}
 		else
 		{
-			ft_putstr_fd("minishell: export: `", 2);
-			ft_putstr_fd(cmd_args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
+			ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+			ft_putstr_fd(cmd_args[i], STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 			error = 1;
 		}
 		i++;
@@ -256,9 +256,9 @@ int	bi_unset(char **cmd_args, t_shell *sh, int mode)
 			remove_env_node(sh->env, cmd_args[i]);
 		else
 		{
-			ft_putstr_fd("minishell: unset: `", 2);
-			ft_putstr_fd(cmd_args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
+			ft_putstr_fd("minishell: unset: `", STDERR_FILENO);
+			ft_putstr_fd(cmd_args[i], STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 			error = 1;
 		}
 		i++;

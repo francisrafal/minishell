@@ -10,7 +10,8 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-#include <fcntl.h>
+# include <fcntl.h>
+# include <signal.h>
 
 /* Project Headers */
 # include "libft.h"
@@ -152,5 +153,9 @@ void		print_arr(char **arr);
 /* init.c */
 t_shell	*init_shell(char **envp);
 void	increase_shell_level(t_env *env);
+
+/* signals.c */
+void	signal_handler_int(int signum);
+void	signal_handler_quit(int signum);
 
 #endif

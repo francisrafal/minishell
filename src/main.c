@@ -9,7 +9,11 @@ int	main(int argc, char **argv, char **envp)
 	int		num_cmds;
 	t_shell	*sh;
 	t_cmd	*cmd;
-
+/*
+	signal(SIGINT, signal_handler_int); 
+	signal(SIGQUIT, signal_handler_quit); 
+*/
+	signal(SIGQUIT, SIG_IGN);
 	sh = init_shell(envp);
 	num_cmds = 1;
 	cmd = NULL;
