@@ -161,4 +161,6 @@ void	handle_sigint_parent(int signum);
 void	handle_sigquit_child(int signum);
 void	set_signal_action(int mode);
 
+/* syntax_error.c*/
+int     check_syntax(char **cmds);
 #endif

@@ -22,7 +22,8 @@ SRCSLIST		:= main.c \
 					exec.c \
 					free.c \
 					files_utils.c \
-					signals.c
+					signals.c\
+					syntax_error.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR			:= ./obj/
