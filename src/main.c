@@ -18,9 +18,11 @@ int	main(int argc, char **argv, char **envp)
 	{		
 		set_signal_action(EXEC_AS_PARENT);
 		cmd_line = get_cmd_line();
+		if (cmd_line == NULL)
+			cmd_line = ft_strdup("exit");
 		split_input_cmd(cmd_line, envp);
 		test_cmd = ft_split(cmd_line, ' ');
-		free(cmd_line);
+		free_null(cmd_line);
 		if (num_cmds == 1)
 			exec_single_cmd(test_cmd, sh);
 		else
