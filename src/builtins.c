@@ -54,14 +54,25 @@ int	bi_cd(char **cmd_args, t_shell *sh, int mode)
 	(void)mode;
 	char	*cwd;
 	char	*tmp;
+	int		argc;
 	t_env_node	*oldpwd;
 	t_env_node	*pwd;
 
-	if (cmd_args[1] == NULL)
+	if (cmd_args == NULL || cmd_args[1] == NULL)
 		return (0);
+	argc = get_arr_size(cmd_args);
+	if (argc > 2)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", STDERR_FILENO);
+		return (1);
+	}
 	if (chdir(cmd_args[1]) == -1)
-		perror_exit("chdir");
-	// Handle if PWD node doesn't exist yet
+	{
+		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+		ft_putstr_fd(cmd_args[1], STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		return (1);
+	}
 	oldpwd = find_env_node(sh->env, "OLDPWD");
 	if (oldpwd == NULL)
 		oldpwd = append_env(sh->env, create_env_node("OLDPWD="));
