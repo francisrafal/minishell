@@ -14,13 +14,18 @@ int	bi_echo(char **cmd_args, t_shell *sh, int mode)
 		printf("\n");
 		return (0);
 	}	
-	if (ft_strncmp(cmd_args[i], "-n", 3) == 0)
+	while (cmd_args[i][0] == '-')
 	{
-		new_line = 0;
-		i++;
+		if (cmd_args[i][1] == 'n')
+		{
+			new_line = 0;
+			i++;
+		}
+		else
+			break ;
 		if (cmd_args[i] == NULL)
 			return (0);
-	}		
+	}
 	while (cmd_args[i])
 	{
 		printf("%s", cmd_args[i]);

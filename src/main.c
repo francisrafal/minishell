@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 		if (cmd_line == NULL)
 			cmd_line = ft_strdup("exit");
 		add_history(cmd_line);
-		split_input_cmd(cmd_line, envp);
+		//split_input_cmd(cmd_line, envp);
 		test_cmd = ft_split(cmd_line, ' ');
 		free_null(cmd_line);
 		if (num_cmds == 1)
