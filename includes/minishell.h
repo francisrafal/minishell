@@ -24,6 +24,9 @@
 # define EXEC_AS_PARENT 1
 # define EXEC_AS_CHILD 2
 
+/* Global Variables */
+extern int	g_exit_code;
+
 /* Structs */
 
 /* Struct For Shell State */
@@ -31,7 +34,6 @@ typedef	struct s_shell
 {
 	int				exit;
 	int				wstatus;
-	int				last_exit_status;
 	struct s_env	*env;
 }	t_shell;
 
