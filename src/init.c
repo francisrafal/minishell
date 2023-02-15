@@ -10,7 +10,6 @@ t_shell	*init_shell(char **envp)
 	sh->env = init_env(envp);
 	increase_shell_level(sh->env);
 	sh->exit = 0;
-	sh->last_exit_status = 0;
 	return (sh);
 }
 

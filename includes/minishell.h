@@ -34,7 +34,6 @@ typedef	struct s_shell
 {
 	int				exit;
 	int				wstatus;
-	int				last_exit_status;
 	struct s_env	*env;
 }	t_shell;
 
