@@ -10,6 +10,7 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+#include <fcntl.h>
 
 /* Project Headers */
 # include "libft.h"
@@ -126,6 +127,7 @@ void    init_idx(int *arr, int len);
 char    **split_pipes(char *line, int *ncmds);
 
 /* files_utils.c */
+int     get_outfile(t_cmd *cmd, char *line);
 
 /* error.c */
 void	perror_exit(char *err);

@@ -20,7 +20,8 @@ SRCSLIST		:= main.c \
 					env.c \
 					init.c \
 					exec.c \
-					free.c
+					free.c\
+					files_utils.c
 
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
