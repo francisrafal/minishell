@@ -20,6 +20,11 @@ int	main(int argc, char **argv, char **envp)
 		cmd_line = get_cmd_line();
 		if (cmd_line == NULL)
 			cmd_line = ft_strdup("exit");
+		if (cmd_line[0] == 0)
+		{
+			free_null(cmd_line);
+			continue ;
+		}
 		add_history(cmd_line);
 		//split_input_cmd(cmd_line, envp);
 		test_cmd = ft_split(cmd_line, ' ');
