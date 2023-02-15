@@ -10,6 +10,7 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+#include <fcntl.h>
 
 /* Project Headers */
 # include "libft.h"
@@ -101,7 +102,7 @@ void	exec_single_cmd(char **cmd_args, t_shell *sh);
 void	exec_pipeline(t_cmd *cmd, t_shell *sh);
 
 /* list_utils.c */
-t_cmd	*ft_lstnew(void); //int fd);
+t_cmd	*ft_lstnew(int ncmds);
 void	ft_lstadd_back(t_cmd **lst, t_cmd *new);
 void	ft_display_lst(t_cmd *lst);
 
@@ -115,7 +116,7 @@ void	free_env(t_env *env);
 void	free_env_node(t_env_node *node);
 
 /* split_input.c*/
-void	split_line(t_cmd **cmd, const char *str);
+void	split_line(t_cmd **cmd, const char *str, int ncmds);
 t_cmd	*split_input_cmd(char *line, char **envp);
 
 /* split_input_utils.c */
@@ -123,9 +124,10 @@ int     get_end_quote(char *line, char c);
 int     count_cmds(char *line);
 char    *fill_cmds(char *line, int len);
 void    init_idx(int *arr, int len);
-char    **split_pipes(char *line);
+char    **split_pipes(char *line, int *ncmds);
 
 /* files_utils.c */
+int     get_outfile(t_cmd *cmd, char *line);
 
 /* error.c */
 void	perror_exit(char *err);

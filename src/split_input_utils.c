@@ -67,13 +67,14 @@ void	init_idx(int *arr, int len)
 	}
 }
 
-char	**split_pipes(char *line)
+char	**split_pipes(char *line, int *ncmds)
 {
 	char	**cmds;
 	int	len;
 	int	idx[3];
 
 	len = count_cmds(line);
+	*ncmds = len;
 	//printf("len : %i\n", len);
 	init_idx(idx, 3);
 	cmds = (char **)malloc(sizeof(char *) * (len + 1));

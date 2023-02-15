@@ -3,7 +3,43 @@
 
 #include "minishell.h"
 
-int	here_doc(char *av)
+int     get_next_char(char *line, char *cset)
+{
+        int     i;
+
+        i = 0;
+        while(line[i])
+        {
+                if(ft_strchr(cset,line[i]))
+                {
+                        return(i);
+                }
+                i++;
+        }
+        return(i);
+}
+
+char	*get_file_name(char *str)
+{
+	int	i;
+
+
+
+	i = 0;
+	while (str[i])
+	{
+		
+		while (str[i] && (str[i] == '\t'  || str[i] == ' '))
+                      i++;
+
+	i++;
+	
+	}	
+	return("test");
+
+}
+
+/*int	here_doc(char *av)
 {
 	int		file;
 	char	*buf;
@@ -28,9 +64,12 @@ int	here_doc(char *av)
 	return (file);
 }
 
-int	get_infile(char **av)
+int	get_infile(t_cmd *cmd, char *line)
 {
-	int	fd_in;
+	int	i;
+
+	i = 0;
+
 
 	if (ft_strncmp("here_doc", av[1], 9))
 	{
@@ -46,20 +85,32 @@ int	get_infile(char **av)
 			ft_error(strerror(errno), av[1]);
 		return (fd_in);
 	}
-}
+}*/
 
-int	get_outfile(int ac, char **av)
+int	get_outfile(t_cmd *cmd, char *line)
 {
 	int	fd_out;
+	char 	*tmp;
+	(void)cmd;
+	char	*file; 
 
-	if (ft_strncmp("here_doc", av[1], 9))
+	printf("get output file");
+	return(1);
+	tmp = ft_strrchr(line, '>');
+	if (tmp)
 	{
-		fd_out = open(av[ac - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
-		return (fd_out);
+		file = get_file_name(tmp);
+		if (tmp[1] == '>')
+		{
+			cmd->re_out_app = 1;
+			fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		}
+		else
+			fd_out = open(file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		//free(file)
+		if (!fd_out)
+			return (1);
+		cmd->fd_out = fd_out;
 	}
-	else
-	{
-		fd_out = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		return (fd_out);
-	}
+	return (0);
 }
