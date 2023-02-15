@@ -9,12 +9,12 @@ int	main(int argc, char **argv, char **envp)
 	int		num_cmds;
 	t_shell	*sh;
 	t_cmd	*cmd;
-
 	sh = init_shell(envp);
 	num_cmds = 1;
 	cmd = NULL;
 	while (1)
 	{		
+		set_signal_action(EXEC_AS_PARENT);
 		cmd_line = get_cmd_line();
 		split_input_cmd(cmd_line, envp);
 		test_cmd = ft_split(cmd_line, ' ');

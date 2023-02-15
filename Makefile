@@ -20,9 +20,9 @@ SRCSLIST		:= main.c \
 					env.c \
 					init.c \
 					exec.c \
-					free.c\
-					files_utils.c
-
+					free.c \
+					files_utils.c \
+					signals.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR			:= ./obj/
