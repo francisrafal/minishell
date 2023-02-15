@@ -24,6 +24,9 @@
 # define EXEC_AS_PARENT 1
 # define EXEC_AS_CHILD 2
 
+/* Global Variables */
+extern int	g_exit_code;
+
 /* Structs */
 
 /* Struct For Shell State */
