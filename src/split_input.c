@@ -82,7 +82,11 @@ t_cmd	*split_input_cmd(char *line, char **envp)
 
 	(void)envp;
        	cmds = split_pipes(line, &ncmds);
-	if (1) // (check_syntax(cmds))
+	lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
+        if (!lst_cmds)
+		return (NULL);
+	lst_cmds = NULL;
+	if (!check_syntax(cmds))
 	{
 		lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
 		if (!lst_cmds)
@@ -107,7 +111,7 @@ t_cmd	*split_input_cmd(char *line, char **envp)
 	else	
 	{
 		free_arr(cmds);
-		printf("here exit because of syntax error\n");
+		printf("TODO: here exit because of syntax error\n");
 	}
         return (lst_cmds);
 }
