@@ -8,11 +8,11 @@ t_cmd	*ft_lstnew(int ncmds)
 	if (elem)
 	{	
 		elem->re_in = 0;
-                elem->re_out = 0;
-                elem->read_in = 0;
-                elem->delim = NULL;
-                elem->fd_in = 0;
-                elem->fd_out = 1;
+		elem->re_out = 0;
+		elem->read_in = 0;
+		elem->delim = NULL;
+		elem->fd_in = 0;
+		elem->fd_out = 1;
 		elem->ncmds = ncmds;
 		elem->next = NULL;
 		elem->path = NULL;
