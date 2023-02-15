@@ -155,7 +155,8 @@ t_shell	*init_shell(char **envp);
 void	increase_shell_level(t_env *env);
 
 /* signals.c */
-void	signal_handler_int(int signum);
-void	signal_handler_quit(int signum);
+void	handle_sigint_parent(int signum);
+void	handle_sigquit_child(int signum);
+void	set_signal_action(int mode);
 
 #endif
