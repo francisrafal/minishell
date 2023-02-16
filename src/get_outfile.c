@@ -1,7 +1,4 @@
-
-
 #include "minishell.h"
-
 
 /*int	here_doc(char *av)
 {
