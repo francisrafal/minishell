@@ -106,31 +106,18 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	if (mode == EXEC_AS_PARENT)
 	{
 		ft_putstr_fd("exit\n", STDERR_FILENO);
-		if (argc > 2)
-		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-			return (1);
-		}
-		if (argc == 2)
-		{
-			code = ft_atoi(cmd_args[1]);
-			free_arr(cmd_args);
-			free_data(sh);
-			exit(code);
-		}
 		if (argc == 1)
 		{
 			free_arr(cmd_args);
 			free_data(sh);
 			exit(EXIT_SUCCESS);
 		}
-	}
-	if (mode == EXEC_AS_CHILD)
-	{
-		if (argc > 2)
+		if (argc > 1 && !ft_isdigit(cmd_args[1][0]))
 		{
-			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-			exit(EXIT_FAILURE);
+			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+			ft_putstr_fd(cmd_args[1], STDERR_FILENO);
+			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+			exit(2);
 		}
 		if (argc == 2)
 		{
@@ -139,11 +126,38 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 			free_data(sh);
 			exit(code);
 		}
+		if (argc > 2)
+		{
+			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+			return (1);
+		}
+	}
+	if (mode == EXEC_AS_CHILD)
+	{
 		if (argc == 1)
 		{
 			free_arr(cmd_args);
 			free_data(sh);
 			exit(EXIT_NO_ARG);
+		}
+		if (argc > 1 && !ft_isdigit(cmd_args[1][0]))
+		{
+			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+			ft_putstr_fd(cmd_args[1], STDERR_FILENO);
+			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+			exit(2);
+		}
+		if (argc == 2)
+		{
+			code = ft_atoi(cmd_args[1]);
+			free_arr(cmd_args);
+			free_data(sh);
+			exit(code);
+		}
+		if (argc > 2)
+		{
+			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+			exit(EXIT_FAILURE);
 		}
 	}
 	return (0);
