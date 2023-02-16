@@ -1,47 +1,7 @@
-/*TO DO: I will use this from pipex with the new struct t_cmd*/
 
 
 #include "minishell.h"
 
-char    *cut_word(char *str, int start, int end);
-
-int     get_next_char(char *line, char *cset)
-{
-        int     i;
-
-        i = 0;
-        while (line[i])
-        {
-                if (ft_strchr(cset, line[i]))
-                        return (i);
-                i++;
-        }
-        return (i);
-}
-
-
-char	*get_file_name(char *str, char **file, char c)
-{
-	int	i;
-	int	j;
-	int	k;
-	
-	k = get_next_char(str, ">");
-	i = k + 1;
-	if (str[i] && str[i] == c)
-                i++;
-	while (str[i] && (str[i] == '\t'  || str[i] == ' '))
-		i++;
-	j = get_next_char(&str[i], "\t ");
-	printf("next >: %i: %i :%i\n", i,j,i+j-1);
-	*file = (char *)malloc(sizeof(char) * (j + 1));
-	if (!*file)
-		return (NULL);
-	ft_strlcpy(*file, &str[i], j+1);
-	str = cut_word(str, k, i+j-1);
-	return(str);
-
-}
 
 /*int	here_doc(char *av)
 {
@@ -119,24 +79,6 @@ int     get_outfile(t_cmd *cmd, char *line)
         }
         return (0);
 }*/
-char	*cut_word(char *str, int start, int end)
-{
-	int	size;
-	char	*new;
-
-	size = (int)ft_strlen(str) - end  + start -1;
-	//printf("new length line: %i = %i - %i + %i\n", size, (int)ft_strlen(str),end, start);
-	new = (char *)malloc(sizeof(char) * (size + 1));
-	if (!new)
-		return (NULL);
-	//printf("cut word: %i bis %i\n", start + 1, size-start);
-	ft_strlcpy(new, str, start);
-	if (size - start != 0)
-		ft_strlcpy(&new[start], &str[end + 1], size - start);
-	//printf("new line after cut: |%s|\n", new);
-	free(str);
-	return(new);
-}
 
 /*char	*cut_line(char *line, char c)
 {
