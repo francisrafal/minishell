@@ -1,10 +1,11 @@
 #include "minishell.h"
-int	check_char(char *str, char c, int *j)
+
+static int	check_char(char *str, char c, int *j)
 {
 	int	i;
 
 	i = 1;
-	if(str[i] && str[i] == c)
+	if (str[i] && str[i] == c)
 		i++;
 	while (str[i])
 	{
@@ -20,32 +21,30 @@ int	check_char(char *str, char c, int *j)
 	return (1);
 }
 
-int	check_line(char *str)
+static int	check_line(char *str)
 {
-	int	i; 
+	int	i;
 
 	i = 0;
 	while (str[i])
 	{
 		if (str[i] == '"')
-                        i += get_end_quote(&str[i + 1], '"') + 1;
-                else if (str[i] == '\'')
+			i += get_end_quote(&str[i + 1], '"') + 1;
+		else if (str[i] == '\'')
 			i += get_end_quote(&str[i + 1], '\'') + 1;
 		else if (str[i] == '>')
 		{
-			if (check_char(&str[i] , '>', &i))
+			if (check_char(&str[i], '>', &i))
 				return (1);
 		}
 		else if (str[i] == '<')
-                {
-                        if (check_char(&str[i] , '<', &i))
-                                return (1);
-                }
-
+		{
+			if (check_char(&str[i], '<', &i))
+				return (1);
+		}
 		i++;
 	}
 	return (0);
-
 }
 
 int	check_syntax(char **cmds)
@@ -55,11 +54,9 @@ int	check_syntax(char **cmds)
 	i = 0;
 	while (cmds[i])
 	{
-		if(check_line(cmds[i]))
+		if (check_line(cmds[i]))
 			return (1);
 		i++;
 	}
 	return (0);
 }
-
-

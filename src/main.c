@@ -26,14 +26,15 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		add_history(cmd_line);
-		split_input_cmd(cmd_line, envp);
+		cmd = split_input_cmd(cmd_line, envp);
 		test_cmd = ft_split(cmd_line, ' ');
 		free_null(cmd_line);
 		if (num_cmds == 1)
 			exec_single_cmd(test_cmd, sh);
 		else
 			exec_pipeline(cmd, sh);
-		free_arr(test_cmd);	
+		free_arr(test_cmd);
+		free_lst(&cmd);	
 	}
 	return (0);
 }

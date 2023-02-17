@@ -39,14 +39,15 @@ void	split_line(t_cmd **lst_cmds, const char *str, int ncmds)
 	t_cmd	*cmd;
 	char	*line;
 
-//	check_syntax_error(str);
+	line = NULL;
 	cmd = ft_lstnew(ncmds);
 	line = ft_strdup(str);
 	printf("|%s|\n", line);
 //	get_infile(&cmd, line);
-	get_outfile(cmd, line);
+	line =get_outfile(cmd, line);
 	//get_command(cmd,line);
 	ft_lstadd_back(lst_cmds, cmd);
+	free(line);
 /*	i = 0; 
 	while (line[i])
 	{
@@ -82,30 +83,21 @@ t_cmd	*split_input_cmd(char *line, char **envp)
 
 	(void)envp;
        	cmds = split_pipes(line, &ncmds);
-	lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
+	/*lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
         if (!lst_cmds)
-		return (NULL);
+		return (NULL); */
 	lst_cmds = NULL;
 	if (!check_syntax(cmds))
 	{
-		lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
-		if (!lst_cmds)
-			return (NULL);
-		lst_cmds = NULL;
 		i = 0;
 		while (cmds[i])
 		{
+			//printf("%s\n", cmds[i]);
 			split_line(&lst_cmds, cmds[i], ncmds);
 			i++;
 		}
-		//comd= NULL;
-		/* comd = init_input_cmd();
-		if (!comd)
-		    free_cmd(comd);
-		split_line(comd, line);
-		 free_cmd(comd);*/
 		ft_display_lst(lst_cmds);
-		//free_lst(&lst_cmds);
+		free_lst(&lst_cmds);
 		free_arr(cmds);
 	}
 	else	
