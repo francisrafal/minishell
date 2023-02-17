@@ -34,7 +34,10 @@ char	*get_outfile(t_cmd *cmd, char *line)
         file = NULL;
         tmp = ft_strchr(line, '>');
         if (!tmp)
-                return (NULL);
+	{
+		printf("no >\n");
+                return (line);
+	}
         while (tmp)
         {
                 file = get_file_name(line, '>');
