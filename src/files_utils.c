@@ -63,6 +63,7 @@ char	*get_file_name(char *str, char c)
 	int	j;
 	int	k;
 	char 	*file;
+	char	*trim;
 
 	k = get_char(str, c);
 	i = k + 1;
@@ -76,5 +77,7 @@ char	*get_file_name(char *str, char c)
 	if (!file)
 		return (NULL);
 	ft_strlcpy(file, &str[i], j+1);
-	return(file);
+	trim =  ft_strtrim(file, "\"\'");
+	free(file);
+	return (trim);
 }

@@ -120,15 +120,15 @@ void	free_env(t_env *env);
 void	free_env_node(t_env_node *node);
 
 /* split_input.c*/
-void	split_line(t_cmd **cmd, const char *str, int ncmds);
+void	split_line(t_cmd **cmd, const char *str, int ncmds, char **envp);
 t_cmd	*split_input_cmd(char *line, char **envp);
 
 /* split_input_utils.c */
 int     get_end_quote(char *line, char c);
-int     count_cmds(char *line);
+int     count_cmds(char *line, char c);
 char    *fill_cmds(char *line, int len);
 void    init_idx(int *arr, int len);
-char    **split_pipes(char *line, int *ncmds);
+char    **split_char(char *line, int *ncmds, char c);
 
 /* files_utils.c */
 int     get_next_char(char *line, char *cset);

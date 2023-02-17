@@ -35,12 +35,18 @@ static int	check_line(char *str)
 		else if (str[i] == '>')
 		{
 			if (check_char(&str[i], '>', &i))
+			{
+				ft_error("", "syntax error near unexpected token '>'");
 				return (1);
+			}
 		}
 		else if (str[i] == '<')
 		{
 			if (check_char(&str[i], '<', &i))
+			{
+				ft_error("syntax error near unexpected token '<'","");
 				return (1);
+			}
 		}
 		i++;
 	}
