@@ -89,7 +89,7 @@ char	*get_infile(t_cmd *cmd, char *line)
         while (tmp)
         {
                 file = get_file_name(line, '<');
-		printf(" input file: |%s|\n", file);
+		printf("in file: |%s|\n", file);
 		/*
                 if(open_close_outfile(tmp, file, cmd))
                 {
@@ -100,7 +100,7 @@ char	*get_infile(t_cmd *cmd, char *line)
                 if (tmp)
 			free(file);
         }
-        printf("cutted line : |%s|\n", line);
+        printf("cutted + timmed line : |%s|\n", line);
         printf("input file: |%s|\n", file);
 	fd_in = 0;
         //fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
