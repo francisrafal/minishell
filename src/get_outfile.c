@@ -35,7 +35,7 @@ char	*get_outfile(t_cmd *cmd, char *line)
         tmp = ft_strchr(line, '>');
         if (!tmp)
 	{
-		printf("no >\n");
+		printf("no output redirection\n");
                 return (line);
 	}
         while (tmp)

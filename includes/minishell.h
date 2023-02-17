@@ -135,9 +135,12 @@ int     get_char(char *line, char c);
 char    *cut_word(char *str,  char c);
 char    *get_file_name(char *str, char c);
 
-/* get_outfile.c*/
+/* get_outfile.c */
 int     open_close_outfile(char * tmp, char *file, t_cmd *cmd);
 char    *get_outfile(t_cmd *cmd, char *line);
+
+/* get_infile.c */
+char    *get_infile(t_cmd *cmd, char *line);
 
 /* error.c */
 void	perror_exit(char *err);
