@@ -19,7 +19,7 @@ int	get_end_quote(char *line, char c)
 	return (i);
 }
 
-int	count_cmds(char *line)
+int	count_cmds(char *line, char c)
 {
 	int	i;
 	int	ncmds;
@@ -34,7 +34,7 @@ int	count_cmds(char *line)
 		}
 		else if (line[i] == '\'' && line[i + 1])
 			i += get_end_quote(&line[i + 1], '\'') + 1;
-		else if (line[i] == '|')
+		else if (line[i] == c)
 			ncmds += 1;
 		else if (line[i] == '#')
 			return (ncmds);
@@ -70,13 +70,13 @@ void	init_idx(int *arr, int len)
 	}
 }
 
-char	**split_pipes(char *line, int *ncmds)
+char	**split_char(char *line, int *ncmds, char c)
 {
 	char	**cmds;
 	int		len;
 	int		idx[3];
 
-	len = count_cmds(line);
+	len = count_cmds(line, c);
 	*ncmds = len;
 	//printf("len : %i\n", len);
 	init_idx(idx, 3);
@@ -87,7 +87,7 @@ char	**split_pipes(char *line, int *ncmds)
 			idx[0] += get_end_quote(&line[idx[0] + 1], '"') + 1;
 		else if (line[idx[0]] == '\'')
 			idx[0] += get_end_quote(&line[idx[0] + 1], '\'') + 1;
-		else if (line[idx[0]] == '|')
+		else if (line[idx[0]] == c)
 		{
 			//printf("start %i and end %i\n", idx[4], idx[0]);
 			cmds[idx[2]] = fill_cmds(&line[idx[1]], idx[0] - idx[1]);

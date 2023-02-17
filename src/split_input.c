@@ -33,12 +33,14 @@ void	free_cmd(t_cmd *cmd)
 */
 char	*get_command(t_cmd *cmd, char *str)
 {
-	cmd->opt = ft_split(str, ' ');
+	int	nopt;
+	/*cmd->opt = ft_split(str, ' ');
 	if (!cmd->opt)
 	{
 		free(str);
 		return (NULL);
-	}
+	}*/
+	cmd->opt = split_char(str, &nopt, ' ');
 	return (str);
 
 }
@@ -59,30 +61,6 @@ void	split_line(t_cmd **lst_cmds, const char *str, int ncmds)
 	line = get_command(cmd,line);
 	ft_lstadd_back(lst_cmds, cmd);
 	free(line);
-/*	i = 0; 
-	while (line[i])
-	{
-		//while (str[i] && (str[i] == '\t'  || str[i] == ' '))
-		//	i++;
-		if(ft_isalpha(str[i]))
-		{
-			printf("command\n");
-		//	get_cmd(str, &i);
-		}
-		else if(str[i] == '<')
-		{
-			printf("file in\n");
-		//	get_infile(str, &i);
-		}
-		else if(str[i] == '>')
-		{
-			printf("file out\n");
-		//	get_outfile(str, &i);
-		}
-
-		printf("%c", str[i]);
-		i++;		
-	}*/
 }
 
 t_cmd	*split_input_cmd(char *line, char **envp)
@@ -93,7 +71,7 @@ t_cmd	*split_input_cmd(char *line, char **envp)
 	int		ncmds;
 
 	(void)envp;
-       	cmds = split_pipes(line, &ncmds);
+       	cmds = split_char(line, &ncmds, '|');
 	/*lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
         if (!lst_cmds)
 		return (NULL); */

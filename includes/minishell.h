@@ -125,10 +125,10 @@ t_cmd	*split_input_cmd(char *line, char **envp);
 
 /* split_input_utils.c */
 int     get_end_quote(char *line, char c);
-int     count_cmds(char *line);
+int     count_cmds(char *line, char c);
 char    *fill_cmds(char *line, int len);
 void    init_idx(int *arr, int len);
-char    **split_pipes(char *line, int *ncmds);
+char    **split_char(char *line, int *ncmds, char c);
 
 /* files_utils.c */
 int     get_next_char(char *line, char *cset);
