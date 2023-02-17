@@ -6,3 +6,4 @@ minishell
 .vscode
 *a.out
 *old*
+.heredoc_tmp
