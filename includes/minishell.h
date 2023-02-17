@@ -120,7 +120,7 @@ void	free_env(t_env *env);
 void	free_env_node(t_env_node *node);
 
 /* split_input.c*/
-void	split_line(t_cmd **cmd, const char *str, int ncmds);
+void	split_line(t_cmd **cmd, const char *str, int ncmds, char **envp);
 t_cmd	*split_input_cmd(char *line, char **envp);
 
 /* split_input_utils.c */

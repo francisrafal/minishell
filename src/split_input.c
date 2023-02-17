@@ -45,10 +45,10 @@ char	*get_command(t_cmd *cmd, char *str)
 
 }
 
-void	split_line(t_cmd **lst_cmds, const char *str, int ncmds)
+void	split_line(t_cmd **lst_cmds, const char *str, int ncmds, char **envp)
 {
 //	int	i;
-	(void)lst_cmds;
+//	(void)lst_cmds;
 	t_cmd	*cmd;
 	char	*line;
 
@@ -59,6 +59,9 @@ void	split_line(t_cmd **lst_cmds, const char *str, int ncmds)
 	line = get_outfile(cmd, line);
 	line = get_infile(cmd, line);
 	line = get_command(cmd,line);
+	while (ft_strncmp("PATH", *envp, 4))
+		envp++;
+	cmd->path = ft_split((*envp + 5), ':');
 	ft_lstadd_back(lst_cmds, cmd);
 	free(line);
 }
@@ -70,7 +73,7 @@ t_cmd	*split_input_cmd(char *line, char **envp)
 	int		i;
 	int		ncmds;
 
-	(void)envp;
+	//(void)envp;
        	cmds = split_char(line, &ncmds, '|');
 	/*lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
         if (!lst_cmds)
@@ -82,7 +85,7 @@ t_cmd	*split_input_cmd(char *line, char **envp)
 		while (cmds[i])
 		{
 			//printf("%s\n", cmds[i]);
-			split_line(&lst_cmds, cmds[i], ncmds);
+			split_line(&lst_cmds, cmds[i], ncmds, envp);
 			i++;
 		}
 		ft_display_lst(lst_cmds);
