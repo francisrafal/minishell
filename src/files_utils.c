@@ -35,8 +35,9 @@ char    *cut_word(char *str,  char c)
         int     k;
 	int 	size;
 	char	*new;
+	char	*trim;
 
-        k = get_char(str, '>');
+        k = get_char(str, c);
         i = k + 1;
         if (str[i] && str[i] == c)
                 i++;
@@ -50,7 +51,9 @@ char    *cut_word(char *str,  char c)
         ft_strlcpy(new, str, k+1);
        	ft_strlcpy(&new[k], &str[i + j], size - k +1);
         free(str);
-        return(new);
+	trim =  ft_strtrim(new, "\t ");
+	free(new);
+        return(trim);
 }
 
 
@@ -61,7 +64,7 @@ char	*get_file_name(char *str, char c)
 	int	k;
 	char 	*file;
 
-	k = get_char(str, '>');
+	k = get_char(str, c);
 	i = k + 1;
 	if (str[i] && str[i] == c)
                 i++;

@@ -21,7 +21,7 @@ SRCSLIST		:= main.c \
 					init.c \
 					exec.c \
 					free.c \
-					files_utils.c get_outfile.c \
+					files_utils.c get_outfile.c get_infile.c \
 					signals.c\
 					syntax_error.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})

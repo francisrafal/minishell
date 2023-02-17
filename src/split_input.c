@@ -43,8 +43,8 @@ void	split_line(t_cmd **lst_cmds, const char *str, int ncmds)
 	cmd = ft_lstnew(ncmds);
 	line = ft_strdup(str);
 	printf("|%s|\n", line);
-//	get_infile(&cmd, line);
-	line =get_outfile(cmd, line);
+	line = get_outfile(cmd, line);
+	line = get_infile(cmd, line);
 	//get_command(cmd,line);
 	ft_lstadd_back(lst_cmds, cmd);
 	free(line);
