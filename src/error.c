@@ -16,7 +16,8 @@ int     ft_error(char *str, char *err)
         {
 		write(2, "minishell: ",11);
                 write(2, err, ft_strlen((const char *)err));
-                write(2, ": ", 2);
+		if (str[0] != '\0')
+			write(2, ": ", 2);
         }
         i = 0;
         while (str[i])
