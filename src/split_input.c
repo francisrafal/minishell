@@ -31,6 +31,17 @@ void	free_cmd(t_cmd *cmd)
 	cmd = NULL;
 }
 */
+char	*get_command(t_cmd *cmd, char *str)
+{
+	cmd->opt = ft_split(str, ' ');
+	if (!cmd->opt)
+	{
+		free(str);
+		return (NULL);
+	}
+	return (str);
+
+}
 
 void	split_line(t_cmd **lst_cmds, const char *str, int ncmds)
 {
@@ -45,7 +56,7 @@ void	split_line(t_cmd **lst_cmds, const char *str, int ncmds)
 	printf("|%s|\n", line);
 	line = get_outfile(cmd, line);
 	line = get_infile(cmd, line);
-	//get_command(cmd,line);
+	line = get_command(cmd,line);
 	ft_lstadd_back(lst_cmds, cmd);
 	free(line);
 /*	i = 0; 
