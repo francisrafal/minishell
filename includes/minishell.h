@@ -144,6 +144,7 @@ char	*get_infile(t_cmd *cmd, char *line);
 
 /* error.c */
 void	perror_exit(char *err);
+int     ft_error(char *str, char *err);
 
 /* env.c */
 //char		**copy_env(char **envp);

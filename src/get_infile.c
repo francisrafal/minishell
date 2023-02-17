@@ -48,30 +48,31 @@ int	get_infile(t_cmd *cmd, char *line)
 	}
 }*/
 
-/*int	open_close_outfile(char * tmp, char *file, t_cmd *cmd)
+int	handle_infile(char * tmp, char *file, t_cmd *cmd)
 {
-	int	fd_out;
+	int	fd_in;
+	//char	*tmp;
 
-		if(tmp[1] == '>' )
+		if(tmp[1] == '<' )
                 {
-                        cmd->re_out_app = 1;
-                        cmd->re_out = 0;
-                        fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			printf("here_doc fun");
+                        cmd->read_in = 1;
+                        cmd->re_in = 0;
+                        //fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			free(file);
+			file = NULL;
                 }
                 else{
-                        cmd->re_out_app = 0;
-                        cmd->re_out = 1;
-                        fd_out = open(file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+                        cmd->read_in = 0;
+                        cmd->re_in = 1;
+			fd_in = open(file, O_RDONLY);
+			if (fd_in < 0)
+				ft_error(strerror(errno), file);
                 }
-                if (fd_out)
-		{
-                        close(fd_out);
-			return (0);
-		}
-		else
-			return (-1);
+                /*if (fd_in >= 0)
+			close(fd_in);*/
+		return (fd_in);
 }
-*/
 
 char	*get_infile(t_cmd *cmd, char *line)
 {
@@ -89,12 +90,8 @@ char	*get_infile(t_cmd *cmd, char *line)
         while (tmp)
         {
                 file = get_file_name(line, '<');
-		printf("in file: |%s|\n", file);
-		/*
-                if(open_close_outfile(tmp, file, cmd))
-                {
-			ft_printf("error");
-                }i*/
+		printf("infile: |%s|\n", file);
+		fd_in = handle_infile(tmp, file, cmd);
 		line = cut_word(line, '<');
                 tmp = ft_strchr(line, '<');
                 if (tmp)
@@ -102,8 +99,7 @@ char	*get_infile(t_cmd *cmd, char *line)
         }
         printf("cutted + timmed line : |%s|\n", line);
         printf("input file: |%s|\n", file);
-	fd_in = 0;
-        //fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	//fd_in = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
         cmd->fd_in = fd_in;
         free(file);
         return (line);
