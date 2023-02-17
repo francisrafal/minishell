@@ -20,6 +20,7 @@
 # define BOLDYELLOW "\e[1;33m"
 # define RESET "\e[0m"
 # define PROMPT "minishell$ "
+# define HERE_DOC "here_doc> "
 # define EXIT_NO_ARG 79
 # define EXEC_AS_PARENT 1
 # define EXEC_AS_CHILD 2

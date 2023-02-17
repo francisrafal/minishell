@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-/*int	here_doc(char *av)
+int	here_doc(char *av)
 {
 	int		file;
 	char	*buf;
@@ -10,9 +10,10 @@
 		return (ft_error(strerror(errno), ".heredoc_tmp"));
 	while (1)
 	{
-		write(1, "heredoc> ", 9);
-		if (get_next_line(0, &buf) < 0)
-			exit(1);
+		//write(1, "heredoc> ", 9);
+		//if (get_next_line(0, &buf) < 0)
+		//	exit(1);
+		buf = readline(HERE_DOC);
 		if (!ft_strncmp(av, buf, ft_strlen(av)))
 			break ;
 		write(file, buf, ft_strlen(buf));
@@ -25,7 +26,7 @@
 	return (file);
 }
 
-int	get_infile(t_cmd *cmd, char *line)
+/*int	get_infile(t_cmd *cmd, char *line)
 {
 	int	i;
 
@@ -58,9 +59,7 @@ int	handle_infile(char * tmp, char *file, t_cmd *cmd)
 			printf("here_doc fun");
                         cmd->read_in = 1;
                         cmd->re_in = 0;
-                        //fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			free(file);
-			file = NULL;
+                        fd_in = here_doc(file);
                 }
                 else{
                         cmd->read_in = 0;
