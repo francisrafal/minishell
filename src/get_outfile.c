@@ -35,13 +35,13 @@ char	*get_outfile(t_cmd *cmd, char *line)
         tmp = ft_strchr(line, '>');
         if (!tmp)
 	{
-		printf("no output redirection\n");
+		//printf("no output redirection\n");
                 return (line);
 	}
         while (tmp)
         {
                 file = get_file_name(line, '>');
-		printf("file: |%s|\n", file);
+		//printf("file: |%s|\n", file);
                 if(open_close_outfile(tmp, file, cmd))
                 {
 			ft_printf("error");
@@ -51,8 +51,8 @@ char	*get_outfile(t_cmd *cmd, char *line)
                 if (tmp)
 			free(file);
         }
-        printf("cutted line : |%s|\n", line);
-        printf("output file: |%s|\n", file);
+        //printf("cutted line : |%s|\n", line);
+        //printf("output file: |%s|\n", file);
         fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
         cmd->fd_out = fd_out;
         free(file);
