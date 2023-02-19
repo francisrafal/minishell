@@ -31,9 +31,31 @@ void	free_cmd(t_cmd *cmd)
 	cmd = NULL;
 }
 */
-char	*get_command(t_cmd *cmd, char *str)
+char	*replace_var(char *cmd, char **envp)
 {
+	char	*trim;
+	(void)envp;
+
+	if (cmd[0] == '\"')
+	{
+		trim = ft_strtrim(cmd, "\"");
+		free(cmd);
+		printf("replace var is missing!\n");
+
+	}
+	else if (cmd[0] == '\'')
+	{
+		trim = ft_strtrim(cmd, "\'");
+		free(cmd);
+	}
+	return (trim);
+}
+
+char	*get_command(t_cmd *cmd, char *str, char **envp)
+{
+	int	i;
 	int	nopt;
+	//char	*trim;
 	/*cmd->opt = ft_split(str, ' ');
 	if (!cmd->opt)
 	{
@@ -41,8 +63,16 @@ char	*get_command(t_cmd *cmd, char *str)
 		return (NULL);
 	}*/
 	cmd->opt = split_char(str, &nopt, ' ');
+	i = 0;
+	while (i < nopt)
+	{
+		if (cmd->opt[i][0] == '\"' || cmd->opt[i][0] == '\'')
+		{
+			cmd->opt[i] = replace_var(cmd->opt[i], envp);
+		}
+		i++;
+	}
 	return (str);
-
 }
 
 void	split_line(t_cmd **lst_cmds, const char *str, int ncmds, char **envp)
@@ -58,7 +88,7 @@ void	split_line(t_cmd **lst_cmds, const char *str, int ncmds, char **envp)
 	printf("|%s|\n", line);
 	line = get_outfile(cmd, line);
 	line = get_infile(cmd, line);
-	line = get_command(cmd,line);
+	line = get_command(cmd,line, envp);
 	while (ft_strncmp("PATH", *envp, 4))
 		envp++;
 	cmd->path = ft_split((*envp + 5), ':');
