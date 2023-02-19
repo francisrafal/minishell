@@ -52,10 +52,114 @@ char	*replace_var(char *cmd, char **envp)
 	return (trim);
 }
 
-char	*get_command(t_cmd *cmd, char *str, char **envp)
+
+
+/*char	**cut_empty_str(char **arr)
+{
+	int	len;
+	int	i;
+	int	nempty;	
+	char	**new;	
+	i = 0;
+	nempty = 0;
+	while (arr[i])
+	{
+		if (arr[i][0] == '\0')
+			nempty++;
+		i++;
+	}
+	len = i;
+	new = (char **)malloc(sizeof(char) * (len - nempty +1));
+	if (! new)
+	{	
+		free_arr(arr);
+		return (NULL);
+	}
+	i = 0;
+	while (i < )
+	printf("len array = %i, #empty str=%i\n", len, nempty);
+	return (arr);
+}*/
+char	*cutted_spaces(char *str, char *new, char c)
+{
+	int	i; 
+	int	j;
+	int	k;
+	
+	i = 0;
+	j = 1;
+	k = 0;
+	while (str[i])
+	{
+		new[k] = str[i];
+		if (str[i] == c)
+		{
+			while (str[i+j] && str[i+j] == c)
+				j++;
+		}
+		i += j;
+		j=1;
+		k++;
+	}
+	new[k] = '\0';
+	return (new);
+}
+
+int     n_add_char(char *str, char c)
+{
+        int     i;
+        int     j;
+        int     k;
+
+        i = 0;
+        j = 1;
+        k = 0;
+        while (str[i])
+        {
+                if (str[i] == c)
+                {
+                        while (str[i+j] && str[i+j] == c)
+                        {
+                                j++;
+                                k++;
+                        }
+                }
+                i+= j+1;
+                j=1;
+        }
+        return (k);
+}
+
+
+
+
+char *rm_space(char *str)
+{
+	int	len;
+	int	nspace;
+	char	*new;
+
+	len = (int)ft_strlen(str);
+	nspace = n_add_char(str, ' ');
+	if (nspace == 0)
+		return (str);
+	new = (char *)malloc(sizeof(char) * (len - nspace + 1));
+	if (!new)
+	{
+		free(str);
+		return (NULL);
+	}
+	new = cutted_spaces(str, new, ' ');
+	free(str); 
+	printf(" len %i | add space %i\n", len, nspace);
+	return (new);
+}
+
+char	*get_command(t_cmd *cmd, char *cmd_str, char **envp)
 {
 	int	i;
 	int	nopt;
+	char	*str;
 	//char	*trim;
 	/*cmd->opt = ft_split(str, ' ');
 	if (!cmd->opt)
@@ -63,6 +167,8 @@ char	*get_command(t_cmd *cmd, char *str, char **envp)
 		free(str);
 		return (NULL);
 	}*/
+	//cmd->opt = cut_empty_str(split_char(str, &nopt, ' '));
+	str = rm_space(cmd_str);
 	cmd->opt = split_char(str, &nopt, ' ');
 	i = 0;
 	while (i < nopt)
