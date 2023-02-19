@@ -21,6 +21,42 @@ static int	check_char(char *str, char c, int *j)
 	return (1);
 }
 
+int	check_quotes(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' && (i>0 && str[i-1] != '\\'))
+		{
+			 i += get_end_quote(&str[i + 1], '"') + 1;
+			 if (str[i] == '\0')
+			 {
+				 ft_error("", "syntax error with qoutes");
+				 return (1);
+			 }
+		}
+                else if (str[i] == '\'' && (i>0 && str[i-1] != '\\'))
+		{
+                        i += get_end_quote(&str[i + 1], '\'') + 1;
+			if (str[i] == '\0')
+			{
+				ft_error("", "syntax error with qoutes");
+				return (1);
+			}
+		}
+                i++;
+	}
+	return (0);
+}
+
+
+
+
+
 static int	check_line(char *str)
 {
 	int	i;
@@ -60,6 +96,8 @@ int	check_syntax(char **cmds)
 	i = 0;
 	while (cmds[i])
 	{
+	//	if (check_quotes(cmds[i]))
+	//		return (1);
 		if (check_line(cmds[i]))
 			return (1);
 		i++;
