@@ -36,6 +36,7 @@ char	*replace_var(char *cmd, char **envp)
 	char	*trim;
 	(void)envp;
 
+	trim = NULL;
 	if (cmd[0] == '\"')
 	{
 		trim = ft_strtrim(cmd, "\"");
@@ -104,27 +105,34 @@ t_cmd	*split_input_cmd(char *line, char **envp)
 	int		ncmds;
 
 	//(void)envp;
-       	cmds = split_char(line, &ncmds, '|');
+	lst_cmds = NULL;
+	if (!check_quotes(line))
+	{
+		cmds = split_char(line, &ncmds, '|');
 	/*lst_cmds = (t_cmd *)malloc(sizeof(t_cmd));
         if (!lst_cmds)
 		return (NULL); */
-	lst_cmds = NULL;
-	if (!check_syntax(cmds))
-	{
-		i = 0;
-		while (cmds[i])
+		if (!check_syntax(cmds))
 		{
-			//printf("%s\n", cmds[i]);
-			split_line(&lst_cmds, cmds[i], ncmds, envp);
-			i++;
+			i = 0;
+			while (cmds[i])
+			{
+				//printf("%s\n", cmds[i]);
+				split_line(&lst_cmds, cmds[i], ncmds, envp);
+				i++;
+			}
+			ft_display_lst(lst_cmds);
+			free_lst(&lst_cmds);
+			free_arr(cmds);
 		}
-		ft_display_lst(lst_cmds);
-		free_lst(&lst_cmds);
-		free_arr(cmds);
+		else	
+		{
+			free_arr(cmds);
+			printf("TODO: here exit because of syntax error\n");
+		}
 	}
-	else	
-	{
-		free_arr(cmds);
+	else
+	{	
 		printf("TODO: here exit because of syntax error\n");
 	}
         return (lst_cmds);

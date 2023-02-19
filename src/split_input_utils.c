@@ -16,7 +16,7 @@ int	get_end_quote(char *line, char c)
 		}
 		i++;
 	}
-	return (0);
+	return (i);
 }
 
 int	count_cmds(char *line, char c)

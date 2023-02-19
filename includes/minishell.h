@@ -175,4 +175,5 @@ void	set_signal_action(int mode);
 
 /* syntax_error.c*/
 int     check_syntax(char **cmds);
+int     check_quotes(char *str);
 #endif
