@@ -120,8 +120,9 @@ void	free_env(t_env *env);
 void	free_env_node(t_env_node *node);
 
 /* split_input.c*/
-void	split_line(t_cmd **cmd, const char *str, int ncmds, char **envp);
-t_cmd	*split_input_cmd(char *line, char **envp);
+int	split_line(t_cmd **cmd, const char *str, int ncmds, char **envp);
+void    split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, char **envp);
+t_cmd	*split_input(char *line, char **envp);
 
 /* split_input_utils.c */
 int     get_end_quote(char *line, char c);

@@ -53,10 +53,6 @@ int	check_quotes(char *str)
 	return (0);
 }
 
-
-
-
-
 static int	check_line(char *str)
 {
 	int	i;
