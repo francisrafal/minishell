@@ -24,24 +24,21 @@ static int	check_char(char *str, char c, int *j)
 int	check_quotes(char *str)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
 	while (str[i])
-	{
-		if (str[i] == '"' && (i>0 && str[i-1] != '\\'))
+	{	
+		if (str[i] == '"' || str[i] == '\'')
 		{
-			 i += get_end_quote(&str[i + 1], '"') + 1;
-			 if (str[i] == '\0')
-			 {
-				 ft_error("", "syntax error with qoutes");
-				 return (1);
-			 }
-		}
-                else if (str[i] == '\'' && (i>0 && str[i-1] != '\\'))
-		{
-                        i += get_end_quote(&str[i + 1], '\'') + 1;
+			if (i>0 && str[i-1] == '\\')
+			{
+				i++;
+				continue;
+			}
+			if (str[i] == '"')
+				i += get_end_quote(&str[i + 1], '"') + 1;
+			else
+				i += get_end_quote(&str[i + 1], '\'') + 1;
 			if (str[i] == '\0')
 			{
 				ft_error("", "syntax error with qoutes");
@@ -68,7 +65,7 @@ static int	check_line(char *str)
 		{
 			if (check_char(&str[i], '>', &i))
 			{
-				ft_error("", "syntax error near unexpected token '>'");
+				ft_error("", "syntax error with input redirection");
 				return (1);
 			}
 		}
@@ -76,7 +73,7 @@ static int	check_line(char *str)
 		{
 			if (check_char(&str[i], '<', &i))
 			{
-				ft_error("syntax error near unexpected token '<'","");
+				ft_error("syntax error with output redirection","");
 				return (1);
 			}
 		}
@@ -92,8 +89,6 @@ int	check_syntax(char **cmds)
 	i = 0;
 	while (cmds[i])
 	{
-	//	if (check_quotes(cmds[i]))
-	//		return (1);
 		if (check_line(cmds[i]))
 			return (1);
 		i++;

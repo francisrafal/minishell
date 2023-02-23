@@ -23,7 +23,7 @@ SRCSLIST		:= main.c \
 					free.c \
 					files_utils.c get_outfile.c get_infile.c \
 					signals.c\
-					syntax_error.c
+					check_input.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR			:= ./obj/

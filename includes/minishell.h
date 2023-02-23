@@ -174,7 +174,7 @@ void	handle_sigint_parent(int signum);
 void	handle_sigquit_child(int signum);
 void	set_signal_action(int mode);
 
-/* syntax_error.c*/
+/* check_input.c*/
 int     check_syntax(char **cmds);
 int     check_quotes(char *str);
 #endif
