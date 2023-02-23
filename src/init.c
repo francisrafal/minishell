@@ -1,5 +1,17 @@
 #include "minishell.h"
 
+void	init_idx(int *arr, int len)
+{
+	int	i;
+
+	i = 0;
+	while (i < len)
+	{
+		arr[i] = 0;
+		i++;
+	}
+}
+
 t_shell	*init_shell(char **envp)
 {
 	t_shell	*sh;
