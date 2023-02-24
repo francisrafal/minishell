@@ -59,7 +59,7 @@ t_cmd	*split_input(char *line, char **envp)
 	int		ncmds;
 
 	lst_cmds = NULL;
-	if (!check_quotes(line))
+	if (!check_quotes(line) && !check_pipes(line))
 	{
 		cmds = split_char(line, &ncmds, '|');
 		if (!cmds)

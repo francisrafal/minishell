@@ -126,6 +126,7 @@ t_cmd	*split_input(char *line, char **envp);
 
 /* check_input.c*/
 int     check_syntax(char **cmds);
+int		check_pipes(char *str);
 int     check_quotes(char *str);
 
 /* split_input_utils.c */
