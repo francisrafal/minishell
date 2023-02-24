@@ -58,20 +58,17 @@ char	*fill_cmds(char *line, int len)
 	return (trim);
 }
 
-static void	split_char_help(char *line, char **cmds, int *idx, char c)
+void	init_idx(int *arr, int len)
 {
-		if (line[idx[0]] == '"')
-			idx[0] += get_end_quote(&line[idx[0] + 1], '"') + 1;
-		else if (line[idx[0]] == '\'')
-			idx[0] += get_end_quote(&line[idx[0] + 1], '\'') + 1;
-		else if (line[idx[0]] == c)
-		{
-			cmds[idx[2]] = fill_cmds(&line[idx[1]], idx[0] - idx[1]);
-			idx[2] += 1;
-			idx[1] = idx[0] + 1;
-		}
-}
+	int	i;
 
+	i = 0;
+	while (i < len)
+	{
+		arr[i] = 0;
+		i++;
+	}
+}
 
 char	**split_char(char *line, int *ncmds, char c)
 {
@@ -79,23 +76,31 @@ char	**split_char(char *line, int *ncmds, char c)
 	int		len;
 	int		idx[3];
 
-	if(!line)
-		return (NULL);
 	len = count_cmds(line, c);
 	*ncmds = len;
+	//printf("len : %i\n", len);
 	init_idx(idx, 3);
 	cmds = (char **)malloc(sizeof(char *) * (len + 1));
-	if (!cmds)
-		return (NULL);
 	while (line[idx[0]] && idx[2] < len)
 	{
-		if (line[idx[0]] == '#')
+		if (line[idx[0]] == '"')
+			idx[0] += get_end_quote(&line[idx[0] + 1], '"') + 1;
+		else if (line[idx[0]] == '\'')
+			idx[0] += get_end_quote(&line[idx[0] + 1], '\'') + 1;
+		else if (line[idx[0]] == c)
+		{
+			//printf("start %i and end %i\n", idx[4], idx[0]);
+			cmds[idx[2]] = fill_cmds(&line[idx[1]], idx[0] - idx[1]);
+			//printf("index %i = %s\n",idx[2], cmds[idx[2]]);
+			idx[2] += 1;
+			idx[1] = idx[0] + 1;
+		}
+		else if (line[idx[0]] == '#')
 			break ;
-		else 
-			split_char_help(line, cmds, idx, c);
 		idx[0] += 1;
 	}
 	cmds[idx[2]] = fill_cmds(&line[idx[1]], idx[0] - idx[1]);
+	//printf("indesx %i = %s\n",idx[2], cmds[idx[2]]);
 	cmds[idx[2] +1] = NULL;
 	return (cmds);
 }

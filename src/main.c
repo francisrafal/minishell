@@ -26,7 +26,8 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		add_history(cmd_line);
-		cmd = split_input_cmd(cmd_line, envp);
+		//cmd = split_input(cmd_line, get_env_arr(sh->env));
+		cmd = split_input(cmd_line, envp);
 		test_cmd = ft_split(cmd_line, ' ');
 		free_null(cmd_line);
 		if (num_cmds == 1)

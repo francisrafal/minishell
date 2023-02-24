@@ -8,7 +8,14 @@ int     get_next_char(char *line, char *cset)
         while (line[i])
         {
                 if (ft_strchr(cset, line[i]))
+                {
+                        if (i>0 && line[i-1] == '\\' && line[i] != '\t' && line[i] != ' ')
+			{
+				i++;
+				continue;
+			}
                         return (i);
+                }
                 i++;
         }
         return (i);
@@ -22,7 +29,14 @@ int     get_char(char *line, char c)
         while (line[i])
         {
                 if (line[i] == c)
-			return (i);
+                {
+                        if (i>0 && line[i-1] == '\\' && line[i] != '\t' && line[i] != ' ')
+			{
+				i++;
+				continue;
+			}
+                        return (i);
+                }
                 i++;
         }
         return (i);
@@ -43,7 +57,7 @@ char    *cut_word(char *str,  char c)
                 i++;
         while (str[i] && (str[i] == '\t'  || str[i] == ' '))
                 i++;
-        j = get_next_char(&str[i], "\t ");
+        j = get_next_char(&str[i], "\t ><");
         size = (int)ft_strlen(str) - i-j + k;
         new = (char *)malloc(sizeof(char) * (size + 1));
         if (!new)
@@ -52,10 +66,11 @@ char    *cut_word(char *str,  char c)
        	ft_strlcpy(&new[k], &str[i + j], size - k +1);
         free(str);
 	trim =  ft_strtrim(new, "\t ");
+        if (!trim)
+                return (NULL);        
 	free(new);
         return(trim);
 }
-
 
 char	*get_file_name(char *str, char c)
 {
@@ -71,13 +86,15 @@ char	*get_file_name(char *str, char c)
                 i++;
 	while (str[i] && (str[i] == '\t'  || str[i] == ' '))
 		i++;
-	j = get_next_char(&str[i], "\t ");
+	j = get_next_char(&str[i], "\t ><");
 	//printf("next >: %i: %i :%i\n", i,j,i+j-1);
 	file = (char *)malloc(sizeof(char) * (j + 1));
 	if (!file)
 		return (NULL);
 	ft_strlcpy(file, &str[i], j+1);
 	trim =  ft_strtrim(file, "\"\'");
+        if (!trim)
+                return(NULL);
 	free(file);
 	return (trim);
 }
