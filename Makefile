@@ -14,16 +14,16 @@ SRCSLIST		:= main.c \
 					builtins.c \
 					builtin_utils.c \
 					list_utils.c \
-					split_input.c \
-					split_input_utils.c \
+					split_input.c check_input.c	split_input_utils.c \
+					files_utils.c get_outfile.c get_infile.c \
+					prun_str.c get_command.c\
 					error.c \
 					env.c \
 					init.c \
 					exec.c \
 					free.c \
-					files_utils.c get_outfile.c get_infile.c \
 					signals.c\
-					check_input.c
+					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
 OBJSDIR			:= ./obj/

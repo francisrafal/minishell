@@ -1,9 +1,6 @@
 #include "minishell.h"
 
-void	prun_help1(char *str, char *new, int *i);
-void	prun_help2(char *str, char *new, int *i);
-
-void	help_count(char *str, int *idx, int *count)
+ static void	help_count(char *str, int *idx, int *count)
 {
 	int	i;
 	int	j;
@@ -56,29 +53,7 @@ int	count_prun(char *str)
 	return (count);
 }
 
-char	*prun_str(char *str)
-{
-	int		i[4];
-	char	*new;
-
-	init_idx(i, 4);
-	i[2] = count_prun(str);
-	new = (char *)malloc(sizeof(char) * (i[2] + 1));
-	if (!new)
-		return (NULL);
-	while (str[i[0]] == ' ' || str[i[0]] == '\t')
-		i[0] += 1;
-	while (str[i[0]])
-	{
-		prun_help1(str, new, i);
-		prun_help2(str, new, i);
-	}
-	new[i[1]] = '\0';
-	free_null(str);
-	return (new);
-}
-
-void	prun_help1(char *str, char *new, int *i)
+ static void	prun_help1(char *str, char *new, int *i)
 {
 	while (str[i[0]] && (str[i[0]] == ' ' || str[i[0]] == '\t'))
 	{
@@ -93,7 +68,7 @@ void	prun_help1(char *str, char *new, int *i)
 	i[3] = 0;
 }
 
-void	prun_help2(char *str, char *new, int *i)
+static void	prun_help2(char *str, char *new, int *i)
 {
 	int	j;
 
@@ -124,4 +99,26 @@ void	prun_help2(char *str, char *new, int *i)
 		i[1] += 1;
 		i[0]++;
 	}
+}
+
+char	*prun_str(char *str)
+{
+	int		i[4];
+	char	*new;
+
+	init_idx(i, 4);
+	i[2] = count_prun(str);
+	new = (char *)malloc(sizeof(char) * (i[2] + 1));
+	if (!new)
+		return (NULL);
+	while (str[i[0]] == ' ' || str[i[0]] == '\t')
+		i[0] += 1;
+	while (str[i[0]])
+	{
+		prun_help1(str, new, i);
+		prun_help2(str, new, i);
+	}
+	new[i[1]] = '\0';
+	free_null(str);
+	return (new);
 }

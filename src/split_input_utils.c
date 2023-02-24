@@ -79,6 +79,8 @@ char	**split_char(char *line, int *ncmds, char c)
 	int		len;
 	int		idx[3];
 
+	if(!line)
+		return (NULL);
 	len = count_cmds(line, c);
 	*ncmds = len;
 	init_idx(idx, 3);
