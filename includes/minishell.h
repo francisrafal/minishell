@@ -120,14 +120,18 @@ void	free_env(t_env *env);
 void	free_env_node(t_env_node *node);
 
 /* split_input.c*/
-void	split_line(t_cmd **cmd, const char *str, int ncmds, char **envp);
-t_cmd	*split_input_cmd(char *line, char **envp);
+int		split_line(t_cmd **cmd, const char *str, int ncmds, char **envp);
+void    split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, char **envp);
+t_cmd	*split_input(char *line, char **envp);
+
+/* check_input.c*/
+int     check_syntax(char **cmds);
+int     check_quotes(char *str);
 
 /* split_input_utils.c */
 int     get_end_quote(char *line, char c);
 int     count_cmds(char *line, char c);
 char    *fill_cmds(char *line, int len);
-void    init_idx(int *arr, int len);
 char    **split_char(char *line, int *ncmds, char c);
 
 /* files_utils.c */
@@ -142,6 +146,12 @@ char	*get_outfile(t_cmd *cmd, char *line);
 
 /* get_infile.c */
 char	*get_infile(t_cmd *cmd, char *line);
+
+/* prun_str.c */
+char	*prun_str(char *str);
+
+/* get_command.c */
+char	*get_command(t_cmd *cmd, char *cmd_str, char **envp);
 
 /* error.c */
 void	perror_exit(char *err);
@@ -165,6 +175,7 @@ t_env_node	*replace_node_value(t_env_node *node, char *value);
 void		print_arr(char **arr);
 
 /* init.c */
+void    init_idx(int *arr, int len);
 t_shell	*init_shell(char **envp);
 void	increase_shell_level(t_env *env);
 
@@ -173,7 +184,5 @@ void	handle_sigint_parent(int signum);
 void	handle_sigquit_child(int signum);
 void	set_signal_action(int mode);
 
-/* syntax_error.c*/
-int     check_syntax(char **cmds);
-int     check_quotes(char *str);
+
 #endif
