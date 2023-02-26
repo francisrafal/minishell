@@ -151,6 +151,9 @@ char	*get_infile(t_cmd *cmd, char *line);
 /* prun_str.c */
 char	*prun_str(char *str);
 
+/* cut_char.c*/
+char	*replace_chars(char *str, char **envp);
+
 /* get_command.c */
 char	*get_command(t_cmd *cmd, char *cmd_str, char **envp);
 
