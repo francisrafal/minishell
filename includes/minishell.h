@@ -132,9 +132,9 @@ void	free_env(t_env *env);
 void	free_env_node(t_env_node *node);
 
 /* split_input.c*/
-int		split_line(t_cmd **cmd, const char *str, int ncmds, char **envp);
-void    split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, char **envp);
-t_cmd	*split_input(char *line, char **envp);
+int		split_line(t_cmd **cmd, const char *str, int ncmds, t_env *env);
+void    split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env);
+t_cmd	*split_input(char *line, t_env *env);
 
 /* check_input.c*/
 int     check_syntax(char **cmds);
@@ -167,7 +167,7 @@ char	*prun_str(char *str);
 char	*replace_chars(char *str, char **envp);
 
 /* get_command.c */
-char	*get_command(t_cmd *cmd, char *cmd_str, char **envp);
+char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env);
 
 /* error.c */
 void	perror_exit(char *err);
