@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*replace_var(char *cmd, char **envp)
+char	*replace_vars(char *cmd, char **envp)
 {
 	char	*trim;
 	(void)envp;
@@ -129,7 +129,7 @@ char	*get_command(t_cmd *cmd, char *cmd_str, char **envp)
 	{
 		if (is_char(cmd->opt[i], '\'') || is_char(cmd->opt[i], '"'))
 		{
-			cmd->opt[i] = replace_var(cmd->opt[i], envp);
+			cmd->opt[i] = replace_vars(cmd->opt[i], envp);
 		}
 		i++;
 	}
