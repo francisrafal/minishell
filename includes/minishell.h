@@ -79,6 +79,18 @@ typedef struct s_env
 	int					size;
 }	t_env;
 
+/* Enums */
+typedef enum e_pipe_state
+{
+	START,
+	CMD,
+	BLANK,
+	PIPE,
+	MULTIPLE_PIPES,
+	BEGIN_PIPE,
+	REJECT
+}	t_pipe_state;
+
 /* Functions */
 
 /* prompt.c */
