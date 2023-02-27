@@ -1,4 +1,13 @@
+#include "minishell.h"
 
+void	pipe_help(int *pipefd, pid_t *pid)
+{
+	if (pipe(pipefd) == -1)
+		return (perror("pipe"));
+	*pid = fork();
+	if (*pid == -1)
+		return (perror("fork"));
+}
 
 int	process_one(int *pipefd, t_cmd *c1, char **envp)
 {
