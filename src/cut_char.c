@@ -49,9 +49,148 @@ char	*get_str_env(char *str, char **envp, int k)
 	ft_strlcpy(new, &envp[i][k + 1], (int)ft_strlen(&envp[i][k + 1]) + 1);
 	return(new);
 }
-
-
 int	count_chars(char *str, char **envp)
+{
+	int	i;
+	int	j;
+	int	k;
+	int	l;
+	int	count;
+
+	count = 0;
+	i = 0;
+	while (str[i] && i < (int)ft_strlen(str))
+	{
+		if (str[i] == '"')
+		{
+			count += 2;
+			j = get_next_char(&str[i + 1], "$") + 1;
+			while (j < get_end_quote(&str[i + 1], '"'))
+			{
+				k = get_next_char(&str[i+j+1], "\t \"\'");
+				if (k != 0)
+				{
+					l =  check_str_env(&str[i+j+1],envp ,k);
+					count += k + 1 - l;
+				}
+				j += get_next_char(&str[i + j + k + 1], "$")+ k + 1;
+			}
+			i += get_end_quote(&str[i + 1], '"') + 2;
+		}
+		else if (str[i] == '\'')
+		{
+			count += 2;
+			i += get_end_quote(&str[i + 1], '\'') + 22;
+		}
+		else if (str[i] == '$')
+		{
+			k = get_next_char(&str[i+1], "\t \"\'");
+                        if (k != 0)
+                        {
+				l =  check_str_env(&str[i+j+1],envp ,k);
+                                count += k + 1 - l;
+			}
+			i += k + 1;
+		}
+		else
+			i++;
+	}
+	return (count);
+}
+
+char	*replace_chars(char *str, char **envp)
+{
+	char 	*line;
+	int	size;
+	int	i;
+	int	m;
+	int	j;
+	int	k;
+	int	l;
+ //   int     i[5];
+	char 	*tmp;
+	
+	//init_idx(i,5);
+	size = (int)ft_strlen(str) - count_chars(str, envp);
+	line = (char *)malloc(sizeof(char) *(size +1));
+	if (!line)
+		return (NULL);
+	
+
+	m = 0;
+	i = 0;
+	while (str[i] && i < (int)ft_strlen(str))
+	{
+		if (str[i] == '"')
+		{
+			j = get_next_char(&str[i + 1], "$") + 1;
+			while (j < get_end_quote(&str[i + 1], '"'))
+			{
+				ft_strlcpy(&line[m], &str[i+1], j);
+				//printf("%s\n %s\n", &str[i], line);
+				i += j;
+				m += j - 1;
+				//printf("%s\n %s\n", &str[i], line);
+				k = get_next_char(&str[i+1], "\t \"\'");
+				if (k != 0)
+				{
+					//printf("%s\n %s\n", &str[i], line);
+					l =  check_str_env(&str[i+1],envp ,k);
+					if(l)
+					{	
+						tmp = get_str_env(&str[i+1], envp, k);
+                                                ft_strlcpy(&line[m], tmp, l+1);
+                                               	m += l;
+                                                i += k;
+						//printf("%s\n %s\n", &str[i], line);
+					}
+					else
+						i += k; 
+				}
+				j += get_next_char(&str[i + 1], "$");
+			}
+			ft_strlcpy(&line[m], &str[i+1], get_end_quote(&str[i + 1], '"') + 1);
+                        m += get_end_quote(&str[i + 1], '"');
+                        i += get_end_quote(&str[i + 1], '"')+2;
+
+		}
+		else if (str[i] == '\'')
+		{
+			l = get_end_quote(&str[i + 1], '\'');
+			ft_strlcpy(&line[m], &str[i + 1], l + 1);
+			m += l;
+			i += l + 2;
+		}
+		else if (str[i] == '$')
+		{
+			k = get_next_char(&str[i+1], "\t \"\'");
+                        if (k != 0)
+                        {
+				//printf("%s\n %s\n", &str[i+1], line);
+				l =  check_str_env(&str[i+1],envp ,k);
+				if(l)
+				{
+					tmp = get_str_env(&str[i+1], envp, k);
+					ft_strlcpy(&line[m], tmp, l+1);
+					m += l;
+					i += k + 1;
+                                        free(tmp);
+				}
+				else
+					i += k + 1;
+			}
+		}
+		else
+		{
+			ft_strlcpy(&line[m], &str[i], 2);
+			i++;
+			m++;
+		}
+	}
+	return (line);
+}
+
+/*int	count_chars(char *str, char **envp)
 {
 	int	i;
 	int	j;
@@ -165,57 +304,5 @@ char	*replace_chars(char *str, char **envp)
 				i[1]++;
 		}
     return (line);
-}
-
-
-/*int	main()
-{
-	int	i;
-	char str[]= "he\"$USER1 und $USER , was\" geht $jh nkj";
-	char str1[]= "\"hello $US  was geht $ jh\"";
-	char str2[]= "hello 'was $USER 'n geht jh kj";
-	char *env[3];
-
-	env[0]="USER=celgert";
-	env[1]="USER1=francis";
-	env[2]=NULL;
-	i = 0; 
-	while (env[i])
-	{
-		printf("%s\n", env[i]);
-		i++;
-	}
-	
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\\')
-			str[i] = 'm';
-		i++;
-	}
-
-	i = 0;
-        while (str1[i])
-        {
-                if (str[i] == '\\')
-                        str[i] = 'm';
-                i++;
-        }
-
-	printf("|%s|\n", str);
-	printf("%i\n", count_chars(str,env));
-	printf("|%s|\n", replace_chars(str, env));
-	printf("\n");
-
-	printf("|%s|\n", str1);
-	printf("%i\n", count_chars(str1,env));
-	printf("|%s|\n", replace_chars(str1, env));
-	printf("\n");
-
-
-	printf("|%s|\n", str2);
-	printf("%i\n", count_chars(str2, env));
-	printf("|%s|\n", replace_chars(str2, env));
-
-	return (0);
 }*/
+

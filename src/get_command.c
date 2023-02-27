@@ -129,7 +129,7 @@ char	*get_command(t_cmd *cmd, char *cmd_str, char **envp)
 	{
 		if (is_char(cmd->opt[i], '\'') || is_char(cmd->opt[i], '"'))
 		{
-			cmd->opt[i] = replace_vars(cmd->opt[i], envp);
+			cmd->opt[i] = replace_chars(cmd->opt[i], envp);
 		}
 		i++;
 	}
