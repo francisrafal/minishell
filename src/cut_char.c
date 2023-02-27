@@ -1,32 +1,39 @@
 #include "minishell.h"
 
-int	check_str_env(char *str, t_env env, int k)
+int	check_str_env(char *str, t_env *env, int k)
 {
+	t_env_node      *tmp;
 	char	*new;
-	char	*tmp;
-	int		i;
 
 	new = (char *)malloc(sizeof(char) * (k + 1));
 	if (!new)
 		return (0);
 	ft_strlcpy(new, str, k + 1);
-	tmp = ft_strjoin(new, "=");
+	tmp = find_env_node(env, new);
 	free(new);
-	if (!tmp)
-		return (0);
-	i = 0;
-	// CORRECT ENVP HERE:
-	while (envp[i] && ft_strncmp(tmp, envp[i], k+1))
-		i++;
-	if (!(envp[i]))
-		return (0);
-	free(tmp);
-	return ((int)ft_strlen(&envp[i][k + 1]));
+        if (tmp == NULL)
+               	return (0);
+        else
+                return ((int)ft_strlen(tmp->value));
 }
 
-char	*get_str_env(char *str, char **envp, int k)
+char	*get_str_env(char *str, t_env *env, int k)
 {
-	char	*new;
+	t_env_node      *tmp;
+        char    *new;
+
+        new = (char *)malloc(sizeof(char) * (k + 1));
+        if (!new)
+                return (0);
+        ft_strlcpy(new, str, k + 1);
+        tmp = find_env_node(env, new);
+        free(new);
+        if (tmp == NULL)
+                return (0);
+        else
+                return (tmp->value);
+}
+/*	char	*new;
     char	*tmp;
 	int		i;
 
@@ -49,8 +56,9 @@ char	*get_str_env(char *str, char **envp, int k)
 		return (0);
 	ft_strlcpy(new, &envp[i][k + 1], (int)ft_strlen(&envp[i][k + 1]) + 1);
 	return(new);
-}
-int	count_chars(char *str, char **envp)
+}*/
+
+int	count_chars(char *str, t_env *env)
 {
 	int	i;
 	int	j;
@@ -71,7 +79,7 @@ int	count_chars(char *str, char **envp)
 				k = get_next_char(&str[i+j+1], "\t \"\'");
 				if (k != 0)
 				{
-					l =  check_str_env(&str[i+j+1],envp ,k);
+					l =  check_str_env(&str[i+j+1],env ,k);
 					count += k + 1 - l;
 				}
 				j += get_next_char(&str[i + j + k + 1], "$")+ k + 1;
@@ -88,7 +96,7 @@ int	count_chars(char *str, char **envp)
 			k = get_next_char(&str[i+1], "\t \"\'");
                         if (k != 0)
                         {
-				l =  check_str_env(&str[i+j+1],envp ,k);
+				l =  check_str_env(&str[i+j+1],env ,k);
                                 count += k + 1 - l;
 			}
 			i += k + 1;
@@ -99,7 +107,7 @@ int	count_chars(char *str, char **envp)
 	return (count);
 }
 
-char	*replace_chars(char *str, char **envp)
+char	*replace_chars(char *str, t_env *env)
 {
 	char 	*line;
 	int	size;
@@ -112,7 +120,8 @@ char	*replace_chars(char *str, char **envp)
 	char 	*tmp;
 	
 	//init_idx(i,5);
-	size = (int)ft_strlen(str) - count_chars(str, envp);
+	size = (int)ft_strlen(str) - count_chars(str, env);
+	printf("works");
 	line = (char *)malloc(sizeof(char) *(size +1));
 	if (!line)
 		return (NULL);
@@ -136,10 +145,10 @@ char	*replace_chars(char *str, char **envp)
 				if (k != 0)
 				{
 					//printf("%s\n %s\n", &str[i], line);
-					l =  check_str_env(&str[i+1],envp ,k);
+					l =  check_str_env(&str[i+1],env ,k);
 					if(l)
 					{	
-						tmp = get_str_env(&str[i+1], envp, k);
+						tmp = get_str_env(&str[i+1], env, k);
                                                 ft_strlcpy(&line[m], tmp, l+1);
                                                	m += l;
                                                 i += k;
@@ -168,14 +177,14 @@ char	*replace_chars(char *str, char **envp)
                         if (k != 0)
                         {
 				//printf("%s\n %s\n", &str[i+1], line);
-				l =  check_str_env(&str[i+1],envp ,k);
+				l =  check_str_env(&str[i+1],env ,k);
 				if(l)
 				{
-					tmp = get_str_env(&str[i+1], envp, k);
+					tmp = get_str_env(&str[i+1], env, k);
 					ft_strlcpy(&line[m], tmp, l+1);
 					m += l;
 					i += k + 1;
-                                        free(tmp);
+                                       // free(tmp);
 				}
 				else
 					i += k + 1;
