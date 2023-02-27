@@ -164,7 +164,7 @@ char	*get_infile(t_cmd *cmd, char *line);
 char	*prun_str(char *str);
 
 /* cut_char.c*/
-char	*replace_chars(char *str, char **envp);
+char	*replace_chars(char *str, t_env *env);
 
 /* get_command.c */
 char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env);
