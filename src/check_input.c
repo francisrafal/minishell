@@ -20,34 +20,61 @@ static int	check_char(char *str, char c, int *j)
 	}
 	return (1);
 }
+
+t_pipe_state	pipe_transition(t_pipe_state state, char c)
+{
+	if (state == START)
+	{
+		if (c == ' ' || c == '\t')
+			return (START);
+		if (c != '|')
+			return (CMD);
+	}
+	if (state == CMD)
+	{
+		if (c != '|')
+			return (CMD);
+		if (c == '|')
+			return (PIPE);
+	}
+	if (state == PIPE)
+	{
+		if (c == ' ' || c == '\t')
+			return (BLANK);
+		if (c != '|')
+			return (CMD);
+		if (c == '|')
+			return (MULTIPLE_PIPES);
+	}
+	if (state == BLANK)
+	{
+		if (c == ' ' || c == '\t')
+			return (BLANK);
+		if (c != '|')
+			return (CMD);
+		if (c == '|')
+			return (MULTIPLE_PIPES);
+	}
+	if (state == BEGIN_PIPE)
+		return (BEGIN_PIPE);
+	if (state == MULTIPLE_PIPES)
+		return (MULTIPLE_PIPES);
+	return (REJECT);
+}
+
 int	check_pipes(char *str)
 {
-	int i;
-	int flg;
+	t_pipe_state	state;
+	int				i;
+
 	i = 0;
-	flg = 0;
-	while (str[i] && str[i] != '|')
-	{
-			flg = 1;
-			i++;
-	}
+	state = START;
 	while (str[i])
-	{
-		if (str[i] == '|' && flg == 0)
-		 	break ;
-		flg = 0;
-		while (str[i] && str[i] != '|')
-		{
-			flg = 1;
-			i++;
-		}
-	}
-	if (flg == 0)
-	{ 
-			ft_error("", "syntax error near unexpected '|'");
-			return (1);
-	}
-	return (0);
+		state = pipe_transition(state, str[i++]);
+	if (state == START || state == CMD)
+		return (0);
+	ft_error("", "syntax error near unexpected token `|'");
+	return (1);
 }
 
 int	check_quotes(char *str)
