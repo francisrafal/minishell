@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	check_str_env(char *str, char **envp, int k)
+int	check_str_env(char *str, t_env env, int k)
 {
 	char	*new;
 	char	*tmp;
@@ -15,6 +15,7 @@ int	check_str_env(char *str, char **envp, int k)
 	if (!tmp)
 		return (0);
 	i = 0;
+	// CORRECT ENVP HERE:
 	while (envp[i] && ft_strncmp(tmp, envp[i], k+1))
 		i++;
 	if (!(envp[i]))

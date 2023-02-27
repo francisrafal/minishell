@@ -114,7 +114,7 @@ int	is_char(char *str, char c)
 	return (0);
 }
 
-char	*get_command(t_cmd *cmd, char *cmd_str, char **envp)
+char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env)
 {
 	int	i;
 	int	nopt;
@@ -129,7 +129,7 @@ char	*get_command(t_cmd *cmd, char *cmd_str, char **envp)
 	{
 		if (is_char(cmd->opt[i], '\'') || is_char(cmd->opt[i], '"'))
 		{
-			cmd->opt[i] = replace_chars(cmd->opt[i], envp);
+			cmd->opt[i] = replace_chars(cmd->opt[i], env);
 		}
 		i++;
 	}
