@@ -27,30 +27,30 @@ t_pipe_state	pipe_transition(t_pipe_state state, char c)
 	{
 		if (c == ' ' || c == '\t')
 			return (START);
-		if (ft_isalnum(c))
+		if (c != '|')
 			return (CMD);
 	}
 	if (state == CMD)
 	{
-		if (ft_isalnum(c) || c == ' ' || c == '\t')
+		if (c != '|')
 			return (CMD);
 		if (c == '|')
 			return (PIPE);
 	}
 	if (state == PIPE)
 	{
-		if (ft_isalnum(c))
+		if (c == ' ' || c == '\t')
+			return (BLANK);
+		if (c != '|')
 			return (CMD);
 		if (c == '|')
 			return (MULTIPLE_PIPES);
-		if (c == ' ' || c == '\t')
-			return (BLANK);
 	}
 	if (state == BLANK)
 	{
 		if (c == ' ' || c == '\t')
 			return (BLANK);
-		if (ft_isalnum(c))
+		if (c != '|')
 			return (CMD);
 		if (c == '|')
 			return (MULTIPLE_PIPES);
