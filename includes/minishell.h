@@ -133,7 +133,7 @@ void	free_env_node(t_env_node *node);
 
 /* split_input.c*/
 int		split_line(t_cmd **cmd, const char *str, int ncmds, t_env *env);
-void    split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env);
+t_cmd   *split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env);
 t_cmd	*split_input(char *line, t_env *env);
 
 /* check_input.c*/

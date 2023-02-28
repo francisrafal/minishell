@@ -10,9 +10,6 @@ int	here_doc(char *av)
 		return (ft_error(strerror(errno), ".heredoc_tmp"));
 	while (1)
 	{
-		//write(1, "heredoc> ", 9);
-		//if (get_next_line(0, &buf) < 0)
-		//	exit(1);
 		buf = readline(HERE_DOC);
 		if (!ft_strncmp(av, buf, ft_strlen(av)))
 			break ;
@@ -26,56 +23,51 @@ int	here_doc(char *av)
 	return (file);
 }
 
-int	handle_infile(char * tmp, char *file, t_cmd *cmd)
+int	handle_infile(char *tmp, char *file, t_cmd *cmd)
 {
 	int	fd_in;
-	//char	*tmp;
 
-		if(tmp[1] == '<' )
-                {
-                        cmd->read_in = 1;
-                        cmd->re_in = 0;
-                        fd_in = here_doc(file);
-                }
-                else{
-                        cmd->read_in = 0;
-                        cmd->re_in = 1;
-			fd_in = open(file, O_RDONLY);
-			if (fd_in < 0)
-				ft_error(strerror(errno), file);
-                }
-                /*if (fd_in >= 0)
-			close(fd_in);*/
-		return (fd_in);
+	if (tmp[1] == '<')
+	{
+		cmd->read_in = 1;
+		cmd->re_in = 0;
+		fd_in = here_doc(file);
+	}
+	else
+	{
+		cmd->read_in = 0;
+		cmd->re_in = 1;
+		fd_in = open(file, O_RDONLY);
+		if (fd_in < 0)
+			ft_error(strerror(errno), file);
+	}
+	return (fd_in);
 }
 
 char	*get_infile(t_cmd *cmd, char *line)
 {
-        int     fd_in;
-        char    *tmp;
-        char    *file;
+	int		fd_in;
+	char	*tmp;
+	char	*file;
 
-        file = NULL;
-        tmp = ft_strchr(line, '<');
-        if (!tmp)
+	file = NULL;
+	tmp = ft_strchr(line, '<');
+	if (!tmp)
+		return (line);
+	while (tmp)
 	{
-		//printf("no input redirection \n");
-                return (line);
-	}
-        while (tmp)
-        {
-                file = get_file_name(line, '<');
-		//printf("infile: |%s|\n", file);
+		file = get_file_name(line, '<');
 		fd_in = handle_infile(tmp, file, cmd);
 		line = cut_word(line, '<');
-                tmp = ft_strchr(line, '<');
-                if (tmp)
+		tmp = ft_strchr(line, '<');
+		if (tmp)
+		{
+			if (fd_in)
+				close(fd_in);
 			free(file);
-        }
-  	//printf("cutted + timmed line : |%s|\n", line);
-        //printf("input file: |%s|\n", file);
-	//fd_in = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-        cmd->fd_in = fd_in;
-        free(file);
-        return (line);
+		}
+	}
+	cmd->fd_in = fd_in;
+	free(file);
+	return (line);
 }
