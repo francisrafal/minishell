@@ -38,28 +38,19 @@ typedef	struct s_shell
 	struct s_env	*env;
 }	t_shell;
 
-/* Struct For List Of Cmds */
-typedef struct s_lst_cmds
-{
-	char	**path;
-	char	**opt;
-	int		fd;
-	struct s_lst_cmds	*next;
-}		t_cmds;
-
 /* Struct for each command of one pipe */
 typedef struct s_cmd
 {
-	int			re_in;
-	int			re_out;
-	int			read_in;
-	char		*delim;
-	int			re_out_app;
-	int			fd_in;
-	int			fd_out;
+	int				re_in;
+	int				re_out;
+	int				read_in;
+	char			*delim;
+	int				re_out_app;
+	int				fd_in;
+	int				fd_out;
 	int 			ncmds;
-	char 		**path;
-	char		**opt;
+	char 			**path;
+	char			**opt;
 	struct s_cmd	*next;
 //	t_cmds		**lst_cmds;
 }		t_cmd;

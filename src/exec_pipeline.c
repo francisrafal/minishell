@@ -1,90 +1,113 @@
 #include "minishell.h"
 
-void	pipe_help(int *pipefd, pid_t *pid)
-{
-	if (pipe(pipefd) == -1)
-		return (perror("pipe"));
-	*pid = fork();
-	if (*pid == -1)
-		return (perror("fork"));
-}
-
-int	process_one(int *pipefd, t_cmd *c1, char **envp)
+void	append_str(char ***paths, char *str)
 {
 	int		i;
-	char	*cmd;
+	char	*tmp;
 
+	tmp = NULL;
 	i = 0;
-	if (c1->fd == -1)
-		return (-1);
-	if (dup2(c1->fd, STDIN_FILENO) < 0 || dup2(pipefd[1], STDOUT_FILENO) < 0)
+	while ((*paths)[i] != NULL)
 	{
-		perror("Process one");
+		tmp = (*paths)[i];
+		(*paths)[i] = ft_strjoin(tmp, str);
+		free(tmp);
+		i++;
+	}
+}
+
+char	*get_cmd_path(t_cmd *cmd)
+{
+	char	*cmd_path;
+	int		i;
+
+	cmd_path = NULL;
+	i = 0;
+	while ((cmd->path)[i] != NULL)
+	{
+		cmd_path = ft_strjoin(cmd->path[i], cmd->opt[0]);
+		if (access(cmd_path, F_OK | X_OK) == 0)
+			return (cmd_path);
+		free(cmd_path);
+		i++;
+	}
+	perror_exit("access");
+	return (cmd_path);
+}
+
+int	child_process(int *pipefd, t_cmd *cmd, char **envp)
+{
+	char	*cmd_path;
+
+	if (cmd->next != NULL)
+	{
+		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
+		{
+			perror("dup2");
+			return (-1);
+		}
+	}
+	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
+	{
+		perror("dup2");
 		return (-1);
 	}
+	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
+	{
+		perror("dup2");
+		return (-1);
+	}
+	// handle builtins
+	// handle Signals
 	close(pipefd[0]);
-	while (c1->path[i])
-	{
-		cmd = ft_strjoin_path(c1->path[i], c1->opt[0]);
-		if (!cmd)
-			return (-1);
-		if (execve(cmd, c1->opt, envp) == -1)
-			free(cmd);
-		i++;
-	}
+	cmd_path = get_cmd_path(cmd);
+	// do for commands without forward slash first, then later handle relative and absolute paths
+	if (execve(cmd_path, cmd->opt, envp) == -1)
+		free(cmd_path);
 	return (-1);
 }
 
-int	process_two(int *pipefd, t_cmd *c2, int fd, char **envp)
-{
-	int		i;
-	char	*cmd;
-
-	i = 0;
-	if (dup2(fd, STDOUT_FILENO) < 0 || dup2(pipefd[0], STDIN_FILENO) < 0)
-	{
-		perror("Process two");
-		return (-1);
-	}
-	close(pipefd[1]);
-	while (c2->path[i])
-	{
-		cmd = ft_strjoin_path(c2->path[i], c2->opt[0]);
-		if (!cmd)
-			return (-1);
-		if (execve(cmd, c2->opt, envp) == -1)
-			free(cmd);
-		i++;
-	}
-	return (-1);
-}
-
-void	pipex(int fd_in, int fd_out, t_cmd **lst, char **envp)
+void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		pipefd[2];
+	char	**envp;
 	pid_t	pid;
-	t_cmd	*cmd;
 
-	cmd = *lst;
-	cmd->fd = fd_in;
-	while (cmd->next)
+	envp = get_env_arr(sh->env);
+	while (cmd)
 	{
-		pipe_help(pipefd, &pid);
+		append_str(&cmd->path, "/");
+		if (cmd->next != NULL)
+		{
+			if (pipe(pipefd) == -1)
+			{
+				perror("pipe");
+				return ;
+			}
+		}
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			return ;
+		}
 		if (pid == 0)
 		{
-			if (process_one(pipefd, cmd, envp) == -1)
+			if (child_process(pipefd, cmd, envp) == -1)
 				return ;
 		}
 		else
 		{
-			wait(NULL);
-			close(pipefd[1]);
+			wait(NULL); // maybe wait outside of loop to handle last exit code
+			if (cmd->next != NULL)
+				close(pipefd[1]);
 			cmd = cmd->next;
-			cmd->fd = pipefd[0];
+			dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[0]);
 		}
 	}
-	process_two(pipefd, cmd, fd_out, envp);
-	free_lst(lst);
+	// Reset STDIN here
+	free_arr(envp);
 }
 
 /*

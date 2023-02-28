@@ -59,10 +59,3 @@ void	exec_single_cmd(char **cmd_args, t_shell *sh)
 	else
 		exec_as_child(cmd_args, sh);
 }
-
-void	exec_pipeline(t_cmd *cmd, t_shell *sh)
-{
-	(void)cmd;
-	(void)sh;
-	// exec pipeline in here
-} 
