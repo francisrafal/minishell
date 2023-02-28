@@ -1,6 +1,6 @@
 #include "minishell.h"
 
- static void	help_count(char *str, int *idx, int *count)
+static void	help_count(char *str, int *idx, int *count)
 {
 	int	i;
 	int	j;
@@ -53,7 +53,7 @@ int	count_prun(char *str)
 	return (count);
 }
 
- static void	prun_help1(char *str, char *new, int *i)
+static void	prun_help1(char *str, char *new, int *i)
 {
 	while (str[i[0]] && (str[i[0]] == ' ' || str[i[0]] == '\t'))
 	{
@@ -93,12 +93,6 @@ static void	prun_help2(char *str, char *new, int *i)
 			i[0] += 1;
 		}
 	}
-	while (str[i[0]] && !(str[i[0]] == ' ' || str[i[0]] == '\t'))
-	{
-		new[i[1]] = str[i[0]];
-		i[1] += 1;
-		i[0]++;
-	}
 }
 
 char	*prun_str(char *str)
@@ -117,6 +111,12 @@ char	*prun_str(char *str)
 	{
 		prun_help1(str, new, i);
 		prun_help2(str, new, i);
+		while (str[i[0]] && !(str[i[0]] == ' ' || str[i[0]] == '\t'))
+		{
+			new[i[1]] = str[i[0]];
+			i[1] += 1;
+			i[0]++;
+		}
 	}
 	new[i[1]] = '\0';
 	free_null(str);

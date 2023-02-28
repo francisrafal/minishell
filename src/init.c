@@ -30,7 +30,7 @@ void	increase_shell_level(t_env *env)
 	t_env_node	*node;
 	char		*new_shell_level;
 
-	node = find_env_node(env, "SHLVL"); 
+	node = find_env_node(env, "SHLVL");
 	if (node)
 	{
 		new_shell_level = ft_itoa(ft_atoi(node->value) + 1);
@@ -39,7 +39,7 @@ void	increase_shell_level(t_env *env)
 	}
 	else
 	{
-		new_shell_level = "SHLVL=1";	
+		new_shell_level = "SHLVL=1";
 		append_env(env, create_env_node(new_shell_level));
 	}
 }
