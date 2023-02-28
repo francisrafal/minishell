@@ -136,10 +136,10 @@ int		split_line(t_cmd **cmd, const char *str, int ncmds, t_env *env);
 t_cmd   *split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env);
 t_cmd	*split_input(char *line, t_env *env);
 
-/* check_input.c*/
-int     check_syntax(char **cmds);
+/* check_input.c and check_input2.c*/
+int		check_syntax(char **cmds);
 int		check_pipes(char *str);
-int     check_quotes(char *str);
+int		check_quotes(char *str);
 
 /* split_input_utils.c */
 int     get_end_quote(char *line, char c);
@@ -163,7 +163,10 @@ char	*get_infile(t_cmd *cmd, char *line);
 /* prun_str.c */
 char	*prun_str(char *str);
 
-/* cut_char.c*/
+/* cut_char.c and cut_char_utils.c*/
+int     check_str_env(char *str, t_env *env, int k);
+char    *get_str_env(char *str, t_env *env, int k);
+int     count_chars(char *str, t_env *env);
 char	*replace_chars(char *str, t_env *env);
 
 /* get_command.c */
