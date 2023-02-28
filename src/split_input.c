@@ -2,8 +2,8 @@
 
 int	split_line(t_cmd **lst_cmds, const char *str, int ncmds, t_env *env)
 {
-	t_cmd	*cmd;
-	char	*line;
+	t_cmd		*cmd;
+	char		*line;
 	t_env_node	*paths;
 
 	line = NULL;
@@ -13,7 +13,7 @@ int	split_line(t_cmd **lst_cmds, const char *str, int ncmds, t_env *env)
 		return (1);
 	line = get_outfile(cmd, line);
 	line = get_infile(cmd, line);
-	line = get_command(cmd,line, env);
+	line = get_command(cmd, line, env);
 	if (!line)
 		return (1);
 	paths = find_env_node(env, "PATH");
@@ -28,9 +28,9 @@ int	split_line(t_cmd **lst_cmds, const char *str, int ncmds, t_env *env)
 	return (0);
 }
 
-void	split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env)
+t_cmd   *split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env)
 {
-	int	i; 
+	int	i;
 
 	if (!check_syntax(cmds))
 	{
@@ -41,24 +41,22 @@ void	split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env)
 				break ;
 			i++;
 		}
-		ft_display_lst(lst_cmds);
-		free_lst(&lst_cmds);
+	//	ft_display_lst(lst_cmds);
+		//free_lst(&lst_cmds);
 		free_arr(cmds);
+		return (lst_cmds);
 	}
 	else
 	{
 		free_arr(cmds);
-		printf("TODO: here exit because of syntax error\n");
+		return (NULL);
 	}
 }
-
-
 
 t_cmd	*split_input(char *line, t_env *env)
 {
 	t_cmd	*lst_cmds;
 	char	**cmds;
-//	int		i;
 	int		ncmds;
 
 	lst_cmds = NULL;
@@ -67,11 +65,16 @@ t_cmd	*split_input(char *line, t_env *env)
 		cmds = split_char(line, &ncmds, '|');
 		if (!cmds)
 			return (NULL);
-		split_input_cmd(cmds, ncmds, lst_cmds, env);
+		lst_cmds = split_input_cmd(cmds, ncmds, lst_cmds, env);
+		if (!lst_cmds)
+		{
+			printf("TODO: here exit because of syntax error\n");
+			return (NULL);
+		}
 	}
 	else
 	{	
 		printf("TODO: here exit because of syntax error\n");
 	}
-        return (lst_cmds);
+	return (lst_cmds);
 }
