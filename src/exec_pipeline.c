@@ -35,44 +35,91 @@ char	*get_cmd_path(t_cmd *cmd)
 	return (cmd_path);
 }
 
-int	child_process(int *pipefd, t_cmd *cmd, char **envp)
+int	is_builtin(t_cmd *cmd)
+{
+	if (ft_strncmp(cmd->opt[0], "echo", 5) == 0)
+		return (1);
+	if (ft_strncmp(cmd->opt[0], "pwd", 4) == 0)
+		return (1);
+	if (ft_strncmp(cmd->opt[0], "cd", 3) == 0)
+		return (1);
+	if (ft_strncmp(cmd->opt[0], "exit", 5) == 0)
+		return (1);
+	if (ft_strncmp(cmd->opt[0], "env", 4) == 0)
+		return (1);
+	if (ft_strncmp(cmd->opt[0], "export", 7) == 0)
+		return (1);
+	if (ft_strncmp(cmd->opt[0], "unset", 6) == 0)
+		return (1);
+	return (0);
+}
+
+int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 {
 	char	*cmd_path;
+		/* Questionable here */
+	char	**cmd_opt;
+		/* Questionable end here */
 
-	if (dup2(pipefd[1], STDOUT_FILENO) < 0)
+	if (cmd->next != NULL)
 	{
-		perror("dup2");
-		return (-1);
+		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
+		{
+			perror("dup2_1");
+			return (-1);
+		}
 	}
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
-		perror("dup2");
+		perror("dup2_2");
 		return (-1);
 	}
 	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
 	{
-		perror("dup2");
+		perror("dup2_3");
 		return (-1);
 	}
-	// handle builtins
 	// handle Signals
 	close(pipefd[0]);
-	cmd_path = get_cmd_path(cmd);
-	// do for commands without forward slash first, then later handle relative and absolute paths
-	if (execve(cmd_path, cmd->opt, envp) == -1)
-		free(cmd_path);
+	close(sh->stdin_copy);
+	if (is_builtin(cmd))
+	{
+		g_exit_code = exec_builtin(cmd->opt, sh, EXEC_AS_CHILD);
+		free_data(sh);
+		/* Questionable here */
+		free_null(cmd->delim);
+		free_arr(cmd->path);
+		free_arr(cmd->opt);
+		free_null(cmd);
+		free_arr(envp);
+		/* Questionable end here */
+		exit(g_exit_code);
+	}
+	else
+	{
+		cmd_path = get_cmd_path(cmd);
+		free_data(sh);
+		/* Questionable here */
+		free_null(cmd->delim);
+		free_arr(cmd->path);
+		cmd_opt = cmd->opt;
+		free_null(cmd);
+		/* Questionable end here */
+		// do for commands without forward slash first, then later handle relative and absolute paths
+		if (execve(cmd_path, cmd_opt, envp) == -1)
+			free(cmd_path);
+	}
 	return (-1);
 }
 
 void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		pipefd[2];
-	int		save_fd_in;
 	char	**envp;
 	pid_t	pid;
 
 	envp = get_env_arr(sh->env);
-	save_fd_in = dup(STDIN_FILENO);
+	sh->stdin_copy = dup(STDIN_FILENO);
 	while (cmd)
 	{
 		append_str(&cmd->path, "/");
@@ -92,8 +139,9 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		}
 		if (pid == 0)
 		{
-			if (child_process(pipefd, cmd, envp) == -1)
+			if (child_process_pipeline(pipefd, cmd, envp, sh) == -1)
 				return ;
+			// exit code in syscall error?
 		}
 		else
 		{
@@ -101,19 +149,16 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 			if (cmd->next != NULL)
 				close(pipefd[1]);
 			cmd = cmd->next;
-			if (cmd->ncmds > 1)
-			{
-				dup2(pipefd[0], STDIN_FILENO);
-				close(pipefd[0]);
-			}
+			dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[0]);
 		}
 	}
-	dup2(save_fd_in, STDIN_FILENO);
-	close(save_fd_in);
+	dup2(sh->stdin_copy, STDIN_FILENO);
+	close(sh->stdin_copy);
 	free_arr(envp);
 }
 
-int	child_process(t_cmd *cmd, char **envp)
+int	child_process_single_cmd(t_cmd *cmd, char **envp)
 {
 	char	*cmd_path;
 
@@ -127,9 +172,7 @@ int	child_process(t_cmd *cmd, char **envp)
 		perror("dup2");
 		return (-1);
 	}
-	// handle builtins
 	// handle Signals
-	close(pipefd[0]);
 	cmd_path = get_cmd_path(cmd);
 	// do for commands without forward slash first, then later handle relative and absolute paths
 	if (execve(cmd_path, cmd->opt, envp) == -1)
@@ -152,8 +195,9 @@ void	exec_as_child(t_cmd *cmd, t_shell *sh)
 	}
 	if (pid == 0)
 	{
-		if (child_process(pipefd, cmd, envp) == -1)
+		if (child_process_single_cmd(cmd, envp) == -1)
 			return ;
+		// exit code on sys call error?
 	}
 	else
 	{

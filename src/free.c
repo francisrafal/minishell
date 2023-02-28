@@ -37,6 +37,8 @@ void	free_arr(char **arr)
 {
 	int	i;
 
+	if (arr == NULL)
+		return ;
 	i = 0;
 	while (arr[i])
 		free_null(arr[i++]);

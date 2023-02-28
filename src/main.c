@@ -32,7 +32,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("syntax error\n"); // write this to STDERR
 			continue ;
 		}
-		ft_display_lst(cmd);
+		//ft_display_lst(cmd);
 		free_null(cmd_line);
 		if (cmd->ncmds == 1)
 			exec_single_cmd(cmd, sh);
