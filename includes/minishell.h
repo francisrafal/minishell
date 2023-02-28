@@ -36,30 +36,22 @@ typedef	struct s_shell
 	int				exit;
 	int				wstatus;
 	struct s_env	*env;
+	int				stdin_copy;
 }	t_shell;
-
-/* Struct For List Of Cmds */
-typedef struct s_lst_cmds
-{
-	char	**path;
-	char	**opt;
-	int		fd;
-	struct s_lst_cmds	*next;
-}		t_cmds;
 
 /* Struct for each command of one pipe */
 typedef struct s_cmd
 {
-	int			re_in;
-	int			re_out;
-	int			read_in;
-	char		*delim;
-	int			re_out_app;
-	int			fd_in;
-	int			fd_out;
+	int				re_in;
+	int				re_out;
+	int				read_in;
+	char			*delim;
+	int				re_out_app;
+	int				fd_in;
+	int				fd_out;
 	int 			ncmds;
-	char 		**path;
-	char		**opt;
+	char 			**path;
+	char			**opt;
 	struct s_cmd	*next;
 //	t_cmds		**lst_cmds;
 }		t_cmd;
@@ -112,9 +104,9 @@ int		get_arr_size(char **arr);
 
 /* exec.c */
 int		exec_builtin(char **cmd_args, t_shell *sh, int mode);
-void	exec_as_parent(char **cmd_args, t_shell *sh);
-void	exec_as_child(char **cmd_args, t_shell *sh);
-void	exec_single_cmd(char **cmd_args, t_shell *sh);
+void	exec_bi_as_parent(char **cmd_args, t_shell *sh);
+void	exec_bi_as_child(char **cmd_args, t_shell *sh);
+void	exec_single_cmd(t_cmd *cmd, t_shell *sh);
 void	exec_pipeline(t_cmd *cmd, t_shell *sh);
 
 /* list_utils.c */
