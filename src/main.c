@@ -4,15 +4,14 @@ int	g_exit_code = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
-	(void)argc;
-	(void)argv;
 	char	*cmd_line;
-	char	**test_cmd; 
-	int		num_cmds;
 	t_shell	*sh;
 	t_cmd	*cmd;
+
+	(void)argc;
+	(void)argv;
+
 	sh = init_shell(envp);
-	num_cmds = 1;
 	cmd = NULL;
 	while (1)
 	{		
@@ -26,23 +25,20 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		add_history(cmd_line);
-		//cmd = split_input(cmd_line, get_env_arr(sh->env));
 		cmd = split_input(cmd_line, sh->env);
 		if (!cmd)
 		{
 			free_null(cmd_line);
-			printf("syntax error\n");
+			printf("syntax error\n"); // write this to STDERR
 			continue ;
 		}
 		ft_display_lst(cmd);
-		test_cmd = ft_split(cmd_line, ' ');
 		free_null(cmd_line);
-		if (num_cmds == 1)
-			exec_single_cmd(test_cmd, sh);
+		if (cmd->ncmds == 1)
+			exec_single_cmd(cmd, sh);
 		else
 			exec_pipeline(cmd, sh);
-		free_arr(test_cmd);
-		free_lst(&cmd);	
+		free_lst(&cmd);
 	}
 	return (0);
 }

@@ -19,12 +19,12 @@ int	exec_builtin(char **cmd_args, t_shell *sh, int mode)
 	return (g_exit_code);
 }
 
-void	exec_as_parent(char **cmd_args, t_shell *sh)
+void	exec_bi_as_parent(char **cmd_args, t_shell *sh)
 {
 	exec_builtin(cmd_args, sh, EXEC_AS_PARENT);
 }
 
-void	exec_as_child(char **cmd_args, t_shell *sh)
+void	exec_bi_as_child(char **cmd_args, t_shell *sh)
 {
 	if (fork() == 0)
 	{
@@ -45,17 +45,19 @@ void	exec_as_child(char **cmd_args, t_shell *sh)
 	}
 }
 
-void	exec_single_cmd(char **cmd_args, t_shell *sh)
+void	exec_single_cmd(t_cmd *cmd, t_shell *sh)
 {
-	// Cgange this function later so that it takes t_cmd *cmd as input instead of char **cmd_args
+	char	**cmd_args;
+
+	cmd_args = cmd->opt;
 	if (ft_strncmp(cmd_args[0], "cd", 3) == 0)
-		exec_as_parent(cmd_args, sh);
+		exec_bi_as_parent(cmd_args, sh);
 	else if (ft_strncmp(cmd_args[0], "exit", 5) == 0)
-		exec_as_parent(cmd_args, sh);
+		exec_bi_as_parent(cmd_args, sh);
 	else if (ft_strncmp(cmd_args[0], "export", 7) == 0)
-		exec_as_parent(cmd_args, sh);
+		exec_bi_as_parent(cmd_args, sh);
 	else if (ft_strncmp(cmd_args[0], "unset", 6) == 0)
-		exec_as_parent(cmd_args, sh);
+		exec_bi_as_parent(cmd_args, sh);
 	else
-		exec_as_child(cmd_args, sh);
+		exec_bi_as_child(cmd_args, sh);
 }
