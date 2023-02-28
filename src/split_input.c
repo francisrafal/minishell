@@ -28,7 +28,7 @@ int	split_line(t_cmd **lst_cmds, const char *str, int ncmds, t_env *env)
 	return (0);
 }
 
-t_cmd   *split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env)
+t_cmd	*split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env)
 {
 	int	i;
 
@@ -41,8 +41,6 @@ t_cmd   *split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env)
 				break ;
 			i++;
 		}
-	//	ft_display_lst(lst_cmds);
-		//free_lst(&lst_cmds);
 		free_arr(cmds);
 		return (lst_cmds);
 	}

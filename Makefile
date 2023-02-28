@@ -14,9 +14,11 @@ SRCSLIST		:= main.c \
 					builtins.c \
 					builtin_utils.c \
 					list_utils.c \
-					split_input.c check_input.c split_input_utils.c \
+					check_input.c check_input2.c \
+					split_input.c split_input_utils.c \
 					files_utils.c get_outfile.c get_infile.c \
-					prun_str.c get_command.c cut_char.c\
+					prun_str.c get_command.c \
+					cut_char.c cut_char_utils.c\
 					error.c \
 					env.c \
 					init.c \
