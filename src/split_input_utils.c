@@ -11,7 +11,7 @@ int	get_end_quote(char *line, char c)
 		{
 			if (i == 0)
 				return (i);
-			else if(i > 0  && line[i - 1] != '\\')
+			else if (i > 0 && line[i - 1] != '\\')
 				return (i);
 		}
 		i++;
@@ -60,18 +60,17 @@ char	*fill_cmds(char *line, int len)
 
 static void	split_char_help(char *line, char **cmds, int *idx, char c)
 {
-		if (line[idx[0]] == '"')
-			idx[0] += get_end_quote(&line[idx[0] + 1], '"') + 1;
-		else if (line[idx[0]] == '\'')
-			idx[0] += get_end_quote(&line[idx[0] + 1], '\'') + 1;
-		else if (line[idx[0]] == c)
-		{
-			cmds[idx[2]] = fill_cmds(&line[idx[1]], idx[0] - idx[1]);
-			idx[2] += 1;
-			idx[1] = idx[0] + 1;
-		}
+	if (line[idx[0]] == '"')
+		idx[0] += get_end_quote(&line[idx[0] + 1], '"') + 1;
+	else if (line[idx[0]] == '\'')
+		idx[0] += get_end_quote(&line[idx[0] + 1], '\'') + 1;
+	else if (line[idx[0]] == c)
+	{
+		cmds[idx[2]] = fill_cmds(&line[idx[1]], idx[0] - idx[1]);
+		idx[2] += 1;
+		idx[1] = idx[0] + 1;
+	}
 }
-
 
 char	**split_char(char *line, int *ncmds, char c)
 {
@@ -79,7 +78,7 @@ char	**split_char(char *line, int *ncmds, char c)
 	int		len;
 	int		idx[3];
 
-	if(!line)
+	if (!line)
 		return (NULL);
 	len = count_cmds(line, c);
 	*ncmds = len;
@@ -91,7 +90,7 @@ char	**split_char(char *line, int *ncmds, char c)
 	{
 		if (line[idx[0]] == '#')
 			break ;
-		else 
+		else
 			split_char_help(line, cmds, idx, c);
 		idx[0] += 1;
 	}
