@@ -44,25 +44,14 @@ int	is_char(char *str, char c)
 
 char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env)
 {
-	int	i;
-	int	nopt;
+	int		nopt;
 	char	*str;
 	char	*tmp;
 
-//	str = prun_str(cmd_str);
 	tmp = replace_chars(cmd_str, env);
 	str = prun_str(tmp);
 	cmd->opt = split_char(str, &nopt, ' ');
 	if (!cmd->opt)
 		return (NULL);
-	i = 0;
-	while (i < nopt)
-	{
-		//if (is_char(cmd->opt[i], '\'') || is_char(cmd->opt[i], '"'))
-		//{
-		//cmd->opt[i] = replace_chars(cmd->opt[i], env);
-		//}
-		i++;
-	}
 	return (str);
 }

@@ -68,24 +68,6 @@ t_cmd	*split_input(char *line, t_env *env)
 		if (!cmds)
 			return (NULL);
 		split_input_cmd(cmds, ncmds, lst_cmds, env);
-		/*if (!check_syntax(cmds))
-		{
-			i = 0;
-			while (cmds[i])
-			{
-				//printf("%s\n", cmds[i]);
-				split_line(&lst_cmds, cmds[i], ncmds, envp);
-				i++;
-			}
-			ft_display_lst(lst_cmds);
-			free_lst(&lst_cmds);
-			free_arr(cmds);
-		}
-		else	
-		{
-			free_arr(cmds);
-			printf("TODO: here exit because of syntax error\n");
-		}*/
 	}
 	else
 	{	
