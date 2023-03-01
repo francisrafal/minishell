@@ -153,10 +153,10 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		j++;
 	}
 	if (WIFEXITED(sh->wstatus))
-		g_exit_code = WEXITSTATUS(sh->wstatus);
-	// Later: EXIT_NO_ARG is used so that $? is set properly. if EXIT_NO_ARG then $? should remain the value of the last pipeline
-	if (WEXITSTATUS(sh->wstatus) == EXIT_NO_ARG)
-		sh->exit = 1;
+	{
+		if (WEXITSTATUS(sh->wstatus) != EXIT_NO_ARG)
+			g_exit_code = WEXITSTATUS(sh->wstatus);
+	}
 	dup2(sh->stdin_copy, STDIN_FILENO);
 	close(sh->stdin_copy);
 	free_arr(envp);
@@ -222,9 +222,6 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 		wait(&sh->wstatus);
 		if (WIFEXITED(sh->wstatus))
 			g_exit_code = WEXITSTATUS(sh->wstatus);
-		// Later: EXIT_NO_ARG is used so that $? is set properly. if EXIT_NO_ARG then $? should remain the value of the last pipeline
-		if (WEXITSTATUS(sh->wstatus) == EXIT_NO_ARG)
-			sh->exit = 1;
 	}
 	free_arr(envp);
 }
