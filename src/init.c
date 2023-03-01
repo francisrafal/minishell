@@ -21,7 +21,6 @@ t_shell	*init_shell(char **envp)
 		perror_exit("malloc");
 	sh->env = init_env(envp);
 	increase_shell_level(sh->env);
-	sh->exit = 0;
 	sh->stdin_copy = 0;
 	return (sh);
 }
