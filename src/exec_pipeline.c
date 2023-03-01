@@ -158,9 +158,12 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 	free_arr(envp);
 }
 
-int	child_process_single_cmd(t_cmd *cmd, char **envp)
+int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 {
 	char	*cmd_path;
+		/* Questionable here */
+	char	**cmd_opt;
+		/* Questionable end here */
 
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
@@ -175,12 +178,37 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp)
 	// handle Signals
 	cmd_path = get_cmd_path(cmd);
 	// do for commands without forward slash first, then later handle relative and absolute paths
-	if (execve(cmd_path, cmd->opt, envp) == -1)
-		free(cmd_path);
+	if (is_builtin(cmd))
+	{
+		g_exit_code = exec_builtin(cmd->opt, sh, EXEC_AS_CHILD);
+		free_data(sh);
+		/* Questionable here */
+		free_null(cmd->delim);
+		free_arr(cmd->path);
+		free_arr(cmd->opt);
+		free_null(cmd);
+		free_arr(envp);
+		/* Questionable end here */
+		exit(g_exit_code);
+	}
+	else
+	{
+		cmd_path = get_cmd_path(cmd);
+		free_data(sh);
+		/* Questionable here */
+		free_null(cmd->delim);
+		free_arr(cmd->path);
+		cmd_opt = cmd->opt;
+		free_null(cmd);
+		/* Questionable end here */
+		// do for commands without forward slash first, then later handle relative and absolute paths
+		if (execve(cmd_path, cmd_opt, envp) == -1)
+			free(cmd_path);
+	}
 	return (-1);
 }
 
-void	exec_as_child(t_cmd *cmd, t_shell *sh)
+void	exec_one_child(t_cmd *cmd, t_shell *sh)
 {
 	char	**envp;
 	pid_t	pid;
@@ -195,13 +223,18 @@ void	exec_as_child(t_cmd *cmd, t_shell *sh)
 	}
 	if (pid == 0)
 	{
-		if (child_process_single_cmd(cmd, envp) == -1)
+		if (child_process_single_cmd(cmd, envp, sh) == -1)
 			return ;
 		// exit code on sys call error?
 	}
 	else
 	{
-		wait(NULL); // maybe wait outside of loop to handle last exit code
+		wait(&sh->wstatus);
+		if (WIFEXITED(sh->wstatus))
+			g_exit_code = WEXITSTATUS(sh->wstatus);
+		// Later: EXIT_NO_ARG is used so that $? is set properly. if EXIT_NO_ARG then $? should remain the value of the last pipeline
+		if (WEXITSTATUS(sh->wstatus) == EXIT_NO_ARG)
+			sh->exit = 1;
 	}
 	free_arr(envp);
 }

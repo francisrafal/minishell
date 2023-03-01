@@ -104,10 +104,17 @@ int		get_arr_size(char **arr);
 
 /* exec.c */
 int		exec_builtin(char **cmd_args, t_shell *sh, int mode);
-void	exec_bi_as_parent(char **cmd_args, t_shell *sh);
 void	exec_bi_as_child(char **cmd_args, t_shell *sh);
 void	exec_single_cmd(t_cmd *cmd, t_shell *sh);
+
+/* exec_pipeline.c */
 void	exec_pipeline(t_cmd *cmd, t_shell *sh);
+int		child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh);
+void	exec_one_child(t_cmd *cmd, t_shell *sh);
+int		child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh);
+int		is_builtin(t_cmd *cmd);
+char	*get_cmd_path(t_cmd *cmd);
+void	append_str(char ***paths, char *str);
 
 /* list_utils.c */
 t_cmd	*ft_lstnew(int ncmds);
