@@ -103,10 +103,16 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		pipefd[2];
 	char	**envp;
-	pid_t	pid;
+	pid_t	*pid;
+	int		i;
+	int		j;
 
+	pid = malloc(sizeof (pid_t) * cmd->ncmds);
+	if (pid == NULL)
+		return ;
 	envp = get_env_arr(sh->env);
 	sh->stdin_copy = dup(STDIN_FILENO);
+	i = 0;
 	while (cmd)
 	{
 		append_str(&cmd->path, "/");
@@ -118,13 +124,13 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 				return ;
 			}
 		}
-		pid = fork();
-		if (pid == -1)
+		pid[i] = fork();
+		if (pid[i] == -1)
 		{
 			perror("fork");
 			return ;
 		}
-		if (pid == 0)
+		if (pid[i] == 0)
 		{
 			if (child_process_pipeline(pipefd, cmd, envp, sh) == -1)
 				return ;
@@ -132,17 +138,29 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		}
 		else
 		{
-			wait(NULL); // maybe wait outside of loop to handle last exit code
 			if (cmd->next != NULL)
 				close(pipefd[1]);
 			cmd = cmd->next;
 			dup2(pipefd[0], STDIN_FILENO);
 			close(pipefd[0]);
+			i++;
 		}
 	}
+	j = 0;
+	while (j < i)
+	{
+		waitpid(pid[j], &sh->wstatus, 0);
+		j++;
+	}
+	if (WIFEXITED(sh->wstatus))
+		g_exit_code = WEXITSTATUS(sh->wstatus);
+	// Later: EXIT_NO_ARG is used so that $? is set properly. if EXIT_NO_ARG then $? should remain the value of the last pipeline
+	if (WEXITSTATUS(sh->wstatus) == EXIT_NO_ARG)
+		sh->exit = 1;
 	dup2(sh->stdin_copy, STDIN_FILENO);
 	close(sh->stdin_copy);
 	free_arr(envp);
+	free(pid);
 }
 
 int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
