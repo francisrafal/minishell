@@ -57,9 +57,6 @@ int	is_builtin(t_cmd *cmd)
 int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 {
 	char	*cmd_path;
-		/* Questionable here */
-	char	**cmd_opt;
-		/* Questionable end here */
 
 	if (cmd->next != NULL)
 	{
@@ -86,27 +83,17 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 	{
 		g_exit_code = exec_builtin(cmd->opt, sh, EXEC_AS_CHILD);
 		free_data(sh);
-		/* Questionable here */
-		free_null(cmd->delim);
-		free_arr(cmd->path);
-		free_arr(cmd->opt);
-		free_null(cmd);
 		free_arr(envp);
-		/* Questionable end here */
 		exit(g_exit_code);
 	}
 	else
 	{
-		cmd_path = get_cmd_path(cmd);
+		if (cmd->opt[0] - ft_strchr(cmd->opt[0], '/') == (long)cmd->opt[0])
+			cmd_path = get_cmd_path(cmd);
+		else
+			cmd_path = ft_strdup(cmd->opt[0]);
 		free_data(sh);
-		/* Questionable here */
-		free_null(cmd->delim);
-		free_arr(cmd->path);
-		cmd_opt = cmd->opt;
-		free_null(cmd);
-		/* Questionable end here */
-		// do for commands without forward slash first, then later handle relative and absolute paths
-		if (execve(cmd_path, cmd_opt, envp) == -1)
+		if (execve(cmd_path, cmd->opt, envp) == -1)
 			free(cmd_path);
 	}
 	return (-1);
@@ -161,9 +148,6 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 {
 	char	*cmd_path;
-		/* Questionable here */
-	char	**cmd_opt;
-		/* Questionable end here */
 
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
@@ -176,33 +160,21 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 		return (-1);
 	}
 	// handle Signals
-	cmd_path = get_cmd_path(cmd);
-	// do for commands without forward slash first, then later handle relative and absolute paths
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd->opt, sh, EXEC_AS_CHILD);
 		free_data(sh);
-		/* Questionable here */
-		free_null(cmd->delim);
-		free_arr(cmd->path);
-		free_arr(cmd->opt);
-		free_null(cmd);
 		free_arr(envp);
-		/* Questionable end here */
 		exit(g_exit_code);
 	}
 	else
 	{
-		cmd_path = get_cmd_path(cmd);
+		if (cmd->opt[0] - ft_strchr(cmd->opt[0], '/') == (long)cmd->opt[0])
+			cmd_path = get_cmd_path(cmd);
+		else
+			cmd_path = ft_strdup(cmd->opt[0]);
 		free_data(sh);
-		/* Questionable here */
-		free_null(cmd->delim);
-		free_arr(cmd->path);
-		cmd_opt = cmd->opt;
-		free_null(cmd);
-		/* Questionable end here */
-		// do for commands without forward slash first, then later handle relative and absolute paths
-		if (execve(cmd_path, cmd_opt, envp) == -1)
+		if (execve(cmd_path, cmd->opt, envp) == -1)
 			free(cmd_path);
 	}
 	return (-1);
