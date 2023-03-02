@@ -36,6 +36,7 @@ typedef	struct s_shell
 	int				wstatus;
 	struct s_env	*env;
 	int				stdin_copy;
+	pid_t			*pid;
 }	t_shell;
 
 /* Struct for each command of one pipe */

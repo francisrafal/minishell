@@ -22,6 +22,7 @@ t_shell	*init_shell(char **envp)
 	sh->env = init_env(envp);
 	increase_shell_level(sh->env);
 	sh->stdin_copy = 0;
+	sh->pid = NULL;
 	return (sh);
 }
 
