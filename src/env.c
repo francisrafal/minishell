@@ -56,6 +56,7 @@ char **get_env_arr(t_env *env)
 		}
 		runner = runner->next;
 	}
+	env_arr[i] = NULL;
 	return (env_arr);
 }
 
