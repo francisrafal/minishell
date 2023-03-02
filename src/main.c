@@ -37,7 +37,10 @@ int	main(int argc, char **argv, char **envp)
 		if (cmd->ncmds == 1)
 			exec_single_cmd(cmd, sh);
 		else
+		{
+			set_signal_action(EXEC_AS_CHILD);
 			exec_pipeline(cmd, sh);
+		}
 		free_lst(&cmd);
 	}
 	return (0);
