@@ -97,4 +97,5 @@ val:			all
 				--track-fds=yes \
 				--show-leak-kinds=all \
 				--suppressions=.ignore_readline_leaks \
+				--track-origins=yes \
 				./${NAME}
