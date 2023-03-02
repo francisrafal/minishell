@@ -30,5 +30,8 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *sh)
 	else if (ft_strncmp(cmd->opt[0], "unset", 6) == 0)
 		exec_builtin(cmd->opt, sh, EXEC_AS_PARENT);
 	else
+	{
+		set_signal_action(EXEC_AS_CHILD);
 		exec_one_child(cmd, sh);
+	}
 }
