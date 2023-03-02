@@ -31,7 +31,8 @@ char	*get_cmd_path(t_cmd *cmd)
 		free(cmd_path);
 		i++;
 	}
-	perror_exit("access");
+
+	//perror_exit("access");
 	return (cmd_path);
 }
 
@@ -82,6 +83,7 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd->opt, sh, EXEC_AS_CHILD);
+		free_lst(&cmd);
 		free_data(sh);
 		free_arr(envp);
 		exit(g_exit_code);
@@ -103,12 +105,11 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		pipefd[2];
 	char	**envp;
-	pid_t	*pid;
 	int		i;
 	int		j;
 
-	pid = malloc(sizeof (pid_t) * cmd->ncmds);
-	if (pid == NULL)
+	sh->pid = malloc(sizeof (pid_t) * cmd->ncmds);
+	if (sh->pid == NULL)
 		return ;
 	envp = get_env_arr(sh->env);
 	sh->stdin_copy = dup(STDIN_FILENO);
@@ -124,13 +125,13 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 				return ;
 			}
 		}
-		pid[i] = fork();
-		if (pid[i] == -1)
+		sh->pid[i] = fork();
+		if (sh->pid[i] == -1)
 		{
 			perror("fork");
 			return ;
 		}
-		if (pid[i] == 0)
+		if (sh->pid[i] == 0)
 		{
 			if (child_process_pipeline(pipefd, cmd, envp, sh) == -1)
 				return ;
@@ -149,7 +150,7 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 	j = 0;
 	while (j < i)
 	{
-		waitpid(pid[j], &sh->wstatus, 0);
+		waitpid(sh->pid[j], &sh->wstatus, 0);
 		j++;
 	}
 	if (WIFEXITED(sh->wstatus))
@@ -160,7 +161,7 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 	dup2(sh->stdin_copy, STDIN_FILENO);
 	close(sh->stdin_copy);
 	free_arr(envp);
-	free(pid);
+	free(sh->pid);
 }
 
 int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
@@ -181,6 +182,7 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd->opt, sh, EXEC_AS_CHILD);
+		free_lst(&cmd);
 		free_data(sh);
 		free_arr(envp);
 		exit(g_exit_code);

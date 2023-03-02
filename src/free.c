@@ -3,6 +3,7 @@
 void	free_data(t_shell *sh)
 {
 	free_env(sh->env);
+	free_null(sh->pid);
 	free_null(sh);
 }
 
