@@ -213,7 +213,7 @@ int	bi_export_no_args(char **cmd_args, t_shell *sh, int mode)
 		if (runner->value == NULL)
 			printf("declare -x %s\n", runner->key);
 		else
-			printf("declare -x %s=\"%s\"\n", runner->key, runner->value);
+			print_with_escaped_quotes(runner->key, runner->value);
 		runner = runner->next;
 	}	
 	free_env(tmp);
