@@ -66,11 +66,11 @@ void	free_lst(t_cmd **lst)
 		while (node)
 		{
 			next = node->next;
-			if(node->delim)
+			if (node->delim)
 				free(node->delim);
-			if(node->path)
+			if (node->path)
 				free_arr(node->path);
-			if(node->opt)
+			if (node->opt)
 				free_arr(node->opt);
 			free_null(node);
 			node = next;
