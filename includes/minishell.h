@@ -101,6 +101,7 @@ int		bi_unset(char **cmd_args, t_shell *sh, int mode);
 
 /* builtin_utils.c */
 int		get_arr_size(char **arr);
+void	print_with_escaped_quotes(char *key, char *value);
 
 /* exec.c */
 int		exec_builtin(char **cmd_args, t_shell *sh, int mode);
@@ -198,8 +199,8 @@ t_shell	*init_shell(char **envp);
 void	increase_shell_level(t_env *env);
 
 /* signals.c */
-void	handle_sigint_parent(int signum);
-void	handle_sigquit_child(int signum);
+void	handle_signal_parent(int signum);
+void	handle_signal_child(int signum);
 void	set_signal_action(int mode);
 
 
