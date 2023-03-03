@@ -173,7 +173,8 @@ char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env);
 
 /* error.c */
 void	perror_exit(char *err);
-int     ft_error(char *str, char *err);
+int		ft_error(char *str, char *err);
+void	print_exec_error(t_cmd *cmd);
 
 /* env.c */
 //char		**copy_env(char **envp);

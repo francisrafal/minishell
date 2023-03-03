@@ -54,7 +54,7 @@ char	*fill_cmds(char *line, int len)
 		return (NULL);
 	ft_strlcpy(str, line, len + 1);
 	trim = ft_strtrim(str, "\t ");
-	free(str);
+	str = free_null(str);
 	return (trim);
 }
 

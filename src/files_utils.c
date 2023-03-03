@@ -64,11 +64,11 @@ char	*cut_word(char *str, char c)
 		return (NULL);
 	ft_strlcpy(new, str, i[2] + 1);
 	ft_strlcpy(&new[i[2]], &str[i[0] + i[1]], i[3] - i[2] + 1);
-	free(str);
+	str = free_null(str);
 	trim = ft_strtrim(new, "\t ");
 	if (!trim)
 		return (NULL);
-	free(new);
+	new = free_null(new);
 	return (trim);
 }
 
@@ -94,6 +94,6 @@ char	*get_file_name(char *str, char c)
 	trim = ft_strtrim(file, "\"\'");
 	if (!trim)
 		return (NULL);
-	free(file);
+	file = free_null(file);
 	return (trim);
 }

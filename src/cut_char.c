@@ -80,7 +80,7 @@ char	*replace_chars(char *str, t_env *env)
 							tmp = free_null(tmp);
 					m += l;
 					i += k + 1;
-					 // free(tmp);
+					 // tmp = free_null(tmp);
 				}
 				else
 					i += k + 1;

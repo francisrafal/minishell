@@ -15,9 +15,9 @@ int	here_doc(char *av)
 			break ;
 		write(file, buf, ft_strlen(buf));
 		write(file, "\n", 1);
-		free(buf);
+		buf = free_null(buf);
 	}
-	free(buf);
+	buf = free_null(buf);
 	close(file);
 	file = open(".heredoc_tmp", O_RDONLY, 0644);
 	return (file);
@@ -64,10 +64,10 @@ char	*get_infile(t_cmd *cmd, char *line)
 		{
 			if (fd_in)
 				close(fd_in);
-			free(file);
+			file = free_null(file);
 		}
 	}
 	cmd->fd_in = fd_in;
-	free(file);
+	file = free_null(file);
 	return (line);
 }

@@ -13,14 +13,14 @@ int	check_str_env(char *str, t_env *env, int k)
 	ft_strlcpy(new, str, k + 1);
 	if (!ft_strncmp(new, "?", 2))
 	{
-		free(new);
+		new = free_null(new);
 		nb = ft_itoa(g_exit_code);
 		size = (int)ft_strlen(nb);
 		nb = free_null(nb);
 		return (size);
 	}
 	tmp = find_env_node(env, new);
-	free(new);
+	new = free_null(new);
 	if (tmp == NULL)
 		return (0);
 	else
@@ -38,11 +38,11 @@ char	*get_str_env(char *str, t_env *env, int k)
 	ft_strlcpy(new, str, k + 1);
 	if (!ft_strncmp(new, "?", 2))
 	{
-		free(new);
+		new = free_null(new);
 		return (ft_itoa(g_exit_code));
 	}
 	tmp = find_env_node(env, new);
-	free(new);
+	new = free_null(new);
 	if (tmp == NULL)
 		return (0);
 	else
