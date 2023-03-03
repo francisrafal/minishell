@@ -156,7 +156,9 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 			if (child_process_pipeline(pipefd, cmd, envp, sh) == -1)
 			{
 				envp = free_arr_null(envp);
+				sh = free_data_null(sh);
 				print_exec_error(cmd);
+				cmd = free_lst_null(cmd);
 				if (errno == 13)
 					exit(126);
 				if (errno == 2)
@@ -239,7 +241,6 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 			envp = free_arr_null(envp);
 			exit (0);
 		}
-		sh = free_data_null(sh);
 		if (cmd->opt[0] - ft_strchr(cmd->opt[0], '/') == (long)cmd->opt[0])
 		{
 			cmd_path = get_cmd_path(cmd);
@@ -248,6 +249,7 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 		}
 		else
 			cmd_path = ft_strdup(cmd->opt[0]);
+		sh = free_data_null(sh);
 		if (execve(cmd_path, cmd->opt, envp) == -1)
 			cmd_path = free_null(cmd_path);
 	}
@@ -272,7 +274,9 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 		if (child_process_single_cmd(cmd, envp, sh) == -1)
 		{
 			envp = free_arr_null(envp);
+			sh = free_data_null(sh);
 			print_exec_error(cmd);
+			cmd = free_lst_null(cmd);
 			if (errno == 13)
 				exit(126);
 			if (errno == 2)
