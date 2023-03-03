@@ -16,7 +16,7 @@ int	check_str_env(char *str, t_env *env, int k)
 		free(new);
 		nb = ft_itoa(g_exit_code);
 		size = (int)ft_strlen(nb);
-		free_null(nb);
+		nb = free_null(nb);
 		return (size);
 	}
 	tmp = find_env_node(env, new);

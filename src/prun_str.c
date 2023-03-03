@@ -119,6 +119,6 @@ char	*prun_str(char *str)
 		}
 	}
 	new[i[1]] = '\0';
-	free_null(str);
+	str = free_null(str);
 	return (new);
 }

@@ -1,94 +1,83 @@
 #include "minishell.h"
 
-void	free_data(t_shell *sh)
+void	*free_data_null(t_shell *sh)
 {
-	free_env(sh->env);
-	free_null(sh->pid);
-	free_null(sh);
+	sh->env = free_env_null(sh->env);
+	sh->pid = free_null(sh->pid);
+	sh = free_null(sh);
+	return (NULL);
 }
 
-void	free_env(t_env *env)
+void	*free_env_null(t_env *env)
 {
 	t_env_node	*runner;	
 	t_env_node	*tmp;	
 
+	if (env == NULL)
+		return (NULL);
 	runner = env->head;
 	if (runner == NULL)
 	{
-		free_null(env);
-		return ;
+		env = free_null(env);
+		return (NULL);
 	}
 	while (runner)
 	{
 		tmp = runner;
 		runner = tmp->next;
-		free_env_node(tmp);
+		tmp = free_env_node_null(tmp);
 	}	
-	free_null(env);
+	env = free_null(env);
+	return (NULL);
 }
 
-void	free_env_node(t_env_node *node)
+void	*free_env_node_null(t_env_node *node)
 {
-	free_null(node->key);
-	free_null(node->value);
-	free_null(node);
+	if (node == NULL)
+		return (NULL);
+	node->key = free_null(node->key);
+	node->value = free_null(node->value);
+	node = free_null(node);
+	return (NULL);
 }
 
-void	free_arr(char **arr)
+void	*free_arr_null(char **arr)
 {
 	int	i;
 
 	if (arr == NULL)
-		return ;
+		return (NULL);
 	i = 0;
 	while (arr[i])
-		free_null(arr[i++]);
-	if (arr)
-		free_null(arr);
+	{
+		arr[i] = free_null(arr[i]);
+		i++;
+	}
+	arr = free_null(arr);
+	return (NULL);
 }
 
-void	free_null(void *ptr)
+void	*free_null(void *ptr)
 {
 	if (ptr)
-	{
 		free(ptr);
-		ptr = NULL;
-	}
+	return (NULL);
 }
 
-void	free_lst(t_cmd **lst)
+void	*free_lst_null(t_cmd *node)
 {
-	t_cmd	*node;
 	t_cmd	*next;
 
-	node = *lst;
-	if (node)
+	if (node == NULL)
+		return (NULL);
+	while (node)
 	{
-		while (node)
-		{
-			next = node->next;
-			if (node->delim)
-				free(node->delim);
-			if (node->path)
-				free_arr(node->path);
-			if (node->opt)
-				free_arr(node->opt);
-			free_null(node);
-			node = next;
-		}
+		node->delim = free_null(node->delim);
+		node->path = free_arr_null(node->path);
+		node->opt = free_arr_null(node->opt);
+		next = node->next;
+		node = free_null(node);
+		node = next;
 	}
-	*lst = NULL;
+	return (NULL);
 }
-
-/*void    free_cmd(t_cmd *cmd)
-{
-        if(cmd)
-        {
-                if(cmd->delim)
-                        free(cmd->delim);
-                free_lst(cmd->lst_cmds);
-                free_null(cmd);
-
-        }
-        cmd = NULL;
-}*/

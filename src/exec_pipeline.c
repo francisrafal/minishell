@@ -83,9 +83,9 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
-		free_lst(&cmd);
-		free_data(sh);
-		free_arr(envp);
+		cmd = free_lst_null(cmd);
+		sh = free_data_null(sh);
+		envp = free_arr_null(envp);
 		exit(g_exit_code);
 	}
 	else
@@ -94,7 +94,7 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 			cmd_path = get_cmd_path(cmd);
 		else
 			cmd_path = ft_strdup(cmd->opt[0]);
-		free_data(sh);
+		sh = free_data_null(sh);
 		if (execve(cmd_path, cmd->opt, envp) == -1)
 			free(cmd_path);
 	}
@@ -160,7 +160,7 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 	}
 	dup2(sh->stdin_copy, STDIN_FILENO);
 	close(sh->stdin_copy);
-	free_arr(envp);
+	envp = free_arr_null(envp);
 	free(sh->pid);
 }
 
@@ -182,9 +182,9 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
-		free_lst(&cmd);
-		free_data(sh);
-		free_arr(envp);
+        cmd = free_lst_null(cmd);
+		sh = free_data_null(sh);
+		envp = free_arr_null(envp);
 		exit(g_exit_code);
 	}
 	else
@@ -193,7 +193,7 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 			cmd_path = get_cmd_path(cmd);
 		else
 			cmd_path = ft_strdup(cmd->opt[0]);
-		free_data(sh);
+		sh = free_data_null(sh);
 		if (execve(cmd_path, cmd->opt, envp) == -1)
 			free(cmd_path);
 	}
@@ -225,7 +225,7 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 		if (WIFEXITED(sh->wstatus))
 			g_exit_code = WEXITSTATUS(sh->wstatus);
 	}
-	free_arr(envp);
+	envp = free_arr_null(envp);
 }
 
 /*
