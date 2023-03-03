@@ -43,7 +43,7 @@ char	*replace_chars(char *str, t_env *env)
 						tmp = get_str_env(&str[i+1], env, k);
                         ft_strlcpy(&line[m], tmp, l+1);
 						if (str[i+1] == '?' && l == 1)
-							free_null(tmp);
+							tmp = free_null(tmp);
                         m += l;
                         i += k;
 						//printf("%s\n %s\n", &str[i], line);
@@ -77,7 +77,7 @@ char	*replace_chars(char *str, t_env *env)
 					tmp = get_str_env(&str[i+1], env, k);
 					ft_strlcpy(&line[m], tmp, l+1);
 					if (str[i+1] == '?' && l == 1)
-							free_null(tmp);
+							tmp = free_null(tmp);
 					m += l;
 					i += k + 1;
 					 // free(tmp);
@@ -93,6 +93,6 @@ char	*replace_chars(char *str, t_env *env)
 			m++;
 		}
 	}
-	free_null(str);
+	str = free_null(str);
 	return (line);
 }

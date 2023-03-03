@@ -213,7 +213,7 @@ void	remove_env_node(t_env *env, char *key)
 	{
 		tmp = runner;
 		env->head = runner->next;
-		free_env_node(runner);
+		runner = free_env_node_null(runner);
 		return ;
 	}
 	while (runner->next && ft_strncmp(key, runner->next->key, ft_strlen(runner->next->key) + 1))
@@ -222,7 +222,7 @@ void	remove_env_node(t_env *env, char *key)
 	{
 		tmp = runner->next;
 		runner->next = runner->next->next;
-		free_env_node(tmp);
+		tmp = free_env_node_null(tmp);
 		env->size--;
 	}
 }
@@ -308,7 +308,7 @@ t_env_node	*replace_node_value(t_env_node *node, char *value)
 {
 	if (node == NULL)
 		return (NULL);
-	free_null(node->value);
+	node->value = free_null(node->value);
 	node->value = ft_strdup(value);	
 	return (node);
 }

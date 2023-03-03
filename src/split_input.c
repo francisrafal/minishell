@@ -24,7 +24,7 @@ int	split_line(t_cmd **lst_cmds, const char *str, int ncmds, t_env *env)
 	if (!cmd->path)
 		return (1);
 	ft_lstadd_back(lst_cmds, cmd);
-	free_null(line);
+	line = free_null(line);
 	return (0);
 }
 
@@ -41,12 +41,12 @@ t_cmd	*split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env)
 				break ;
 			i++;
 		}
-		free_arr(cmds);
+		cmds = free_arr_null(cmds);
 		return (lst_cmds);
 	}
 	else
 	{
-		free_arr(cmds);
+		cmds = free_arr_null(cmds);
 		return (NULL);
 	}
 }

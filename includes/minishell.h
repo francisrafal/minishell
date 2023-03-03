@@ -123,17 +123,16 @@ void	ft_lstadd_back(t_cmd **lst, t_cmd *new);
 void	ft_display_lst(t_cmd *lst);
 
 /* free.c */
-void	free_arr(char **arr);
-void	free_null(void *ptr);
-void	free_lst(t_cmd **lst);
-//void    free_cmd(t_cmd *cmd);
-void	free_data(t_shell *sh);
-void	free_env(t_env *env);
-void	free_env_node(t_env_node *node);
+void	*free_arr_null(char **arr);
+void	*free_null(void *ptr);
+void	*free_lst_null(t_cmd *node);
+void	*free_data_null(t_shell *sh);
+void	*free_env_null(t_env *env);
+void	*free_env_node_null(t_env_node *node);
 
 /* split_input.c*/
 int		split_line(t_cmd **cmd, const char *str, int ncmds, t_env *env);
-t_cmd   *split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env);
+t_cmd	*split_input_cmd(char **cmds, int ncmds, t_cmd *lst_cmds, t_env *env);
 t_cmd	*split_input(char *line, t_env *env);
 
 /* check_input.c and check_input2.c*/

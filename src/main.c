@@ -21,19 +21,19 @@ int	main(int argc, char **argv, char **envp)
 			cmd_line = ft_strdup("exit");
 		if (cmd_line[0] == 0)
 		{
-			free_null(cmd_line);
+			cmd_line = free_null(cmd_line);
 			continue ;
 		}
 		add_history(cmd_line);
 		cmd = split_input(cmd_line, sh->env);
 		if (!cmd)
 		{
-			free_null(cmd_line);
+			cmd_line = free_null(cmd_line);
 			printf("syntax error\n"); // write this to STDERR
 			continue ;
 		}
 		//ft_display_lst(cmd);
-		free_null(cmd_line);
+		cmd_line = free_null(cmd_line);
 		if (cmd->ncmds == 1)
 			exec_single_cmd(cmd, sh);
 		else
@@ -41,7 +41,7 @@ int	main(int argc, char **argv, char **envp)
 			set_signal_action(EXEC_AS_CHILD);
 			exec_pipeline(cmd, sh);
 		}
-		free_lst(&cmd);
+		cmd = free_lst_null(cmd);
 	}
 	return (0);
 }

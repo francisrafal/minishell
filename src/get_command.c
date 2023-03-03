@@ -75,7 +75,7 @@ char	**cut_empty_opt(char **cmds, int nopt)
 		tmp[0] = (char *)malloc(sizeof(char));
 		tmp[0] = "";
 		tmp[1] = NULL;
-		free_arr(cmds);
+		cmds = free_arr_null(cmds);
 		return (tmp);
 	}
 	i = 0;
@@ -90,7 +90,7 @@ char	**cut_empty_opt(char **cmds, int nopt)
 		j++;
 	}
 	tmp[i] = NULL;
-	free_arr(cmds);
+	cmds = free_arr_null(cmds);
 	return (tmp);	
 }
 

@@ -36,7 +36,7 @@ void	increase_shell_level(t_env *env)
 	{
 		new_shell_level = ft_itoa(ft_atoi(node->value) + 1);
 		replace_node_value(node, new_shell_level);
-		free_null(new_shell_level);
+		new_shell_level = free_null(new_shell_level);
 	}
 	else
 	{
