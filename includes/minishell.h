@@ -49,6 +49,7 @@ typedef struct s_cmd
 	int				re_out_app;
 	int				fd_in;
 	int				fd_out;
+	int				cmd_id;
 	int 			ncmds;
 	char 			**path;
 	char			**opt;
@@ -119,6 +120,7 @@ void	append_str(char ***paths, char *str);
 
 /* list_utils.c */
 t_cmd	*ft_lstnew(int ncmds);
+int		ft_lstsize(t_cmd *lst);
 void	ft_lstadd_back(t_cmd **lst, t_cmd *new);
 void	ft_display_lst(t_cmd *lst);
 
@@ -157,6 +159,7 @@ int		open_close_outfile(char * tmp, char *file, t_cmd *cmd);
 char	*get_outfile(t_cmd *cmd, char *line);
 
 /* get_infile.c */
+char	*get_heredoc_name(int cmd_id);
 char	*get_infile(t_cmd *cmd, char *line);
 
 /* prun_str.c */

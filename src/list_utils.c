@@ -13,11 +13,25 @@ t_cmd	*ft_lstnew(int ncmds)
 	elem->delim = NULL;
 	elem->fd_in = 0;
 	elem->fd_out = 1;
+	elem->cmd_id = 0;
 	elem->ncmds = ncmds;
 	elem->next = NULL;
 	elem->path = NULL;
 	elem->opt = NULL;
 	return (elem);
+}
+
+int	ft_lstsize(t_cmd *lst)
+{
+		int	i;
+
+		i = 0;
+		while (lst != NULL)
+		{
+			i++;
+			lst = lst->next;
+		}
+		return (i);
 }
 
 void	ft_lstadd_back(t_cmd **lst, t_cmd *new)

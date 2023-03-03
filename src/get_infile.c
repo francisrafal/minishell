@@ -1,27 +1,32 @@
 #include "minishell.h"
 
-void	print_heredoc_error(char *av)
+char	*get_heredoc_name(int cmd_id)
 {
-	write(2, "minishell: warning : here-document delimited ", 45);
-	write(2, "by end-of-file (wanted `", 24);
-	write(2, av, ft_strlen(av));
-	write(2, "`)\n", 3);
+	char	*nb;
+	char	*name;
+
+	name = NULL;
+	nb = ft_itoa(cmd_id);
+	name = ft_strjoin(".heredoc_tmp", nb);
+	if (!name)
+		return (NULL);
+	nb = free_null(nb);
+	return (name);
 }
 
-int	here_doc(char *av)
+void	write_heredoc(int file, char *av)
 {
-	int		file;
 	char	*buf;
 
-	file = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (file < 0)
-		return (ft_error(strerror(errno), ".heredoc_tmp"));
 	while (1)
 	{
 		buf = readline(HERE_DOC);
 		if (buf == NULL)
 		{
-			print_heredoc_error(av);
+			write(2, "minishell: warning : here-document delimited ", 45);
+			write(2, "by end-of-file (wanted `", 24);
+			write(2, av, ft_strlen(av));
+			write(2, "`)\n", 3);
 			break ;
 		}
 		if (!ft_strncmp(av, buf, ft_strlen(av)))
@@ -31,8 +36,23 @@ int	here_doc(char *av)
 		buf = free_null(buf);
 	}
 	buf = free_null(buf);
+}
+
+int	here_doc(char *av, t_cmd *cmd)
+{
+	int		file;
+	char	*name;
+
+	name = get_heredoc_name(cmd->cmd_id);
+	if (!name)
+		return (-1);
+	file = open(name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (file < 0)
+		return (ft_error(strerror(errno), ".heredoc_tmp"));
+	write_heredoc(file, av);
 	close(file);
-	file = open(".heredoc_tmp", O_RDONLY, 0644);
+	file = open(name, O_RDONLY, 0644);
+	name = free_null(name);
 	return (file);
 }
 
@@ -44,7 +64,7 @@ int	handle_infile(char *tmp, char *file, t_cmd *cmd)
 	{
 		cmd->read_in = 1;
 		cmd->re_in = 0;
-		fd_in = here_doc(file);
+		fd_in = here_doc(file, cmd);
 	}
 	else
 	{
