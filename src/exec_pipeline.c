@@ -60,7 +60,12 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 	char	*cmd_path;
 
 	if (cmd->fd_in == -1)
-		return (-1);
+	{
+		cmd = free_lst_null(cmd);
+		sh = free_data_null(sh);
+		envp = free_arr_null(envp);
+		exit (1);
+	}	
 	if (cmd->next != NULL)
 	{
 		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
@@ -188,7 +193,12 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 	char	*cmd_path;
 
 	if (cmd->fd_in == -1)
-		return (-1);
+	{
+		cmd = free_lst_null(cmd);
+		sh = free_data_null(sh);
+		envp = free_arr_null(envp);
+		exit (1);
+	}
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
 		perror("dup2");
@@ -211,7 +221,6 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 	{
 		if (cmd->opt[0][0] == '\0')
 		{
-			printf("we are here\n");
 			cmd = free_lst_null(cmd);
 			sh = free_data_null(sh);
 			envp = free_arr_null(envp);
