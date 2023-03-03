@@ -11,7 +11,7 @@ void	append_str(char ***paths, char *str)
 	{
 		tmp = (*paths)[i];
 		(*paths)[i] = ft_strjoin(tmp, str);
-		free(tmp);
+		tmp = free_null(tmp);
 		i++;
 	}
 }
@@ -28,7 +28,7 @@ char	*get_cmd_path(t_cmd *cmd)
 		cmd_path = ft_strjoin(cmd->path[i], cmd->opt[0]);
 		if (access(cmd_path, F_OK | X_OK) == 0)
 			return (cmd_path);
-		free(cmd_path);
+		cmd_path = free_null(cmd_path);
 		i++;
 	}
 
@@ -63,21 +63,20 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 	{
 		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
 		{
-			perror("dup2_1");
+			perror("dup2");
 			return (-1);
 		}
 	}
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
-		perror("dup2_2");
+		perror("dup2");
 		return (-1);
 	}
 	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
 	{
-		perror("dup2_3");
+		perror("dup2");
 		return (-1);
 	}
-	// handle Signals
 	close(pipefd[0]);
 	close(sh->stdin_copy);
 	if (is_builtin(cmd))
@@ -91,12 +90,16 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 	else
 	{
 		if (cmd->opt[0] - ft_strchr(cmd->opt[0], '/') == (long)cmd->opt[0])
+		{
 			cmd_path = get_cmd_path(cmd);
+			if (cmd_path == NULL)
+				return (-1);
+		}
 		else
 			cmd_path = ft_strdup(cmd->opt[0]);
 		sh = free_data_null(sh);
 		if (execve(cmd_path, cmd->opt, envp) == -1)
-			free(cmd_path);
+			cmd_path = free_null(cmd_path);
 	}
 	return (-1);
 }
@@ -134,8 +137,15 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		if (sh->pid[i] == 0)
 		{
 			if (child_process_pipeline(pipefd, cmd, envp, sh) == -1)
-				return ;
-			// exit code in syscall error?
+			{
+				envp = free_arr_null(envp);
+				print_exec_error(cmd);
+				if (errno == 13)
+					exit(126);
+				if (errno == 2)
+					exit(127);
+				exit(127);
+			}
 		}
 		else
 		{
@@ -161,7 +171,7 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 	dup2(sh->stdin_copy, STDIN_FILENO);
 	close(sh->stdin_copy);
 	envp = free_arr_null(envp);
-	free(sh->pid);
+	sh->pid = free_null(sh->pid);
 }
 
 int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
@@ -178,7 +188,6 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 		perror("dup2");
 		return (-1);
 	}
-	// handle Signals
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
@@ -189,13 +198,17 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 	}
 	else
 	{
+		sh = free_data_null(sh);
 		if (cmd->opt[0] - ft_strchr(cmd->opt[0], '/') == (long)cmd->opt[0])
+		{
 			cmd_path = get_cmd_path(cmd);
+			if (cmd_path == NULL)
+				return (-1);
+		}
 		else
 			cmd_path = ft_strdup(cmd->opt[0]);
-		sh = free_data_null(sh);
 		if (execve(cmd_path, cmd->opt, envp) == -1)
-			free(cmd_path);
+			cmd_path = free_null(cmd_path);
 	}
 	return (-1);
 }
@@ -216,8 +229,15 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 	if (pid == 0)
 	{
 		if (child_process_single_cmd(cmd, envp, sh) == -1)
-			return ;
-		// exit code on sys call error?
+		{
+			envp = free_arr_null(envp);
+			print_exec_error(cmd);
+			if (errno == 13)
+				exit(126);
+			if (errno == 2)
+				exit(127);
+			exit(127);
+		}
 	}
 	else
 	{

@@ -9,14 +9,14 @@
 	if (cmd[0] == '\"')
 	{
 		trim = ft_strtrim(cmd, "\"");
-		free(cmd);
+		cmd = free_null(cmd);
 		printf("replace var is missing!\n");
 
 	}
 	else if (cmd[0] == '\'')
 	{
 		trim = ft_strtrim(cmd, "\'");
-		free(cmd);
+		cmd = free_null(cmd);
 	}
 	return (trim);
 }

@@ -45,10 +45,10 @@ char	*get_outfile(t_cmd *cmd, char *line)
 		line = cut_word(line, '>');
 		tmp = ft_strchr(line, '>');
 		if (tmp)
-			free(file);
+			file = free_null(file);
 	}
 	fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	cmd->fd_out = fd_out;
-	free(file);
+	file = free_null(file);
 	return (line);
 }

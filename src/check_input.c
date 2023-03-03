@@ -41,7 +41,7 @@ int	check_quotes(char *str)
 				i += get_end_quote(&str[i + 1], '\'') + 1;
 			if (str[i] == '\0')
 			{
-				ft_error("", "syntax error with qoutes");
+				ft_error("", "syntax error with quotes");
 				return (1);
 			}
 		}

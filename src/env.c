@@ -51,7 +51,7 @@ char **get_env_arr(t_env *env)
 		{
 			tmp = ft_strjoin(runner->key, "=");
 			env_arr[i] = ft_strjoin(tmp, runner->value);
-			free(tmp);
+			tmp = free_null(tmp);
 			i++;
 		}
 		runner = runner->next;
@@ -101,9 +101,9 @@ t_env	*init_env(char **envp)
 		if (cwd == NULL)
 			perror_exit("getcwd");
 		pwd = ft_strjoin("PWD=", cwd);
-		free(cwd);
+		cwd = free_null(cwd);
 		append_env(env, create_env_node(pwd));
-		free(pwd);
+		pwd = free_null(pwd);
 	}
 	return (env);
 }

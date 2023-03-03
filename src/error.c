@@ -28,3 +28,12 @@ int	ft_error(char *str, char *err)
 	write(2, "\n", 1);
 	return (2);
 }
+
+void	print_exec_error(t_cmd *cmd)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(cmd->opt[0], STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(strerror(errno), STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+}

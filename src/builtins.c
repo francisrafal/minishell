@@ -49,7 +49,7 @@ int	bi_pwd(char **cmd_args, t_shell *sh, int mode)
 	if (cwd == NULL)
 		perror_exit("getcwd");
 	printf("%s\n", cwd);
-	free(cwd);
+	cwd = free_null(cwd);
 	return (0);
 }
 
@@ -89,11 +89,11 @@ int	bi_cd(char **cmd_args, t_shell *sh, int mode)
 	{
 		tmp = ft_strjoin("PWD=", cwd);
 		pwd = append_env(sh->env, create_env_node(tmp));
-		free(tmp);
+		tmp = free_null(tmp);
 	}
 	replace_node_value(oldpwd, pwd->value);
 	replace_node_value(pwd, cwd);
-	free(cwd);
+	cwd = free_null(cwd);
 	return (0);
 }
 
