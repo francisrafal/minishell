@@ -65,14 +65,7 @@ t_cmd	*split_input(char *line, t_env *env)
 			return (NULL);
 		lst_cmds = split_input_cmd(cmds, ncmds, lst_cmds, env);
 		if (!lst_cmds)
-		//{
-		//	printf("TODO: here exit because of syntax error\n");
 			return (NULL);
-		//}
 	}
-	/*else
-	{	
-		printf("TODO: here exit because of syntax error\n");
-	}*/
 	return (lst_cmds);
 }

@@ -63,21 +63,3 @@ void	*free_null(void *ptr)
 		free(ptr);
 	return (NULL);
 }
-
-void	*free_lst_null(t_cmd *node)
-{
-	t_cmd	*next;
-
-	if (node == NULL)
-		return (NULL);
-	while (node)
-	{
-		node->delim = free_null(node->delim);
-		node->path = free_arr_null(node->path);
-		node->opt = free_arr_null(node->opt);
-		next = node->next;
-		node = free_null(node);
-		node = next;
-	}
-	return (NULL);
-}

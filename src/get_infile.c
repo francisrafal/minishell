@@ -1,5 +1,13 @@
 #include "minishell.h"
 
+void	print_heredoc_error(char *av)
+{
+	write(2, "minishell: warning : here-document delimited ", 45);
+	write(2, "by end-of-file (wanted `", 24);
+	write(2, av, ft_strlen(av));
+	write(2, "`)\n", 3);
+}
+
 int	here_doc(char *av)
 {
 	int		file;
@@ -13,7 +21,7 @@ int	here_doc(char *av)
 		buf = readline(HERE_DOC);
 		if (buf == NULL)
 		{
-			ft_error("here-document at line 9 delimited by end-of-file (wanted `END`)", "warning");
+			print_heredoc_error(av);
 			break ;
 		}
 		if (!ft_strncmp(av, buf, ft_strlen(av)))
