@@ -82,7 +82,7 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 	close(sh->stdin_copy);
 	if (is_builtin(cmd))
 	{
-		g_exit_code = exec_builtin(cmd->opt, sh, EXEC_AS_CHILD);
+		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
 		free_lst(&cmd);
 		free_data(sh);
 		free_arr(envp);
@@ -181,7 +181,7 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 	// handle Signals
 	if (is_builtin(cmd))
 	{
-		g_exit_code = exec_builtin(cmd->opt, sh, EXEC_AS_CHILD);
+		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
 		free_lst(&cmd);
 		free_data(sh);
 		free_arr(envp);

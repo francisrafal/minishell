@@ -92,7 +92,7 @@ char	*get_cmd_line(void);
 int		bi_echo(char **cmd_args, t_shell *sh, int mode);
 int		bi_pwd(char **cmd_args, t_shell *sh, int mode);
 int		bi_cd(char **cmd_args, t_shell *sh, int mode);
-int		bi_exit(char **cmd_args, t_shell *sh, int mode);
+int		bi_exit(t_cmd *cmd, t_shell *sh, int mode);
 int		bi_env(char **cmd_args, t_shell *sh, int mode);
 int		bi_export(char **cmd_args, t_shell *sh, int mode);
 int		bi_export_no_args(char **cmd_args, t_shell *sh, int mode);
@@ -104,7 +104,7 @@ int		get_arr_size(char **arr);
 void	print_with_escaped_quotes(char *key, char *value);
 
 /* exec.c */
-int		exec_builtin(char **cmd_args, t_shell *sh, int mode);
+int		exec_builtin(t_cmd *cmd, t_shell *sh, int mode);
 void	exec_bi_as_child(char **cmd_args, t_shell *sh);
 void	exec_single_cmd(t_cmd *cmd, t_shell *sh);
 
