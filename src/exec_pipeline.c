@@ -31,8 +31,6 @@ char	*get_cmd_path(t_cmd *cmd)
 		cmd_path = free_null(cmd_path);
 		i++;
 	}
-
-	//perror_exit("access");
 	return (cmd_path);
 }
 
@@ -199,20 +197,30 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 		envp = free_arr_null(envp);
 		exit (1);
 	}
+	sleep(1);
+	lsof("child: after fork", getpid());
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
+	if (cmd->re_in)
+		close(cmd->fd_in);
+	sleep(1);
+	lsof("child: dup2(cmd->fd_in, STDIN_FILENO)", getpid());
 	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
+	if (cmd->re_out)
+		close(cmd->fd_out);
+	sleep(1);
+	lsof("child: dup2(cmd->fd_out, STDOUT_FILENO)", getpid());
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
-        cmd = free_lst_null(cmd);
+		cmd = free_lst_null(cmd);
 		sh = free_data_null(sh);
 		envp = free_arr_null(envp);
 		exit(g_exit_code);
@@ -248,6 +256,10 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 
 	envp = get_env_arr(sh->env);
 	append_str(&cmd->path, "/");
+	ft_putstr_fd("Parent PID: ", STDERR_FILENO);
+	ft_putnbr_fd(getpid(), STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	lsof("before fork", getpid());
 	pid = fork();
 	if (pid == -1)
 	{
@@ -256,6 +268,9 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 	}
 	if (pid == 0)
 	{
+		ft_putstr_fd("Child PID: ", STDERR_FILENO);
+		ft_putnbr_fd(getpid(), STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
 		if (child_process_single_cmd(cmd, envp, sh) == -1)
 		{
 			envp = free_arr_null(envp);
@@ -269,6 +284,11 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 	}
 	else
 	{
+		if (cmd->re_in)
+			close(cmd->fd_in);
+		if (cmd->re_out)
+			close(cmd->fd_out);
+		lsof("parent: after fork", getpid());
 		wait(&sh->wstatus);
 		if (WIFEXITED(sh->wstatus))
 			g_exit_code = WEXITSTATUS(sh->wstatus);

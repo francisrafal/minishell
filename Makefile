@@ -31,7 +31,8 @@ SRCSLIST		:= main.c \
 					exec.c \
 					exec_pipeline.c \
 					free.c \
-					signals.c
+					signals.c \
+					debug_helpers.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
