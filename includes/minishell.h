@@ -204,5 +204,5 @@ void	handle_signal_child(int signum);
 void	set_signal_action(int mode);
 
 /* debug_helpers.c */
-void	lsof(char *str, int pid);
+void	lsof(char *helper_message);
 #endif
