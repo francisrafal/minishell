@@ -31,8 +31,6 @@ char	*get_cmd_path(t_cmd *cmd)
 		cmd_path = free_null(cmd_path);
 		i++;
 	}
-
-	//perror_exit("access");
 	return (cmd_path);
 }
 
@@ -73,17 +71,22 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 			perror("dup2");
 			return (-1);
 		}
+		close(pipefd[1]);
 	}
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
+	if (cmd->re_in)
+		close(cmd->fd_in);
 	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
+	if (cmd->re_out)
+		close(cmd->fd_out);
 	close(pipefd[0]);
 	close(sh->stdin_copy);
 	if (is_builtin(cmd))
@@ -163,14 +166,22 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		}
 		else
 		{
+			if (cmd->re_in)
+				close(cmd->fd_in);
+			if (cmd->re_out)
+				close(cmd->fd_out);
 			if (cmd->next != NULL)
+			{
 				close(pipefd[1]);
-			cmd = cmd->next;
-			dup2(pipefd[0], STDIN_FILENO);
+				dup2(pipefd[0], STDIN_FILENO);
+			}
 			close(pipefd[0]);
+			cmd = cmd->next;
 			i++;
 		}
 	}
+	dup2(sh->stdin_copy, STDIN_FILENO);
+	close(sh->stdin_copy);
 	j = 0;
 	while (j < i)
 	{
@@ -182,8 +193,6 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		if (WEXITSTATUS(sh->wstatus) != EXIT_NO_ARG)
 			g_exit_code = WEXITSTATUS(sh->wstatus);
 	}
-	dup2(sh->stdin_copy, STDIN_FILENO);
-	close(sh->stdin_copy);
 	envp = free_arr_null(envp);
 	sh->pid = free_null(sh->pid);
 }
@@ -204,15 +213,19 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 		perror("dup2");
 		return (-1);
 	}
+	if (cmd->re_in)
+		close(cmd->fd_in);
 	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
+	if (cmd->re_out)
+		close(cmd->fd_out);
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
-        cmd = free_lst_null(cmd);
+		cmd = free_lst_null(cmd);
 		sh = free_data_null(sh);
 		envp = free_arr_null(envp);
 		exit(g_exit_code);
@@ -269,16 +282,13 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 	}
 	else
 	{
+		if (cmd->re_in)
+			close(cmd->fd_in);
+		if (cmd->re_out)
+			close(cmd->fd_out);
 		wait(&sh->wstatus);
 		if (WIFEXITED(sh->wstatus))
 			g_exit_code = WEXITSTATUS(sh->wstatus);
 	}
 	envp = free_arr_null(envp);
 }
-
-/*
-	if (fd_in != -1 && close(fd_in) < 0)
-		ft_error(strerror(errno), 0);
-	if (close(fd_out) < 0)
-		return (ft_error(strerror(errno), 0));
-*/
