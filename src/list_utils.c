@@ -37,6 +37,25 @@ void	ft_lstadd_back(t_cmd **lst, t_cmd *new)
 		*lst = new;
 }
 
+void	*free_lst_null(t_cmd *node)
+{
+	t_cmd	*next;
+
+	if (node == NULL)
+		return (NULL);
+	while (node)
+        {
+		node->delim = free_null(node->delim);
+		node->path = free_arr_null(node->path);
+		node->opt = free_arr_null(node->opt);
+		next = node->next;
+		node = free_null(node);
+		node = next;
+	}
+	return (NULL);
+}
+
+
 void	ft_display_lst(t_cmd *lst)
 {
 	int	i;
