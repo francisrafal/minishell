@@ -97,32 +97,34 @@ int	bi_cd(char **cmd_args, t_shell *sh, int mode)
 	return (0);
 }
 
-int	bi_exit(char **cmd_args, t_shell *sh, int mode)
+int	bi_exit(t_cmd *cmd, t_shell *sh, int mode)
 {
 	int argc;
 	int code;
 
-	argc = get_arr_size(cmd_args);
+	argc = get_arr_size(cmd->opt);
 	if (mode == EXEC_AS_PARENT)
 	{
 		ft_putstr_fd("exit\n", STDERR_FILENO);
 		if (argc == 1)
 		{
-			free_arr(cmd_args);
+			free_lst(&cmd);
 			free_data(sh);
 			exit(EXIT_SUCCESS);
 		}
-		if (argc > 1 && !ft_isdigit(cmd_args[1][0]))
+		if (argc > 1 && !ft_isdigit(cmd->opt[1][0]))
 		{
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-			ft_putstr_fd(cmd_args[1], STDERR_FILENO);
+			ft_putstr_fd(cmd->opt[1], STDERR_FILENO);
 			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+			free_lst(&cmd);
+			free_data(sh);
 			exit(2);
 		}
 		if (argc == 2)
 		{
-			code = ft_atoi(cmd_args[1]);
-			free_arr(cmd_args);
+			code = ft_atoi(cmd->opt[1]);
+			free_lst(&cmd);
 			free_data(sh);
 			exit(code);
 		}
@@ -136,27 +138,31 @@ int	bi_exit(char **cmd_args, t_shell *sh, int mode)
 	{
 		if (argc == 1)
 		{
-			free_arr(cmd_args);
+			free_lst(&cmd);
 			free_data(sh);
 			exit(EXIT_NO_ARG);
 		}
-		if (argc > 1 && !ft_isdigit(cmd_args[1][0]))
+		if (argc > 1 && !ft_isdigit(cmd->opt[1][0]))
 		{
 			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-			ft_putstr_fd(cmd_args[1], STDERR_FILENO);
+			ft_putstr_fd(cmd->opt[1], STDERR_FILENO);
 			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+			free_lst(&cmd);
+			free_data(sh);
 			exit(2);
 		}
 		if (argc == 2)
 		{
-			code = ft_atoi(cmd_args[1]);
-			free_arr(cmd_args);
+			code = ft_atoi(cmd->opt[1]);
+			free_lst(&cmd);
 			free_data(sh);
 			exit(code);
 		}
 		if (argc > 2)
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+			free_lst(&cmd);
+			free_data(sh);
 			exit(EXIT_FAILURE);
 		}
 	}
