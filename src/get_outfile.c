@@ -40,7 +40,8 @@ char	*get_outfile(t_cmd *cmd, char *line)
 		file = get_file_name(line, '>');
 		if (open_close_outfile(tmp, file, cmd))
 		{
-			ft_printf("error");
+			ft_error("", "redirection output file");
+			return (NULL);
 		}
 		line = cut_word(line, '>');
 		tmp = ft_strchr(line, '>');
