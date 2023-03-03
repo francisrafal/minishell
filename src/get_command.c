@@ -72,8 +72,7 @@ char	**cut_empty_opt(char **cmds, int nopt)
 		tmp = (char **)malloc(sizeof(char *) * 2);
 		if(!tmp)
 			return (NULL);
-		tmp[0] = (char *)malloc(sizeof(char));
-		tmp[0] = "";
+		tmp[0] = ft_strdup("");
 		tmp[1] = NULL;
 		cmds = free_arr_null(cmds);
 		return (tmp);
