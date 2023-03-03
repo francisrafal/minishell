@@ -11,6 +11,11 @@ int	here_doc(char *av)
 	while (1)
 	{
 		buf = readline(HERE_DOC);
+		if (buf == NULL)
+		{
+			ft_error("here-document at line 9 delimited by end-of-file (wanted `END`)", "warning");
+			break ;
+		}
 		if (!ft_strncmp(av, buf, ft_strlen(av)))
 			break ;
 		write(file, buf, ft_strlen(buf));
