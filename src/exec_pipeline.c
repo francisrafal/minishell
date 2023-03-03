@@ -64,6 +64,11 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 		envp = free_arr_null(envp);
 		exit (1);
 	}	
+	if (cmd->next == NULL)
+		sleep(3);
+	else
+		sleep(2);
+	lsof("child: after fork", getpid());
 	if (cmd->next != NULL)
 	{
 		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
@@ -71,19 +76,58 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 			perror("dup2");
 			return (-1);
 		}
+		sleep(2);
+		lsof("child: dup2(pipefd[1], STDOUT_FILENO)", getpid());
+		close(pipefd[1]);
+		sleep(2);
+		lsof("child: close(pipefd[1])", getpid());
 	}
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
+	if (cmd->next == NULL)
+		sleep(3);
+	else
+		sleep(2);
+	lsof("child: dup2(cmd->fd_in, STDIN_FILENO)", getpid());
+	if (cmd->re_in)
+		close(cmd->fd_in);
+	if (cmd->next == NULL)
+		sleep(3);
+	else
+		sleep(2);
+	lsof("child: close(cmd->fd_in)", getpid());
 	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
+	if (cmd->next == NULL)
+		sleep(3);
+	else
+		sleep(2);
+	lsof("child: dup2(cmd->fd_out, STDOUT_FILENO)", getpid());
+	if (cmd->re_out)
+		close(cmd->fd_out);
+	if (cmd->next == NULL)
+		sleep(3);
+	else
+		sleep(2);
+	lsof("child: close(cmd->fd_out)", getpid());
 	close(pipefd[0]);
+	if (cmd->next == NULL)
+		sleep(3);
+	else
+		sleep(2);
+	lsof("child: close(pipefd[0])", getpid());
 	close(sh->stdin_copy);
+	if (cmd->next == NULL)
+		sleep(3);
+	else
+		sleep(2);
+	lsof("child: close(sh->stdin_copy)", getpid());
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
@@ -127,7 +171,12 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 	if (sh->pid == NULL)
 		return ;
 	envp = get_env_arr(sh->env);
+	ft_putstr_fd("Parent PID: ", STDERR_FILENO);
+	ft_putnbr_fd(getpid(), STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	lsof("Parent: before stdin_copy", getpid());
 	sh->stdin_copy = dup(STDIN_FILENO);
+	lsof("Parent: stdin_copy", getpid());
 	i = 0;
 	while (cmd)
 	{
@@ -139,7 +188,9 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 				perror("pipe");
 				return ;
 			}
+			lsof("Parent: pipe(pipefd)", getpid());
 		}
+		lsof("Parent: before fork", getpid());
 		sh->pid[i] = fork();
 		if (sh->pid[i] == -1)
 		{
@@ -148,6 +199,9 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		}
 		if (sh->pid[i] == 0)
 		{
+			ft_putstr_fd("Child PID: ", STDERR_FILENO);
+			ft_putnbr_fd(getpid(), STDERR_FILENO);
+			ft_putstr_fd("\n", STDERR_FILENO);
 			if (child_process_pipeline(pipefd, cmd, envp, sh) == -1)
 			{
 				envp = free_arr_null(envp);
@@ -161,11 +215,34 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		}
 		else
 		{
+			lsof("parent: after fork", getpid());
+			if (cmd->re_in)
+			{
+				close(cmd->fd_in);
+				lsof("parent: close(cmd->fd_in)", getpid());
+			}
+			if (cmd->re_out)
+			{
+				close(cmd->fd_out);
+				lsof("parent: close(cmd->fd_out)", getpid());
+			}
 			if (cmd->next != NULL)
+			{
 				close(pipefd[1]);
-			cmd = cmd->next;
-			dup2(pipefd[0], STDIN_FILENO);
+				lsof("parent: close(pipefd[1])", getpid());
+				dup2(pipefd[0], STDIN_FILENO);
+				lsof("parent: dup2(pipefd[0], STDIN_FILENO)", getpid());
+			}
 			close(pipefd[0]);
+			lsof("parent: close(pipefd[0])", getpid());
+			cmd = cmd->next;
+			if (cmd == NULL)
+			{
+				dup2(sh->stdin_copy, STDIN_FILENO);
+				lsof("parent: dup2(sh->stdin_copy, STDIN_FILENO)", getpid());
+				close(sh->stdin_copy);
+				lsof("parent: close(sh->stdin_copy)", getpid());
+			}
 			i++;
 		}
 	}
@@ -180,8 +257,6 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		if (WEXITSTATUS(sh->wstatus) != EXIT_NO_ARG)
 			g_exit_code = WEXITSTATUS(sh->wstatus);
 	}
-	dup2(sh->stdin_copy, STDIN_FILENO);
-	close(sh->stdin_copy);
 	envp = free_arr_null(envp);
 	sh->pid = free_null(sh->pid);
 }
@@ -295,10 +370,3 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 	}
 	envp = free_arr_null(envp);
 }
-
-/*
-	if (fd_in != -1 && close(fd_in) < 0)
-		ft_error(strerror(errno), 0);
-	if (close(fd_out) < 0)
-		return (ft_error(strerror(errno), 0));
-*/
