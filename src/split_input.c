@@ -8,6 +8,7 @@ int	split_line(t_cmd **lst_cmds, const char *str, int ncmds, t_env *env)
 
 	line = NULL;
 	cmd = ft_lstnew(ncmds);
+	cmd->cmd_id = ft_lstsize(*lst_cmds) + 1;
 	line = ft_strdup(str);
 	if (!line)
 		return (1);
