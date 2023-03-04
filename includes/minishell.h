@@ -209,4 +209,8 @@ void	set_signal_action(int mode);
 
 /* debug_helpers.c */
 void	lsof(char *helper_message);
+
+/* syscall_wrappers.c */
+void	close_or_print_error(int fd);
+
 #endif

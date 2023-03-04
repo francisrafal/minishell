@@ -18,7 +18,7 @@ int	open_close_outfile(char *tmp, char *file, t_cmd *cmd)
 	}
 	if (fd_out)
 	{
-		close(fd_out);
+		close_or_print_error(fd_out);
 		return (0);
 	}
 	else
