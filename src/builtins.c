@@ -2,11 +2,11 @@
 
 int	bi_echo(char **cmd_args, t_shell *sh, int mode)
 {
-	(void)sh;
-	(void)mode;
 	int	i;
 	int	new_line;
 
+	(void)sh;
+	(void)mode;
 	new_line = 1;
 	i = 1;
 	if (cmd_args[i] == NULL)
@@ -40,11 +40,11 @@ int	bi_echo(char **cmd_args, t_shell *sh, int mode)
 
 int	bi_pwd(char **cmd_args, t_shell *sh, int mode)
 {
+	char	*cwd;
+
 	(void)cmd_args;
 	(void)sh;
 	(void)mode;
-	char	*cwd;
-
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
 		perror_exit("getcwd");
@@ -55,14 +55,14 @@ int	bi_pwd(char **cmd_args, t_shell *sh, int mode)
 
 int	bi_cd(char **cmd_args, t_shell *sh, int mode)
 {
-	(void)sh;
-	(void)mode;
-	char	*cwd;
-	char	*tmp;
-	int		argc;
+	char		*cwd;
+	char		*tmp;
+	int			argc;
 	t_env_node	*oldpwd;
 	t_env_node	*pwd;
 
+	(void)sh;
+	(void)mode;
 	if (cmd_args == NULL || cmd_args[1] == NULL)
 		return (0);
 	argc = get_arr_size(cmd_args);
@@ -99,8 +99,8 @@ int	bi_cd(char **cmd_args, t_shell *sh, int mode)
 
 int	bi_exit(t_cmd *cmd, t_shell *sh, int mode)
 {
-	int argc;
-	int code;
+	int	argc;
+	int	code;
 
 	argc = get_arr_size(cmd->opt);
 	if (mode == EXEC_AS_PARENT)
@@ -171,10 +171,10 @@ int	bi_exit(t_cmd *cmd, t_shell *sh, int mode)
 
 int	bi_env(char **cmd_args, t_shell *sh, int mode)
 {
-	(void)mode;
-	int	argc;
+	int			argc;
 	t_env_node	*runner;	
-	
+
+	(void)mode;
 	argc = get_arr_size(cmd_args);
 	if (argc > 1)
 	{
@@ -199,11 +199,11 @@ int	bi_env(char **cmd_args, t_shell *sh, int mode)
 
 int	bi_export_no_args(char **cmd_args, t_shell *sh, int mode)
 {
-	(void)mode;
-	(void)cmd_args;
 	t_env		*tmp;
 	t_env_node	*runner;	
-	
+
+	(void)mode;
+	(void)cmd_args;
 	tmp = env_dup(sh->env);
 	sort_env(tmp);
 	runner = tmp->head;
@@ -228,12 +228,12 @@ int	bi_export_no_args(char **cmd_args, t_shell *sh, int mode)
 
 int	bi_export_with_args(char **cmd_args, t_shell *sh, int mode, int argc)
 {
-	(void)mode;
 	int			i;
-	int 		error;
+	int			error;
 	t_env_node	*new_node;
 	t_env_node	*node;
-	
+
+	(void)mode;
 	error = 0;
 	i = 1;
 	while (i < argc)
@@ -266,9 +266,9 @@ int	bi_export_with_args(char **cmd_args, t_shell *sh, int mode, int argc)
 
 int	bi_export(char **cmd_args, t_shell *sh, int mode)
 {
+	int	argc;
+
 	(void)mode;
-	int			argc;
-	
 	argc = get_arr_size(cmd_args);
 	if (argc == 1)
 		return (bi_export_no_args(cmd_args, sh, mode));
@@ -278,12 +278,12 @@ int	bi_export(char **cmd_args, t_shell *sh, int mode)
 
 int	bi_unset(char **cmd_args, t_shell *sh, int mode)
 {
-	(void)mode;
 	int	argc;
 	int	i;
 	int	error;
 
-	argc = get_arr_size(cmd_args);	
+	(void)mode;
+	argc = get_arr_size(cmd_args);
 	error = 0;
 	i = 1;
 	while (i < argc)
@@ -303,25 +303,3 @@ int	bi_unset(char **cmd_args, t_shell *sh, int mode)
 		return (1);
 	return (0);
 }
-
-
-// FOR EXIT Builtin:
-// Case in pipe:
-// - don't print exit in any case
-// - print too many arguments if argc is not correct
-
-// - exit code with 1 argument is argument
-// - exit code with wrong number of arguments is 1
-// - exit code without argument is exit code of last pipeline
-
-// Case in single command:
-// print exit in any case
-// print too many arguments if argc is not correct and don't exit
-
-// Exit code with 1 argument is argument
-// exit code with wrong number of arguments is 1
-// Exit code if no argument is 0
-
-// Exit shell only if correct num of arguments
-
-// User Defined Exit Codes From 79-113 are okay
