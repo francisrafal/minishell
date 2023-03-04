@@ -35,11 +35,11 @@ int	main(int argc, char **argv, char **envp)
 		//ft_display_lst(cmd);
 		cmd_line = free_null(cmd_line);
 		if (cmd->ncmds == 1)
-			exec_single_cmd(cmd, sh);
+			cmd = exec_single_cmd(cmd, sh);
 		else
 		{
 			set_signal_action(EXEC_AS_CHILD);
-			exec_pipeline(cmd, sh);
+			cmd = exec_pipeline(cmd, sh);
 		}
 		cmd = free_lst_null(cmd);
 	}

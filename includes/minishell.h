@@ -24,6 +24,7 @@
 # define EXIT_NO_ARG 79
 # define EXEC_AS_PARENT 1
 # define EXEC_AS_CHILD 2
+# define EXEC_BUILTIN 3
 
 /* Global Variables */
 extern int	g_exit_code;
@@ -107,13 +108,13 @@ void	print_with_escaped_quotes(char *key, char *value);
 /* exec.c */
 int		exec_builtin(t_cmd *cmd, t_shell *sh, int mode);
 void	exec_bi_as_child(char **cmd_args, t_shell *sh);
-void	exec_single_cmd(t_cmd *cmd, t_shell *sh);
+void	*exec_single_cmd(t_cmd *cmd, t_shell *sh);
 
 /* exec_pipeline.c */
-void	exec_pipeline(t_cmd *cmd, t_shell *sh);
-int		child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh);
-void	exec_one_child(t_cmd *cmd, t_shell *sh);
-int		child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh);
+void	*exec_pipeline(t_cmd *cmd, t_shell *sh);
+int		child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
+void	*exec_one_child(t_cmd *cmd, t_shell *sh);
+int		child_process_single_cmd(t_cmd *cmd, t_shell *sh);
 int		is_builtin(t_cmd *cmd);
 char	*get_cmd_path(t_cmd *cmd);
 void	append_str(char ***paths, char *str);
@@ -128,7 +129,7 @@ void	ft_display_lst(t_cmd *lst);
 void	*free_arr_null(char **arr);
 void	*free_null(void *ptr);
 void	*free_lst_null(t_cmd *node);
-void	*free_data_null(t_shell *sh);
+void	*free_shell_null(t_shell *sh);
 void	*free_env_null(t_env *env);
 void	*free_env_node_null(t_env_node *node);
 

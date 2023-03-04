@@ -53,15 +53,15 @@ int	is_builtin(t_cmd *cmd)
 	return (0);
 }
 
-int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
+int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 {
 	char	*cmd_path;
+	char	**envp;
 
 	if (cmd->fd_in == -1)
 	{
 		cmd = free_lst_null(cmd);
-		sh = free_data_null(sh);
-		envp = free_arr_null(envp);
+		sh = free_shell_null(sh);
 		exit (1);
 	}	
 	if (cmd->next != NULL)
@@ -91,19 +91,19 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 	close(sh->stdin_copy);
 	if (is_builtin(cmd))
 	{
+		//set_signal_action(EXEC_BUILTIN);
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
 		cmd = free_lst_null(cmd);
-		sh = free_data_null(sh);
-		envp = free_arr_null(envp);
+		sh = free_shell_null(sh);
 		exit(g_exit_code);
 	}
 	else
 	{
+		//set_signal_action(EXEC_BUILTIN);
 		if (cmd->opt[0][0] == '\0')
 		{
 			cmd = free_lst_null(cmd);
-			sh = free_data_null(sh);
-			envp = free_arr_null(envp);
+			sh = free_shell_null(sh);
 			exit (0);
 		}
 		if (cmd->opt[0] - ft_strchr(cmd->opt[0], '/') == (long)cmd->opt[0])
@@ -114,24 +114,27 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, char **envp, t_shell *sh)
 		}
 		else
 			cmd_path = ft_strdup(cmd->opt[0]);
-		sh = free_data_null(sh);
+		envp = get_env_arr(sh->env);
+		sh = free_shell_null(sh);
 		if (execve(cmd_path, cmd->opt, envp) == -1)
+		{
 			cmd_path = free_null(cmd_path);
+			envp = free_arr_null(envp);
+		}
 	}
 	return (-1);
 }
 
-void	exec_pipeline(t_cmd *cmd, t_shell *sh)
+void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		pipefd[2];
-	char	**envp;
 	int		i;
 	int		j;
+	t_cmd	*next;
 
 	sh->pid = malloc(sizeof (pid_t) * cmd->ncmds);
 	if (sh->pid == NULL)
-		return ;
-	envp = get_env_arr(sh->env);
+		return (cmd);
 	sh->stdin_copy = dup(STDIN_FILENO);
 	i = 0;
 	while (cmd)
@@ -142,21 +145,20 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 			if (pipe(pipefd) == -1)
 			{
 				perror("pipe");
-				return ;
+				return (cmd);
 			}
 		}
 		sh->pid[i] = fork();
 		if (sh->pid[i] == -1)
 		{
 			perror("fork");
-			return ;
+			return (cmd);
 		}
 		if (sh->pid[i] == 0)
 		{
-			if (child_process_pipeline(pipefd, cmd, envp, sh) == -1)
+			if (child_process_pipeline(pipefd, cmd, sh) == -1)
 			{
-				envp = free_arr_null(envp);
-				sh = free_data_null(sh);
+				sh = free_shell_null(sh);
 				print_exec_error(cmd);
 				cmd = free_lst_null(cmd);
 				if (errno == 13)
@@ -178,7 +180,10 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 				dup2(pipefd[0], STDIN_FILENO);
 			}
 			close(pipefd[0]);
-			cmd = cmd->next;
+			next = cmd->next;
+			cmd->next = NULL;
+			cmd = free_lst_null(cmd);
+			cmd = next;
 			i++;
 		}
 	}
@@ -195,19 +200,19 @@ void	exec_pipeline(t_cmd *cmd, t_shell *sh)
 		if (WEXITSTATUS(sh->wstatus) != EXIT_NO_ARG)
 			g_exit_code = WEXITSTATUS(sh->wstatus);
 	}
-	envp = free_arr_null(envp);
 	sh->pid = free_null(sh->pid);
+	return (cmd);
 }
 
-int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
+int	child_process_single_cmd(t_cmd *cmd, t_shell *sh)
 {
 	char	*cmd_path;
+	char	**envp;
 
 	if (cmd->fd_in == -1)
 	{
 		cmd = free_lst_null(cmd);
-		sh = free_data_null(sh);
-		envp = free_arr_null(envp);
+		sh = free_shell_null(sh);
 		exit (1);
 	}
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
@@ -228,8 +233,7 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 	{
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
 		cmd = free_lst_null(cmd);
-		sh = free_data_null(sh);
-		envp = free_arr_null(envp);
+		sh = free_shell_null(sh);
 		exit(g_exit_code);
 	}
 	else
@@ -237,8 +241,7 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 		if (cmd->opt[0][0] == '\0')
 		{
 			cmd = free_lst_null(cmd);
-			sh = free_data_null(sh);
-			envp = free_arr_null(envp);
+			sh = free_shell_null(sh);
 			exit (0);
 		}
 		if (cmd->opt[0] - ft_strchr(cmd->opt[0], '/') == (long)cmd->opt[0])
@@ -249,32 +252,33 @@ int	child_process_single_cmd(t_cmd *cmd, char **envp, t_shell *sh)
 		}
 		else
 			cmd_path = ft_strdup(cmd->opt[0]);
-		sh = free_data_null(sh);
+		envp = get_env_arr(sh->env);
+		sh = free_shell_null(sh);
 		if (execve(cmd_path, cmd->opt, envp) == -1)
+		{
 			cmd_path = free_null(cmd_path);
+			envp = free_arr_null(envp);
+		}
 	}
 	return (-1);
 }
 
-void	exec_one_child(t_cmd *cmd, t_shell *sh)
+void	*exec_one_child(t_cmd *cmd, t_shell *sh)
 {
-	char	**envp;
 	pid_t	pid;
 
-	envp = get_env_arr(sh->env);
 	append_str(&cmd->path, "/");
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
-		return ;
+		return (cmd);
 	}
 	if (pid == 0)
 	{
-		if (child_process_single_cmd(cmd, envp, sh) == -1)
+		if (child_process_single_cmd(cmd, sh) == -1)
 		{
-			envp = free_arr_null(envp);
-			sh = free_data_null(sh);
+			sh = free_shell_null(sh);
 			print_exec_error(cmd);
 			cmd = free_lst_null(cmd);
 			if (errno == 13)
@@ -294,5 +298,5 @@ void	exec_one_child(t_cmd *cmd, t_shell *sh)
 		if (WIFEXITED(sh->wstatus))
 			g_exit_code = WEXITSTATUS(sh->wstatus);
 	}
-	envp = free_arr_null(envp);
+	return (cmd);
 }
