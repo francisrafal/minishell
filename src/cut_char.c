@@ -2,13 +2,13 @@
 
 char	*replace_chars(char *str, t_env *env)
 {
-	char 	*line;
-	int	size;
-	int	i;
-	int	m;
-	int	j;
-	int	k;
-	int	l;
+	char	*line;
+	int		size;
+	int		i;
+	int		m;
+	int		j;
+	int		k;
+	int		l;
  //   int     i[5];
 	char 	*tmp;
 	
@@ -33,30 +33,29 @@ char	*replace_chars(char *str, t_env *env)
 				i += j;
 				m += j - 1;
 				//printf("%s\n %s\n", &str[i], line);
-				k = get_next_char(&str[i+1], "\t \"\'");
+				k = get_next_char(&str[i + 1], "\t \"\'");
 				if (k != 0)
 				{
 					//printf("%s\n %s\n", &str[i], line);
-					l =  check_str_env(&str[i+1],env ,k);
-					if(l)
+					l = check_str_env(&str[i + 1], env, k);
+					if (l)
 					{	
-						tmp = get_str_env(&str[i+1], env, k);
-                        ft_strlcpy(&line[m], tmp, l+1);
-						if (str[i+1] == '?' && l == 1)
+						tmp = get_str_env(&str[i + 1], env, k);
+						ft_strlcpy(&line[m], tmp, l + 1);
+						if (str[i + 1] == '?' && l == 1)
 							tmp = free_null(tmp);
-                        m += l;
-                        i += k;
+						m += l;
+						i += k;
 						//printf("%s\n %s\n", &str[i], line);
 					}
 					else
-						i += k; 
+						i += k;
 				}
 				j += get_next_char(&str[i + 1], "$");
 			}
-			ft_strlcpy(&line[m], &str[i+1], get_end_quote(&str[i + 1], '"') + 1);
+			ft_strlcpy(&line[m], &str[i + 1], get_end_quote(&str[i + 1], '"') + 1);
 			m += get_end_quote(&str[i + 1], '"');
-			i += get_end_quote(&str[i + 1], '"')+2;
-
+			i += get_end_quote(&str[i + 1], '"') + 2;
 		}
 		else if (str[i] == '\'')
 		{
@@ -67,16 +66,16 @@ char	*replace_chars(char *str, t_env *env)
 		}
 		else if (str[i] == '$')
 		{
-			k = get_next_char(&str[i+1], "\t \"\'\0");
-            if (k != 0)
-                        {
+			k = get_next_char(&str[i + 1], "\t \"\'\0");
+			if (k != 0)
+			{
 				//printf("%s\n %s\n", &str[i+1], line);
-				l =  check_str_env(&str[i+1],env ,k);
-				if(l)
+				l = check_str_env(&str[i + 1], env, k);
+				if (l)
 				{
-					tmp = get_str_env(&str[i+1], env, k);
-					ft_strlcpy(&line[m], tmp, l+1);
-					if (str[i+1] == '?' && l > 0)
+					tmp = get_str_env(&str[i + 1], env, k);
+					ft_strlcpy(&line[m], tmp, l + 1);
+					if (str[i + 1] == '?' && l > 0)
 							tmp = free_null(tmp);
 					m += l;
 					i += k + 1;

@@ -10,7 +10,6 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-
 	sh = init_shell(envp);
 	cmd = NULL;
 	while (1)
@@ -29,10 +28,8 @@ int	main(int argc, char **argv, char **envp)
 		if (!cmd)
 		{
 			cmd_line = free_null(cmd_line);
-			printf("syntax error\n"); // write this to STDERR
 			continue ;
 		}
-		//ft_display_lst(cmd);
 		cmd_line = free_null(cmd_line);
 		if (cmd->ncmds == 1)
 			cmd = exec_single_cmd(cmd, sh);

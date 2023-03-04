@@ -1,28 +1,6 @@
 #include "minishell.h"
-/*
-char	**copy_env(char **envp)
-{
-	char	**env;
-	int		size;	
-	int		i;
 
-	size = 0;
-	while (envp[size])
-		size++;
-	env = malloc(sizeof (char *) * (size + 1));
-	if (env == NULL)
-		perror_exit("malloc");	
-	i = 0;
-	while (i < size)
-	{
-		env[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	env[i] = NULL;
-	return (env);
-}
-*/
-char **get_env_arr(t_env *env)
+char	**get_env_arr(t_env *env)
 {
 	t_env_node	*runner;
 	char		**env_arr;
@@ -110,7 +88,7 @@ t_env	*init_env(char **envp)
 
 t_env_node	*create_env_node(char *str)
 {
-	t_env_node 	*node;
+	t_env_node	*node;
 	char		*equal_sign;
 	char		*end_of_str;
 
@@ -129,7 +107,8 @@ t_env_node	*create_env_node(char *str)
 	else
 	{
 		node->key = ft_substr(str, 0, equal_sign - str);
-		node->value = ft_substr(str, (equal_sign - str) + 1, end_of_str - (equal_sign + 1));
+		node->value = ft_substr(str, (equal_sign - str) + 1,
+				end_of_str - (equal_sign + 1));
 	}
 	node->next = NULL;
 	return (node);
@@ -164,7 +143,7 @@ void	prepend_env(t_env *env, t_env_node *node)
 
 t_env	*env_dup(t_env *env)
 {
-	t_env 		*env_copy;
+	t_env		*env_copy;
 	t_env_node	*runner;
 
 	env_copy = malloc (sizeof (t_env));
@@ -183,7 +162,7 @@ t_env	*env_dup(t_env *env)
 
 t_env_node	*env_node_dup(t_env_node *node)
 {
-	t_env_node 	*dup;
+	t_env_node	*dup;
 
 	if (node == NULL)
 		return (NULL);
@@ -216,7 +195,8 @@ void	remove_env_node(t_env *env, char *key)
 		runner = free_env_node_null(runner);
 		return ;
 	}
-	while (runner->next && ft_strncmp(key, runner->next->key, ft_strlen(runner->next->key) + 1))
+	while (runner->next
+		&& ft_strncmp(key, runner->next->key, ft_strlen(runner->next->key) + 1))
 		runner = runner->next;
 	if (runner->next)
 	{
@@ -264,7 +244,8 @@ void	sort_env(t_env *env)
 		swap = 0;
 		while (runner->next)
 		{
-			if (ft_strncmp(runner->key, runner->next->key, ft_strlen(runner->key) + 1) > 0)
+			if (ft_strncmp(runner->key, runner->next->key,
+					ft_strlen(runner->key) + 1) > 0)
 			{
 				runner = env_node_swap(env, runner->key);
 				swap = 1;
@@ -294,7 +275,7 @@ t_env_node	*env_node_swap(t_env *env, char *key)
 
 t_env_node	*find_env_node(t_env *env, char *key)
 {
-	t_env_node *runner;
+	t_env_node	*runner;
 
 	if (env == NULL || env->head == NULL)
 		return (NULL);
@@ -309,6 +290,6 @@ t_env_node	*replace_node_value(t_env_node *node, char *value)
 	if (node == NULL)
 		return (NULL);
 	node->value = free_null(node->value);
-	node->value = ft_strdup(value);	
+	node->value = ft_strdup(value);
 	return (node);
 }
