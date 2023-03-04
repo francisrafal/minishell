@@ -32,7 +32,6 @@ int	main(int argc, char **argv, char **envp)
 			ft_putstr_fd("syntax error\n", STDERR_FILENO);
 			continue ;
 		}
-		//ft_display_lst(cmd);
 		cmd_line = free_null(cmd_line);
 		if (cmd->ncmds == 1)
 			cmd = exec_single_cmd(cmd, sh);

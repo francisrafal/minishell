@@ -212,5 +212,6 @@ void	lsof(char *helper_message);
 
 /* syscall_wrappers.c */
 void	close_or_print_error(int fd);
+int		dup2_or_print_error(int oldfd, int newfd);
 
 #endif

@@ -66,26 +66,17 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 	}	
 	if (cmd->next != NULL)
 	{
-		if (dup2(pipefd[1], STDOUT_FILENO) < 0)
-		{
-			perror("dup2");
+		if (dup2_or_print_error(pipefd[1], STDOUT_FILENO) == -1)
 			return (-1);
-		}
 		close_or_print_error(pipefd[1]);
 		close_or_print_error(pipefd[0]);
 	}
-	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
-	{
-		perror("dup2");
+	if (dup2_or_print_error(cmd->fd_in, STDIN_FILENO) == -1)
 		return (-1);
-	}
 	if (cmd->re_in)
 		close_or_print_error(cmd->fd_in);
-	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
-	{
-		perror("dup2");
+	if (dup2_or_print_error(cmd->fd_out, STDOUT_FILENO) == -1)
 		return (-1);
-	}
 	if (cmd->re_out)
 		close_or_print_error(cmd->fd_out);
 	close_or_print_error(sh->stdin_copy);
@@ -175,7 +166,11 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 			if (cmd->next != NULL)
 			{
 				close_or_print_error(pipefd[1]);
-				dup2(pipefd[0], STDIN_FILENO);
+				if (dup2_or_print_error(pipefd[0], STDIN_FILENO) == -1)
+				{
+					cmd = free_lst_null(cmd);
+					break ;
+				}
 				close_or_print_error(pipefd[0]);
 			}
 			next = cmd->next;
@@ -185,12 +180,13 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 			i++;
 		}
 	}
-	dup2(sh->stdin_copy, STDIN_FILENO);
+	dup2_or_print_error(sh->stdin_copy, STDIN_FILENO);
 	close_or_print_error(sh->stdin_copy);
 	j = 0;
 	while (j < i)
 	{
-		waitpid(sh->pid[j], &sh->wstatus, 0);
+		if (waitpid(sh->pid[j], &sh->wstatus, 0) == -1)
+			perror("waitpid");
 		j++;
 	}
 	if (WIFEXITED(sh->wstatus))
@@ -213,18 +209,12 @@ int	child_process_single_cmd(t_cmd *cmd, t_shell *sh)
 		sh = free_shell_null(sh);
 		exit (1);
 	}
-	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
-	{
-		perror("dup2");
+	if (dup2_or_print_error(cmd->fd_in, STDIN_FILENO) == -1)
 		return (-1);
-	}
 	if (cmd->re_in)
 		close_or_print_error(cmd->fd_in);
-	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
-	{
-		perror("dup2");
+	if (dup2_or_print_error(cmd->fd_out, STDOUT_FILENO) == -1)
 		return (-1);
-	}
 	if (cmd->re_out)
 		close_or_print_error(cmd->fd_out);
 	if (is_builtin(cmd))
