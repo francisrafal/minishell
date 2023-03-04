@@ -22,3 +22,15 @@ int	dup2_or_print_error(int oldfd, int newfd)
 		perror("dup2");
 	return (fd);
 }
+
+void	unlink_heredoc(t_cmd *cmd)
+{
+	char	*name;
+
+	if (!cmd->read_in)
+		return ;
+	name = get_heredoc_name(cmd->cmd_id);
+	if (unlink(name) == -1)
+		perror("unlink");
+	name = free_null(name);
+}
