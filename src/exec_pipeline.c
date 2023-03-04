@@ -71,7 +71,8 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 			perror("dup2");
 			return (-1);
 		}
-		close(pipefd[1]);
+		close_or_print_error(pipefd[1]);
+		close_or_print_error(pipefd[0]);
 	}
 	if (dup2(cmd->fd_in, STDIN_FILENO) < 0)
 	{
@@ -79,19 +80,17 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 		return (-1);
 	}
 	if (cmd->re_in)
-		close(cmd->fd_in);
+		close_or_print_error(cmd->fd_in);
 	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
 	if (cmd->re_out)
-		close(cmd->fd_out);
-	close(pipefd[0]);
-	close(sh->stdin_copy);
+		close_or_print_error(cmd->fd_out);
+	close_or_print_error(sh->stdin_copy);
 	if (is_builtin(cmd))
 	{
-		//set_signal_action(EXEC_BUILTIN);
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
 		cmd = free_lst_null(cmd);
 		sh = free_shell_null(sh);
@@ -99,7 +98,6 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 	}
 	else
 	{
-		//set_signal_action(EXEC_BUILTIN);
 		if (cmd->opt[0][0] == '\0')
 		{
 			cmd = free_lst_null(cmd);
@@ -171,15 +169,15 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 		else
 		{
 			if (cmd->re_in)
-				close(cmd->fd_in);
+				close_or_print_error(cmd->fd_in);
 			if (cmd->re_out)
-				close(cmd->fd_out);
+				close_or_print_error(cmd->fd_out);
 			if (cmd->next != NULL)
 			{
-				close(pipefd[1]);
+				close_or_print_error(pipefd[1]);
 				dup2(pipefd[0], STDIN_FILENO);
+				close_or_print_error(pipefd[0]);
 			}
-			close(pipefd[0]);
 			next = cmd->next;
 			cmd->next = NULL;
 			cmd = free_lst_null(cmd);
@@ -188,7 +186,7 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 		}
 	}
 	dup2(sh->stdin_copy, STDIN_FILENO);
-	close(sh->stdin_copy);
+	close_or_print_error(sh->stdin_copy);
 	j = 0;
 	while (j < i)
 	{
@@ -221,14 +219,14 @@ int	child_process_single_cmd(t_cmd *cmd, t_shell *sh)
 		return (-1);
 	}
 	if (cmd->re_in)
-		close(cmd->fd_in);
+		close_or_print_error(cmd->fd_in);
 	if (dup2(cmd->fd_out, STDOUT_FILENO) < 0)
 	{
 		perror("dup2");
 		return (-1);
 	}
 	if (cmd->re_out)
-		close(cmd->fd_out);
+		close_or_print_error(cmd->fd_out);
 	if (is_builtin(cmd))
 	{
 		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
@@ -291,9 +289,9 @@ void	*exec_one_child(t_cmd *cmd, t_shell *sh)
 	else
 	{
 		if (cmd->re_in)
-			close(cmd->fd_in);
+			close_or_print_error(cmd->fd_in);
 		if (cmd->re_out)
-			close(cmd->fd_out);
+			close_or_print_error(cmd->fd_out);
 		wait(&sh->wstatus);
 		if (WIFEXITED(sh->wstatus))
 			g_exit_code = WEXITSTATUS(sh->wstatus);

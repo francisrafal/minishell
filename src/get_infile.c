@@ -50,7 +50,7 @@ int	here_doc(char *av, t_cmd *cmd)
 	if (file < 0)
 		return (ft_error(strerror(errno), ".heredoc_tmp"));
 	write_heredoc(file, av);
-	close(file);
+	close_or_print_error(file);
 	file = open(name, O_RDONLY, 0644);
 	name = free_null(name);
 	return (file);
@@ -96,7 +96,7 @@ char	*get_infile(t_cmd *cmd, char *line)
 		if (tmp)
 		{
 			if (fd_in)
-				close(fd_in);
+				close_or_print_error(fd_in);
 			file = free_null(file);
 		}
 	}
