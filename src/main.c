@@ -28,7 +28,6 @@ int	main(int argc, char **argv, char **envp)
 		if (!cmd)
 		{
 			cmd_line = free_null(cmd_line);
-			ft_putstr_fd("syntax error\n", STDERR_FILENO);
 			continue ;
 		}
 		cmd_line = free_null(cmd_line);

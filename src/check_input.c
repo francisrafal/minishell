@@ -65,7 +65,7 @@ static int	check_line(char *str)
 		{
 			if (check_char(&str[i], '>', &i))
 			{
-				ft_error("", "syntax error with input redirection");
+				ft_error("", "syntax error with output redirection");
 				return (1);
 			}
 		}
@@ -73,7 +73,7 @@ static int	check_line(char *str)
 		{
 			if (check_char(&str[i], '<', &i))
 			{
-				ft_error("", "syntax error with output redirection");
+				ft_error("", "syntax error with input redirection");
 				return (1);
 			}
 		}
