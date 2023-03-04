@@ -23,6 +23,8 @@ char	*get_cmd_path(t_cmd *cmd)
 
 	cmd_path = NULL;
 	i = 0;
+	if (cmd->path[i] == NULL)
+		errno = 2;
 	while ((cmd->path)[i] != NULL)
 	{
 		cmd_path = ft_strjoin(cmd->path[i], cmd->opt[0]);
