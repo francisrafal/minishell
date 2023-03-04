@@ -28,12 +28,6 @@ void	handle_signal_child(int signum)
 	}
 }	
 
-void	handle_signal_builtin(int signum)
-{
-	(void)signum;
-	ft_putstr_fd("SIGPIPE handled\n", STDERR_FILENO);
-}
-
 void	set_signal_action(int mode)
 {
 	if (mode == EXEC_AS_PARENT)
@@ -45,9 +39,5 @@ void	set_signal_action(int mode)
 	{
 		signal(SIGINT, handle_signal_child);
 		signal(SIGQUIT, handle_signal_child);
-	}
-	if (mode == EXEC_BUILTIN)
-	{
-		signal(SIGPIPE, handle_signal_builtin);
 	}
 }

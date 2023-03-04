@@ -1,46 +1,5 @@
 #include "minishell.h"
 
-/*char	*replace_vars(char *cmd, char **envp)
-{
-	char	*trim;
-	(void)envp;
-
-	trim = NULL;
-	if (cmd[0] == '\"')
-	{
-		trim = ft_strtrim(cmd, "\"");
-		cmd = free_null(cmd);
-		printf("replace var is missing!\n");
-
-	}
-	else if (cmd[0] == '\'')
-	{
-		trim = ft_strtrim(cmd, "\'");
-		cmd = free_null(cmd);
-	}
-	return (trim);
-}
-
-int	is_char(char *str, char c)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if(str[i] == c)
-		{
-			if (i > 0 && str[i-1] == '\\')
-			{
-				i++;
-				continue ;
-			}
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}*/
 int	count_empty_opt(char **cmds)
 {
 	int	i;
@@ -48,7 +7,7 @@ int	count_empty_opt(char **cmds)
 
 	i = 0;
 	count = 0;
-	while(cmds[i])
+	while (cmds[i])
 	{
 		if (!ft_strncmp(cmds[i], "", 1))
 			count++;
@@ -67,10 +26,10 @@ char	**cut_empty_opt(char **cmds, int nopt)
 	size = nopt - count_empty_opt(cmds);
 	if (count_empty_opt(cmds) == 0)
 		return (cmds);
-	if(size == 0)
+	if (size == 0)
 	{
 		tmp = (char **)malloc(sizeof(char *) * 2);
-		if(!tmp)
+		if (!tmp)
 			return (NULL);
 		tmp[0] = ft_strdup("");
 		tmp[1] = NULL;
@@ -90,7 +49,7 @@ char	**cut_empty_opt(char **cmds, int nopt)
 	}
 	tmp[i] = NULL;
 	cmds = free_arr_null(cmds);
-	return (tmp);	
+	return (tmp);
 }
 
 char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env)
@@ -98,9 +57,7 @@ char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env)
 	int		nopt;
 	int		i;
 	char	*str;
-	//char	*tmp;
 
-	//tmp = replace_chars(cmd_str, env);
 	str = prun_str(cmd_str);
 	cmd->opt = split_char(str, &nopt, ' ');
 	if (!cmd->opt)
@@ -108,9 +65,9 @@ char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env)
 	i = 0;
 	while (cmd->opt[i])
 	{
-		cmd->opt[i] = replace_chars(cmd->opt[i],env);
+		cmd->opt[i] = replace_chars(cmd->opt[i], env);
 		if (!cmd->opt[i])
-			return (NULL);	
+			return (NULL);
 		i++;
 	}
 	cmd->opt = cut_empty_opt(cmd->opt, nopt);

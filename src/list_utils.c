@@ -23,15 +23,15 @@ t_cmd	*ft_lstnew(int ncmds)
 
 int	ft_lstsize(t_cmd *lst)
 {
-		int	i;
+	int	i;
 
-		i = 0;
-		while (lst != NULL)
-		{
-			i++;
-			lst = lst->next;
-		}
-		return (i);
+	i = 0;
+	while (lst != NULL)
+	{
+		i++;
+		lst = lst->next;
+	}
+	return (i);
 }
 
 void	ft_lstadd_back(t_cmd **lst, t_cmd *new)
@@ -66,42 +66,3 @@ void	*free_lst_null(t_cmd *node)
 	}
 	return (NULL);
 }
-/*
-void	ft_display_lst(t_cmd *lst)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (lst != NULL)
-	{
-		printf("Command %i of %i cmds: \n", j+1, lst->ncmds); // |%s|\n", lst->opt[0]);
-		if (!lst->path)
-			printf("No paths!\n");
-		else
-		{
-			while (lst->path[i])
-			{
-				printf("Path %d: %s\n", i, lst->path[i]);
-				i++;
-			}
-		}
-		i = 0;
-		if (!lst->opt)
-			printf("No options!\n");
-		else
-		{
-			while (lst->opt[i])
-			{
-				printf("Options  %d: |%s|\n", i, lst->opt[i]);
-				i++;
-			}
-		}
-		printf("File descriptor for input: |%d|\n", lst->fd_in);
-		printf("File descriptor for output: |%d|\n", lst->fd_out);
-		printf("\n");
-		lst = lst->next;
-		j++;
-	}
-}*/
