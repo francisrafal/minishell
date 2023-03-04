@@ -170,6 +170,7 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 				close_or_print_error(pipefd[1]);
 				if (dup2_or_print_error(pipefd[0], STDIN_FILENO) == -1)
 				{
+					unlink_heredoc(cmd);
 					cmd = free_lst_null(cmd);
 					break ;
 				}
@@ -177,6 +178,7 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 			}
 			next = cmd->next;
 			cmd->next = NULL;
+			unlink_heredoc(cmd);
 			cmd = free_lst_null(cmd);
 			cmd = next;
 			i++;
@@ -287,6 +289,7 @@ void	*exec_one_child(t_cmd *cmd, t_shell *sh)
 		wait(&sh->wstatus);
 		if (WIFEXITED(sh->wstatus))
 			g_exit_code = WEXITSTATUS(sh->wstatus);
+		unlink_heredoc(cmd);
 	}
 	return (cmd);
 }
