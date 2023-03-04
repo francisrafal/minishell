@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	*free_data_null(t_shell *sh)
+void	*free_shell_null(t_shell *sh)
 {
 	sh->env = free_env_null(sh->env);
 	sh->pid = free_null(sh->pid);

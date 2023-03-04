@@ -19,7 +19,7 @@ int	exec_builtin(t_cmd *cmd, t_shell *sh, int mode)
 	return (g_exit_code);
 }
 
-void	exec_single_cmd(t_cmd *cmd, t_shell *sh)
+void	*exec_single_cmd(t_cmd *cmd, t_shell *sh)
 {
 	if (ft_strncmp(cmd->opt[0], "cd", 3) == 0)
 		exec_builtin(cmd, sh, EXEC_AS_PARENT);
@@ -32,6 +32,7 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *sh)
 	else
 	{
 		set_signal_action(EXEC_AS_CHILD);
-		exec_one_child(cmd, sh);
+		cmd = exec_one_child(cmd, sh);
 	}
+	return (cmd);
 }
