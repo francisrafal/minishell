@@ -29,7 +29,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!cmd)
 		{
 			cmd_line = free_null(cmd_line);
-			printf("syntax error\n"); // write this to STDERR
+			ft_putstr_fd("syntax error\n", STDERR_FILENO);
 			continue ;
 		}
 		//ft_display_lst(cmd);
