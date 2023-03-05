@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 12:03:23 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 12:04:39 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/05 13:18:02 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,15 +131,18 @@ int			execve_safe(t_cmd *cmd, t_shell *sh);
 /* exec_pipeline.c */
 void		*exec_pipeline(t_cmd *cmd, t_shell *sh);
 int			child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
-char		*get_cmd_path(t_cmd *cmd);
-void		append_str(char ***paths, char *str);
 int			redirect_fds_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
+int			parent_process_pipeline(int *pipefd, t_cmd *cmd);
 
 /* exec_single_cmd.c */
 void		*exec_single_cmd(t_cmd *cmd, t_shell *sh);
 void		*exec_one_child(t_cmd *cmd, t_shell *sh);
 int			child_process_single_cmd(t_cmd *cmd, t_shell *sh);
 int			redirect_fds_single_cmd(t_cmd *cmd, t_shell *sh);
+
+/* exec_utils.c */
+char		*get_cmd_path(t_cmd *cmd);
+void		append_str(char ***paths, char *str);
 
 /* exits.c */
 void		exit_after_failed_exec(t_cmd *cmd, t_shell *sh);
