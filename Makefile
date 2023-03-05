@@ -30,10 +30,13 @@ SRCSLIST		:= main.c \
 					init.c \
 					exec.c \
 					exec_pipeline.c \
+					exec_single_cmd.c \
+					exits.c \
 					free.c \
 					signals.c \
 					debug_helpers.c \
-					syscall_wrappers.c
+					syscall_wrappers.c \
+					wait_for_children.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
