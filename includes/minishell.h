@@ -6,7 +6,7 @@
 /*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 12:03:23 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:32:24 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/05 13:39:01 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,10 +158,13 @@ void		ft_display_lst(t_cmd *lst);
 /* free.c */
 void		*free_arr_null(char **arr);
 void		*free_null(void *ptr);
-void		*free_lst_null(t_cmd *node);
 void		*free_shell_null(t_shell *sh);
 void		*free_env_null(t_env *env);
 void		*free_env_node_null(t_env_node *node);
+
+/* cmd_list_utils.c */
+void		*free_lst_null(t_cmd *node);
+void		*free_cmd_null(t_cmd *node);
 
 /* split_input.c*/
 int			split_line(t_cmd **cmd, const char *str, int ncmds, t_env *env);

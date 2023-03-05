@@ -6,7 +6,7 @@
 /*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:46:22 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:31:41 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/05 13:41:59 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,17 +103,15 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 	i = 0;
 	while (cmd)
 	{
-		error = pipeline_loop(pipefd, cmd, sh, i);
+		error = pipeline_loop(pipefd, cmd, sh, i++);
 		if (error == -1)
 			return (cmd);
 		if (error == -2)
 			break ;
 		next = cmd->next;
-		cmd->next = NULL;
 		unlink_heredoc(cmd);
-		cmd = free_lst_null(cmd);
+		cmd = free_cmd_null(cmd);
 		cmd = next;
-		i++;
 	}
 	dup2_or_print_error(sh->stdin_copy, STDIN_FILENO);
 	close_or_print_error(sh->stdin_copy);
