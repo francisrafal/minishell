@@ -6,7 +6,7 @@
 /*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:50:23 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:55:52 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/05 14:12:45 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	exec_builtin(t_cmd *cmd, t_shell *sh, int mode)
 {
 	if (ft_strncmp(cmd->opt[0], "echo", 5) == 0)
-		g_exit_code = bi_echo(cmd->opt, sh, mode);
+		g_exit_code = bi_echo(cmd->opt);
 	else if (ft_strncmp(cmd->opt[0], "pwd", 4) == 0)
 		g_exit_code = bi_pwd(cmd->opt, sh, mode);
 	else if (ft_strncmp(cmd->opt[0], "cd", 3) == 0)
