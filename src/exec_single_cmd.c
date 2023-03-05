@@ -43,11 +43,8 @@ void	*exec_one_child(t_cmd *cmd, t_shell *sh)
 	return (cmd);
 }
 
-int	child_process_single_cmd(t_cmd *cmd, t_shell *sh)
+int	redirect_fds_single_cmd(t_cmd *cmd, t_shell *sh)
 {
-	char	*cmd_path;
-	char	**envp;
-
 	if (cmd->fd_in == -1)
 		exit_on_file_error(cmd, sh);
 	if (dup2_or_print_error(cmd->fd_in, STDIN_FILENO) == -1)
@@ -58,6 +55,16 @@ int	child_process_single_cmd(t_cmd *cmd, t_shell *sh)
 		return (-1);
 	if (cmd->re_out)
 		close_or_print_error(cmd->fd_out);
+	return (0);
+}
+
+int	child_process_single_cmd(t_cmd *cmd, t_shell *sh)
+{
+	char	*cmd_path;
+	char	**envp;
+
+	if (redirect_fds_single_cmd(cmd, sh) == -1)
+		return (-1);
 	if (is_builtin(cmd))
 		exec_builtin(cmd, sh, EXEC_AS_CHILD);
 	else
