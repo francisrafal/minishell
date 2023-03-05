@@ -6,7 +6,7 @@
 /*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:42:50 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:43:03 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/05 12:37:07 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ static int	check_char(char *str, char c, int *j)
 	int	i;
 
 	i = 1;
-	if (str[i] && str[i] == c)
+	if (str[i] && (str[i] == c || str[i] == '\t' || str[i] == ' '))
 		i++;
 	while (str[i])
 	{
-		if (str[i] == c)
+		if (str[i] == c || str[i] == '<' || str[i] == '>')
 			return (1);
 		else if (str[i] != '\t' && str[i] != ' ')
 		{
@@ -62,6 +62,27 @@ int	check_quotes(char *str)
 	return (0);
 }
 
+static int	help_check_line(char *str, int *i)
+{
+	if (str[*i] == '>')
+	{
+		if (check_char(&str[*i], '>', i))
+		{
+			ft_error("", "syntax error with output redirection");
+			return (1);
+		}
+	}
+	else if (str[*i] == '<')
+	{
+		if (check_char(&str[*i], '<', i))
+		{
+			ft_error("", "syntax error with input redirection");
+			return (1);
+		}
+	}
+	return (0);
+}
+
 static int	check_line(char *str)
 {
 	int	i;
@@ -73,21 +94,10 @@ static int	check_line(char *str)
 			i += get_end_quote(&str[i + 1], '"') + 1;
 		else if (str[i] == '\'')
 			i += get_end_quote(&str[i + 1], '\'') + 1;
-		else if (str[i] == '>')
-		{
-			if (check_char(&str[i], '>', &i))
-			{
-				ft_error("", "syntax error with output redirection");
+		else if (str[i] == '>' || str[i] == '<')
+		{	
+			if (help_check_line(str, &i))
 				return (1);
-			}
-		}
-		else if (str[i] == '<')
-		{
-			if (check_char(&str[i], '<', &i))
-			{
-				ft_error("", "syntax error with input redirection");
-				return (1);
-			}
 		}
 		i++;
 	}
