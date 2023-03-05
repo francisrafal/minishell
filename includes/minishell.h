@@ -189,21 +189,30 @@ void		perror_exit(char *err);
 int			ft_error(char *str, char *err);
 void		print_exec_error(t_cmd *cmd);
 
-/* env.c */
+/* env_arr.c */
+char		**fill_env_arr(t_env *env, char **env_arr);
 char		**get_env_arr(t_env *env);
+void		print_arr(char **arr);
+
+/* env.c */
+t_env		*init_empty_env(t_env *env);
 t_env		*init_env(char **envp);
 t_env_node	*create_env_node(char *str);
 t_env_node	*append_env(t_env *env, t_env_node *node);
 void		prepend_env(t_env *env, t_env_node *node);
+
+/* env_lst_utils2.c */
 t_env		*env_dup(t_env *env);
 t_env_node	*env_node_dup(t_env_node *node);
 void		remove_env_node(t_env *env, char *key);
 void		insert_env_node_after_key(t_env *env, char *key, t_env_node *node);
+
+/* env_lst_utils.c */
 void		sort_env(t_env *env);
 t_env_node	*env_node_swap(t_env *env, char *key);
 t_env_node	*find_env_node(t_env *env, char *key);
 t_env_node	*replace_node_value(t_env_node *node, char *value);
-void		print_arr(char **arr);
+
 
 /* init.c */
 void		init_idx(int *arr, int len);
