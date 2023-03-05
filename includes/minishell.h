@@ -6,7 +6,7 @@
 /*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 12:03:23 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:39:01 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/05 14:05:00 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ int			bi_env(char **cmd_args, t_shell *sh, int mode);
 int			bi_unset(char **cmd_args, t_shell *sh, int mode);
 
 /* builtin_cd.c */
-int			bi_cd(char **cmd_args, t_shell *sh, int mode);
+int			bi_cd(char **cmd_args, t_shell *sh);
+void		update_pwd_and_oldpwd(t_shell *sh);
 
 /* builtin_exit.c */
 int			bi_exit(t_cmd *cmd, t_shell *sh, int mode);

@@ -3,40 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 13:13:47 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:13:50 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/05 14:02:39 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	bi_cd(char **cmd_args, t_shell *sh, int mode)
+void	update_pwd_and_oldpwd(t_shell *sh)
 {
-	char		*cwd;
 	char		*tmp;
-	int			argc;
+	char		*cwd;
 	t_env_node	*oldpwd;
 	t_env_node	*pwd;
 
-	(void)sh;
-	(void)mode;
-	if (cmd_args == NULL || cmd_args[1] == NULL)
-		return (0);
-	argc = get_arr_size(cmd_args);
-	if (argc > 2)
-	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", STDERR_FILENO);
-		return (1);
-	}
-	if (chdir(cmd_args[1]) == -1)
-	{
-		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-		ft_putstr_fd(cmd_args[1], STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		return (1);
-	}
 	oldpwd = find_env_node(sh->env, "OLDPWD");
 	if (oldpwd == NULL)
 		oldpwd = append_env(sh->env, create_env_node("OLDPWD="));
@@ -53,5 +35,27 @@ int	bi_cd(char **cmd_args, t_shell *sh, int mode)
 	replace_node_value(oldpwd, pwd->value);
 	replace_node_value(pwd, cwd);
 	cwd = free_null(cwd);
+}
+
+int	bi_cd(char **cmd_args, t_shell *sh)
+{
+	int			argc;
+
+	if (cmd_args == NULL || cmd_args[1] == NULL)
+		return (0);
+	argc = get_arr_size(cmd_args);
+	if (argc > 2)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", STDERR_FILENO);
+		return (1);
+	}
+	if (chdir(cmd_args[1]) == -1)
+	{
+		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+		ft_putstr_fd(cmd_args[1], STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		return (1);
+	}
+	update_pwd_and_oldpwd(sh);
 	return (0);
 }
