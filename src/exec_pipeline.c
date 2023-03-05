@@ -83,12 +83,7 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 		close_or_print_error(cmd->fd_out);
 	close_or_print_error(sh->stdin_copy);
 	if (is_builtin(cmd))
-	{
-		g_exit_code = exec_builtin(cmd, sh, EXEC_AS_CHILD);
-		cmd = free_lst_null(cmd);
-		sh = free_shell_null(sh);
-		exit(g_exit_code);
-	}
+		exec_builtin(cmd, sh, EXEC_AS_CHILD);
 	else
 	{
 		if (cmd->opt[0][0] == '\0')

@@ -16,6 +16,12 @@ int	exec_builtin(t_cmd *cmd, t_shell *sh, int mode)
 		g_exit_code = bi_export(cmd->opt, sh, mode);
 	else if (ft_strncmp(cmd->opt[0], "unset", 6) == 0)
 		g_exit_code = bi_unset(cmd->opt, sh, mode);
+	if (mode == EXEC_AS_CHILD)
+	{
+		cmd = free_lst_null(cmd);
+		sh = free_shell_null(sh);
+		exit(g_exit_code);
+	}
 	return (g_exit_code);
 }
 
