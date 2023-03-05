@@ -42,15 +42,3 @@ void	*exec_single_cmd(t_cmd *cmd, t_shell *sh)
 	}
 	return (cmd);
 }
-
-void	exit_after_failed_exec(t_cmd *cmd, t_shell *sh)
-{
-	sh = free_shell_null(sh);
-	print_exec_error(cmd);
-	cmd = free_lst_null(cmd);
-	if (errno == 13)
-		exit(126);
-	if (errno == 2)
-		exit(127);
-	exit(127);
-}

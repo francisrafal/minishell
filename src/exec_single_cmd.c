@@ -6,11 +6,7 @@ int	child_process_single_cmd(t_cmd *cmd, t_shell *sh)
 	char	**envp;
 
 	if (cmd->fd_in == -1)
-	{
-		cmd = free_lst_null(cmd);
-		sh = free_shell_null(sh);
-		exit (1);
-	}
+		exit_on_file_error(cmd, sh);
 	if (dup2_or_print_error(cmd->fd_in, STDIN_FILENO) == -1)
 		return (-1);
 	if (cmd->re_in)

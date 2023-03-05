@@ -107,7 +107,6 @@ void		print_with_escaped_quotes(char *key, char *value);
 /* exec.c */
 int			exec_builtin(t_cmd *cmd, t_shell *sh, int mode);
 void		*exec_single_cmd(t_cmd *cmd, t_shell *sh);
-void		exit_after_failed_exec(t_cmd *cmd, t_shell *sh);
 
 /* exec_pipeline.c */
 void		*exec_pipeline(t_cmd *cmd, t_shell *sh);
@@ -119,6 +118,10 @@ void		append_str(char ***paths, char *str);
 /* exec_single_cmd.c */
 void		*exec_one_child(t_cmd *cmd, t_shell *sh);
 int			child_process_single_cmd(t_cmd *cmd, t_shell *sh);
+
+/* exits.c */
+void		exit_after_failed_exec(t_cmd *cmd, t_shell *sh);
+void		exit_on_file_error(t_cmd *cmd, t_shell *sh);
 
 /* list_utils.c */
 t_cmd		*ft_lstnew(int ncmds);

@@ -61,11 +61,7 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 	char	**envp;
 
 	if (cmd->fd_in == -1)
-	{
-		cmd = free_lst_null(cmd);
-		sh = free_shell_null(sh);
-		exit (1);
-	}	
+		exit_on_file_error(cmd, sh);
 	if (cmd->next != NULL)
 	{
 		if (dup2_or_print_error(pipefd[1], STDOUT_FILENO) == -1)
