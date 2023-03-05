@@ -3,50 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:46:22 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:46:27 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/05 13:41:59 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	append_str(char ***paths, char *str)
-{
-	int		i;
-	char	*tmp;
-
-	tmp = NULL;
-	i = 0;
-	while ((*paths)[i] != NULL)
-	{
-		tmp = (*paths)[i];
-		(*paths)[i] = ft_strjoin(tmp, str);
-		tmp = free_null(tmp);
-		i++;
-	}
-}
-
-char	*get_cmd_path(t_cmd *cmd)
-{
-	char	*cmd_path;
-	int		i;
-
-	cmd_path = NULL;
-	i = 0;
-	if (cmd->path[i] == NULL)
-		errno = 2;
-	while ((cmd->path)[i] != NULL)
-	{
-		cmd_path = ft_strjoin(cmd->path[i], cmd->opt[0]);
-		if (access(cmd_path, F_OK | X_OK) == 0)
-			return (cmd_path);
-		cmd_path = free_null(cmd_path);
-		i++;
-	}
-	return (cmd_path);
-}
 
 int	redirect_fds_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 {
@@ -82,10 +46,55 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 	return (-1);
 }
 
+int	parent_process_pipeline(int *pipefd, t_cmd *cmd)
+{
+	if (cmd->re_in)
+		close_or_print_error(cmd->fd_in);
+	if (cmd->re_out)
+		close_or_print_error(cmd->fd_out);
+	if (cmd->next != NULL)
+	{
+		close_or_print_error(pipefd[1]);
+		if (dup2_or_print_error(pipefd[0], STDIN_FILENO) == -1)
+		{
+			unlink_heredoc(cmd);
+			cmd = free_lst_null(cmd);
+			return (-1);
+		}
+		close_or_print_error(pipefd[0]);
+	}
+	return (0);
+}
+
+int	pipeline_loop(int *pipefd, t_cmd *cmd, t_shell *sh, int i)
+{
+	append_str(&cmd->path, "/");
+	if (cmd->next != NULL)
+	{
+		if (pipe_or_print_error(pipefd) == -1)
+			return (-1);
+	}
+	sh->pid[i] = fork_or_print_error();
+	if (sh->pid[i] == -1)
+		return (-1);
+	if (sh->pid[i] == 0)
+	{
+		if (child_process_pipeline(pipefd, cmd, sh) == -1)
+			exit_after_failed_exec(cmd, sh);
+	}
+	else
+	{
+		if (parent_process_pipeline(pipefd, cmd) == -1)
+			return (-2);
+	}
+	return (0);
+}
+
 void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		pipefd[2];
 	int		i;
+	int		error;
 	t_cmd	*next;
 
 	if (init_pid(sh, cmd->ncmds) == NULL)
@@ -94,44 +103,15 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 	i = 0;
 	while (cmd)
 	{
-		append_str(&cmd->path, "/");
-		if (cmd->next != NULL)
-		{
-			if (pipe_or_print_error(pipefd) == -1)
-				return (cmd);
-		}
-		sh->pid[i] = fork_or_print_error();
-		if (sh->pid[i] == -1)
+		error = pipeline_loop(pipefd, cmd, sh, i++);
+		if (error == -1)
 			return (cmd);
-		if (sh->pid[i] == 0)
-		{
-			if (child_process_pipeline(pipefd, cmd, sh) == -1)
-				exit_after_failed_exec(cmd, sh);
-		}
-		else
-		{
-			if (cmd->re_in)
-				close_or_print_error(cmd->fd_in);
-			if (cmd->re_out)
-				close_or_print_error(cmd->fd_out);
-			if (cmd->next != NULL)
-			{
-				close_or_print_error(pipefd[1]);
-				if (dup2_or_print_error(pipefd[0], STDIN_FILENO) == -1)
-				{
-					unlink_heredoc(cmd);
-					cmd = free_lst_null(cmd);
-					break ;
-				}
-				close_or_print_error(pipefd[0]);
-			}
-			next = cmd->next;
-			cmd->next = NULL;
-			unlink_heredoc(cmd);
-			cmd = free_lst_null(cmd);
-			cmd = next;
-			i++;
-		}
+		if (error == -2)
+			break ;
+		next = cmd->next;
+		unlink_heredoc(cmd);
+		cmd = free_cmd_null(cmd);
+		cmd = next;
 	}
 	dup2_or_print_error(sh->stdin_copy, STDIN_FILENO);
 	close_or_print_error(sh->stdin_copy);

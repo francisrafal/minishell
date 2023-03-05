@@ -37,6 +37,7 @@ SRCSLIST		:= main.c \
 					exec.c \
 					exec_pipeline.c \
 					exec_single_cmd.c \
+					exec_utils.c \
 					exits.c \
 					free.c \
 					signals.c \

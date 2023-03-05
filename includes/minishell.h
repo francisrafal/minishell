@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 12:03:23 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 12:04:39 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/05 13:39:01 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,15 +131,19 @@ int			execve_safe(t_cmd *cmd, t_shell *sh);
 /* exec_pipeline.c */
 void		*exec_pipeline(t_cmd *cmd, t_shell *sh);
 int			child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
-char		*get_cmd_path(t_cmd *cmd);
-void		append_str(char ***paths, char *str);
 int			redirect_fds_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
+int			parent_process_pipeline(int *pipefd, t_cmd *cmd);
+int			pipeline_loop(int *pipefd, t_cmd *cmd, t_shell *sh, int i);
 
 /* exec_single_cmd.c */
 void		*exec_single_cmd(t_cmd *cmd, t_shell *sh);
 void		*exec_one_child(t_cmd *cmd, t_shell *sh);
 int			child_process_single_cmd(t_cmd *cmd, t_shell *sh);
 int			redirect_fds_single_cmd(t_cmd *cmd, t_shell *sh);
+
+/* exec_utils.c */
+char		*get_cmd_path(t_cmd *cmd);
+void		append_str(char ***paths, char *str);
 
 /* exits.c */
 void		exit_after_failed_exec(t_cmd *cmd, t_shell *sh);
@@ -154,10 +158,13 @@ void		ft_display_lst(t_cmd *lst);
 /* free.c */
 void		*free_arr_null(char **arr);
 void		*free_null(void *ptr);
-void		*free_lst_null(t_cmd *node);
 void		*free_shell_null(t_shell *sh);
 void		*free_env_null(t_env *env);
 void		*free_env_node_null(t_env_node *node);
+
+/* cmd_list_utils.c */
+void		*free_lst_null(t_cmd *node);
+void		*free_cmd_null(t_cmd *node);
 
 /* split_input.c*/
 int			split_line(t_cmd **cmd, const char *str, int ncmds, t_env *env);

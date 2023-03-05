@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_lst_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:43:37 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:43:39 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/05 13:44:34 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,20 @@ void	*free_lst_null(t_cmd *node)
 		return (NULL);
 	while (node)
 	{
-		node->delim = free_null(node->delim);
-		node->path = free_arr_null(node->path);
-		node->opt = free_arr_null(node->opt);
 		next = node->next;
-		node = free_null(node);
+		node = free_cmd_null(node);
 		node = next;
 	}
 	return (NULL);
+}
+
+void	*free_cmd_null(t_cmd *node)
+{
+	if (node == NULL)
+		return (NULL);
+	node->delim = free_null(node->delim);
+	node->path = free_arr_null(node->path);
+	node->opt = free_arr_null(node->opt);
+	node = free_null(node);
+	return (node);
 }
