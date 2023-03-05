@@ -13,7 +13,7 @@ SRCSLIST		:= main.c \
 					prompt.c \
 					builtins.c \
 					builtin_utils.c \
-					list_utils.c \
+					cmd_lst_utils.c \
 					check_input.c \
 					check_input2.c \
 					split_input.c \
@@ -27,6 +27,9 @@ SRCSLIST		:= main.c \
 					cut_char_utils.c\
 					error.c \
 					env.c \
+					env_lst_utils.c\
+					env_lst_utils2.c\
+					env_arr.c\
 					init.c \
 					exec.c \
 					exec_pipeline.c \
