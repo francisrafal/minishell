@@ -106,11 +106,14 @@ int			bi_pwd(char **cmd_args, t_shell *sh, int mode);
 int			bi_cd(char **cmd_args, t_shell *sh, int mode);
 int			bi_exit(t_cmd *cmd, t_shell *sh, int mode);
 int			bi_env(char **cmd_args, t_shell *sh, int mode);
+int			bi_unset(char **cmd_args, t_shell *sh, int mode);
+
+/* builtin_export.c */
 int			bi_export(char **cmd_args, t_shell *sh, int mode);
 int			bi_export_no_args(char **cmd_args, t_shell *sh, int mode);
 int			bi_export_with_args(char **cmd_args, t_shell *sh,
 				int mode, int argc);
-int			bi_unset(char **cmd_args, t_shell *sh, int mode);
+
 
 /* builtin_utils.c */
 int			get_arr_size(char **arr);

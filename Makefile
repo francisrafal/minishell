@@ -12,6 +12,7 @@ SRCSDIR			:= ./src/
 SRCSLIST		:= main.c \
 					prompt.c \
 					builtins.c \
+					builtin_export.c \
 					builtin_utils.c \
 					cmd_lst_utils.c \
 					check_input.c \
