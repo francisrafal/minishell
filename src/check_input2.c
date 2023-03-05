@@ -1,21 +1,7 @@
 #include "minishell.h"
 
-static t_pipe_state	dfa_pipe_transition(t_pipe_state state, char c)
+static t_pipe_state	dfa_pipe_transition2(t_pipe_state state, char c)
 {
-	if (state == START)
-	{
-		if (c == ' ' || c == '\t')
-			return (START);
-		if (c != '|')
-			return (CMD);
-	}
-	if (state == CMD)
-	{
-		if (c != '|')
-			return (CMD);
-		if (c == '|')
-			return (PIPE);
-	}
 	if (state == PIPE)
 	{
 		if (c == ' ' || c == '\t')
@@ -34,6 +20,27 @@ static t_pipe_state	dfa_pipe_transition(t_pipe_state state, char c)
 		if (c == '|')
 			return (MULTIPLE_PIPES);
 	}
+	return (state);
+}
+
+static t_pipe_state	dfa_pipe_transition(t_pipe_state state, char c)
+{
+	if (state == START)
+	{
+		if (c == ' ' || c == '\t')
+			return (START);
+		if (c != '|')
+			return (CMD);
+	}
+	if (state == CMD)
+	{
+		if (c != '|')
+			return (CMD);
+		if (c == '|')
+			return (PIPE);
+	}
+	if (state == PIPE || state == BLANK)
+		return (dfa_pipe_transition2(state, c));
 	if (state == BEGIN_PIPE)
 		return (BEGIN_PIPE);
 	if (state == MULTIPLE_PIPES)

@@ -16,6 +16,19 @@ int	count_empty_opt(char **cmds)
 	return (count);
 }
 
+char	**only_empty_opt(char **cmds)
+{
+	char	**tmp;
+
+	tmp = (char **)malloc(sizeof(char *) * 2);
+	if (!tmp)
+		return (NULL);
+	tmp[0] = ft_strdup("");
+	tmp[1] = NULL;
+	cmds = free_arr_null(cmds);
+	return (tmp);
+}
+
 char	**cut_empty_opt(char **cmds, int nopt)
 {
 	int		size;
@@ -27,15 +40,7 @@ char	**cut_empty_opt(char **cmds, int nopt)
 	if (count_empty_opt(cmds) == 0)
 		return (cmds);
 	if (size == 0)
-	{
-		tmp = (char **)malloc(sizeof(char *) * 2);
-		if (!tmp)
-			return (NULL);
-		tmp[0] = ft_strdup("");
-		tmp[1] = NULL;
-		cmds = free_arr_null(cmds);
-		return (tmp);
-	}
+		return (only_empty_opt(cmds));
 	i = 0;
 	j = 0;
 	tmp = (char **)malloc(sizeof(char *) * (size + 1));
