@@ -6,7 +6,7 @@
 /*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:46:22 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:16:15 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/05 13:31:41 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,35 @@ int	parent_process_pipeline(int *pipefd, t_cmd *cmd)
 	return (0);
 }
 
+int	pipeline_loop(int *pipefd, t_cmd *cmd, t_shell *sh, int i)
+{
+	append_str(&cmd->path, "/");
+	if (cmd->next != NULL)
+	{
+		if (pipe_or_print_error(pipefd) == -1)
+			return (-1);
+	}
+	sh->pid[i] = fork_or_print_error();
+	if (sh->pid[i] == -1)
+		return (-1);
+	if (sh->pid[i] == 0)
+	{
+		if (child_process_pipeline(pipefd, cmd, sh) == -1)
+			exit_after_failed_exec(cmd, sh);
+	}
+	else
+	{
+		if (parent_process_pipeline(pipefd, cmd) == -1)
+			return (-2);
+	}
+	return (0);
+}
+
 void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		pipefd[2];
 	int		i;
+	int		error;
 	t_cmd	*next;
 
 	if (init_pid(sh, cmd->ncmds) == NULL)
@@ -78,31 +103,17 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 	i = 0;
 	while (cmd)
 	{
-		append_str(&cmd->path, "/");
-		if (cmd->next != NULL)
-		{
-			if (pipe_or_print_error(pipefd) == -1)
-				return (cmd);
-		}
-		sh->pid[i] = fork_or_print_error();
-		if (sh->pid[i] == -1)
+		error = pipeline_loop(pipefd, cmd, sh, i);
+		if (error == -1)
 			return (cmd);
-		if (sh->pid[i] == 0)
-		{
-			if (child_process_pipeline(pipefd, cmd, sh) == -1)
-				exit_after_failed_exec(cmd, sh);
-		}
-		else
-		{
-			if (parent_process_pipeline(pipefd, cmd) == -1)
-				break ;
-			next = cmd->next;
-			cmd->next = NULL;
-			unlink_heredoc(cmd);
-			cmd = free_lst_null(cmd);
-			cmd = next;
-			i++;
-		}
+		if (error == -2)
+			break ;
+		next = cmd->next;
+		cmd->next = NULL;
+		unlink_heredoc(cmd);
+		cmd = free_lst_null(cmd);
+		cmd = next;
+		i++;
 	}
 	dup2_or_print_error(sh->stdin_copy, STDIN_FILENO);
 	close_or_print_error(sh->stdin_copy);

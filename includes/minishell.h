@@ -6,7 +6,7 @@
 /*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 12:03:23 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:18:02 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/05 13:32:24 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ void		*exec_pipeline(t_cmd *cmd, t_shell *sh);
 int			child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
 int			redirect_fds_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
 int			parent_process_pipeline(int *pipefd, t_cmd *cmd);
+int			pipeline_loop(int *pipefd, t_cmd *cmd, t_shell *sh, int i);
 
 /* exec_single_cmd.c */
 void		*exec_single_cmd(t_cmd *cmd, t_shell *sh);
