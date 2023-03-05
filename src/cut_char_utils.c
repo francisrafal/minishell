@@ -49,51 +49,52 @@ char	*get_str_env(char *str, t_env *env, int k)
 		return (tmp->value);
 }
 
+void	help_count_dq(char *str, int *i, t_env *env)
+{
+	i[4] += 2;
+	i[1] = get_next_char(&str[i[0] + 1], "$") + 1;
+	while (i[1] < get_end_quote(&str[i[0] + 1], '"'))
+	{
+		i[2] = get_next_char(&str[i[0] + i[1] +1], "\t \"\'");
+		if (i[2] != 0)
+		{
+			i[3] = check_str_env(&str[i[0] + i[1] + 1], env, i[2]);
+			i[4] += i[2] + 1 - i[3];
+		}
+		i[1] += get_next_char(&str[i[0] + i[1] + i[2] + 1], "$") + i[2] + 1;
+	}
+	i[0] += get_end_quote(&str[i[0] + 1], '"') + 2;
+}
+
+void	help_count_dollar(char *str, int *i, t_env *env)
+{
+	i[2] = get_next_char(&str[i[0] + 1], "\t \"\'\0");
+	if (i[2] != 0)
+	{
+		i[3] = check_str_env(&str[i[0] + 1], env, i[2]);
+		i[4] += i[2] + 1 - i[3];
+	}
+	i[0] += i[2] + 1;
+}
+
 int	count_chars(char *str, t_env *env)
 {
-	int	i;
-	int	j;
-	int	k;
-	int	l;
-	int	count;
+	int	i[5];
 
-	count = 0;
-	i = 0;
-	while (str[i] && i < (int)ft_strlen(str))
+	init_idx(i, 5);
+	while (str[i[0]] && i[0] < (int)ft_strlen(str))
 	{
-		if (str[i] == '"')
+		if (str[i[0]] == '"')
+			help_count_dq(str, i, env);
+		else if (str[i[0]] == '\'')
 		{
-			count += 2;
-			j = get_next_char(&str[i + 1], "$") + 1;
-			while (j < get_end_quote(&str[i + 1], '"'))
-			{
-				k = get_next_char(&str[i + j +1], "\t \"\'");
-				if (k != 0)
-				{
-					l = check_str_env(&str[i + j + 1], env, k);
-					count += k + 1 - l;
-				}
-				j += get_next_char(&str[i + j + k + 1], "$") + k + 1;
-			}
-			i += get_end_quote(&str[i + 1], '"') + 2;
+			i[4] += 2;
+			i[0] += get_end_quote(&str[i[0] + 1], '\'') + 2;
 		}
-		else if (str[i] == '\'')
-		{
-			count += 2;
-			i += get_end_quote(&str[i + 1], '\'') + 22;
-		}
-		else if (str[i] == '$')
-		{
-			k = get_next_char(&str[i + 1], "\t \"\'\0");
-			if (k != 0)
-			{
-				l = check_str_env(&str[i + 1], env, k);
-				count += k + 1 - l;
-			}
-			i += k + 1;
-		}
+		else if (str[i[0]] == '$')
+			help_count_dollar(str, i, env);
 		else
-			i++;
+			i[0]++;
 	}
-	return (count);
+	return (i[4]);
 }
