@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/05 12:03:23 by celgert           #+#    #+#             */
+/*   Updated: 2023/03/05 12:04:39 by celgert          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -212,7 +224,6 @@ void		sort_env(t_env *env);
 t_env_node	*env_node_swap(t_env *env, char *key);
 t_env_node	*find_env_node(t_env *env, char *key);
 t_env_node	*replace_node_value(t_env_node *node, char *value);
-
 
 /* init.c */
 void		init_idx(int *arr, int len);
