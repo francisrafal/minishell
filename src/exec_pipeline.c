@@ -36,7 +36,7 @@ char	*get_cmd_path(t_cmd *cmd)
 	return (cmd_path);
 }
 
-int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
+int	redirect_fds_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 {
 	if (cmd->fd_in == -1)
 		exit_on_file_error(cmd, sh);
@@ -56,6 +56,13 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 	if (cmd->re_out)
 		close_or_print_error(cmd->fd_out);
 	close_or_print_error(sh->stdin_copy);
+	return (0);
+}
+
+int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
+{
+	if (redirect_fds_pipeline(pipefd, cmd, sh) == -1)
+		return (-1);
 	if (is_builtin(cmd))
 		exec_builtin(cmd, sh, EXEC_AS_CHILD);
 	else

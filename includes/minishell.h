@@ -115,11 +115,13 @@ void		*exec_pipeline(t_cmd *cmd, t_shell *sh);
 int			child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
 char		*get_cmd_path(t_cmd *cmd);
 void		append_str(char ***paths, char *str);
+int			redirect_fds_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
 
 /* exec_single_cmd.c */
 void		*exec_single_cmd(t_cmd *cmd, t_shell *sh);
 void		*exec_one_child(t_cmd *cmd, t_shell *sh);
 int			child_process_single_cmd(t_cmd *cmd, t_shell *sh);
+int			redirect_fds_single_cmd(t_cmd *cmd, t_shell *sh);
 
 /* exits.c */
 void		exit_after_failed_exec(t_cmd *cmd, t_shell *sh);
