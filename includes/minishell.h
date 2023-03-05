@@ -108,6 +108,7 @@ void		print_with_escaped_quotes(char *key, char *value);
 int			exec_builtin(t_cmd *cmd, t_shell *sh, int mode);
 int			is_builtin(t_cmd *cmd);
 t_cmd		*exec_parsed_cmd_line(t_cmd *cmd, t_shell *sh);
+int			execve_safe(t_cmd *cmd, t_shell *sh);
 
 /* exec_pipeline.c */
 void		*exec_pipeline(t_cmd *cmd, t_shell *sh);
