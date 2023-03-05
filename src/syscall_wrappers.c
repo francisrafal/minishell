@@ -34,3 +34,13 @@ void	unlink_heredoc(t_cmd *cmd)
 		perror("unlink");
 	name = free_null(name);
 }
+
+pid_t	fork_or_print_error(void)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+		perror("fork");
+	return (pid);
+}

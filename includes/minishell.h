@@ -107,6 +107,7 @@ void		print_with_escaped_quotes(char *key, char *value);
 /* exec.c */
 int			exec_builtin(t_cmd *cmd, t_shell *sh, int mode);
 void		*exec_single_cmd(t_cmd *cmd, t_shell *sh);
+void		exit_after_failed_exec(t_cmd *cmd, t_shell *sh);
 
 /* exec_pipeline.c */
 void		*exec_pipeline(t_cmd *cmd, t_shell *sh);
@@ -214,5 +215,6 @@ void		lsof(char *helper_message);
 void		close_or_print_error(int fd);
 int			dup2_or_print_error(int oldfd, int newfd);
 void		unlink_heredoc(t_cmd *cmd);
+pid_t		fork_or_print_error(void);
 
 #endif

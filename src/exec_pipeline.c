@@ -139,25 +139,13 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 				return (cmd);
 			}
 		}
-		sh->pid[i] = fork();
+		sh->pid[i] = fork_or_print_error();
 		if (sh->pid[i] == -1)
-		{
-			perror("fork");
 			return (cmd);
-		}
 		if (sh->pid[i] == 0)
 		{
 			if (child_process_pipeline(pipefd, cmd, sh) == -1)
-			{
-				sh = free_shell_null(sh);
-				print_exec_error(cmd);
-				cmd = free_lst_null(cmd);
-				if (errno == 13)
-					exit(126);
-				if (errno == 2)
-					exit(127);
-				exit(127);
-			}
+				exit_after_failed_exec(cmd, sh);
 		}
 		else
 		{

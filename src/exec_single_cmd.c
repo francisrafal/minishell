@@ -58,25 +58,13 @@ void	*exec_one_child(t_cmd *cmd, t_shell *sh)
 	pid_t	pid;
 
 	append_str(&cmd->path, "/");
-	pid = fork();
+	pid = fork_or_print_error();
 	if (pid == -1)
-	{
-		perror("fork");
 		return (cmd);
-	}
 	if (pid == 0)
 	{
 		if (child_process_single_cmd(cmd, sh) == -1)
-		{
-			sh = free_shell_null(sh);
-			print_exec_error(cmd);
-			cmd = free_lst_null(cmd);
-			if (errno == 13)
-				exit(126);
-			if (errno == 2)
-				exit(127);
-			exit(127);
-		}
+			exit_after_failed_exec(cmd, sh);
 	}
 	else
 	{
