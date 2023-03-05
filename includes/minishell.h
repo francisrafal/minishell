@@ -205,6 +205,7 @@ void		print_arr(char **arr);
 void		init_idx(int *arr, int len);
 t_shell		*init_shell(char **envp);
 void		increase_shell_level(t_env *env);
+pid_t		*init_pid(t_shell *sh, int ncmds);
 
 /* signals.c */
 void		handle_signal_parent(int signum);
@@ -219,5 +220,8 @@ void		close_or_print_error(int fd);
 int			dup2_or_print_error(int oldfd, int newfd);
 void		unlink_heredoc(t_cmd *cmd);
 pid_t		fork_or_print_error(void);
+
+/* wait_for_children.c */
+pid_t		*wait_for_children(t_shell *sh, int children);
 
 #endif

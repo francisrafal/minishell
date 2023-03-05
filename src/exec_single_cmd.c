@@ -46,13 +46,13 @@ int	child_process_single_cmd(t_cmd *cmd, t_shell *sh)
 
 void	*exec_one_child(t_cmd *cmd, t_shell *sh)
 {
-	pid_t	pid;
-
-	append_str(&cmd->path, "/");
-	pid = fork_or_print_error();
-	if (pid == -1)
+	if (init_pid(sh, cmd->ncmds) == NULL)
 		return (cmd);
-	if (pid == 0)
+	append_str(&cmd->path, "/");
+	sh->pid[0] = fork_or_print_error();
+	if (sh->pid[0] == -1)
+		return (cmd);
+	if (sh->pid[0] == 0)
 	{
 		if (child_process_single_cmd(cmd, sh) == -1)
 			exit_after_failed_exec(cmd, sh);
@@ -63,9 +63,7 @@ void	*exec_one_child(t_cmd *cmd, t_shell *sh)
 			close_or_print_error(cmd->fd_in);
 		if (cmd->re_out)
 			close_or_print_error(cmd->fd_out);
-		wait(&sh->wstatus);
-		if (WIFEXITED(sh->wstatus))
-			g_exit_code = WEXITSTATUS(sh->wstatus);
+		sh->pid = wait_for_children(sh, 1);
 		unlink_heredoc(cmd);
 	}
 	return (cmd);

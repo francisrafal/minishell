@@ -44,3 +44,9 @@ void	increase_shell_level(t_env *env)
 		append_env(env, create_env_node(new_shell_level));
 	}
 }
+
+pid_t	*init_pid(t_shell *sh, int ncmds)
+{
+	sh->pid = malloc(sizeof (pid_t) * ncmds);
+	return (sh->pid);
+}

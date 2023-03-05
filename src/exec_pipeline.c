@@ -111,11 +111,9 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		pipefd[2];
 	int		i;
-	int		j;
 	t_cmd	*next;
 
-	sh->pid = malloc(sizeof (pid_t) * cmd->ncmds);
-	if (sh->pid == NULL)
+	if (init_pid(sh, cmd->ncmds) == NULL)
 		return (cmd);
 	sh->stdin_copy = dup(STDIN_FILENO);
 	i = 0;
@@ -165,18 +163,6 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 	}
 	dup2_or_print_error(sh->stdin_copy, STDIN_FILENO);
 	close_or_print_error(sh->stdin_copy);
-	j = 0;
-	while (j < i)
-	{
-		if (waitpid(sh->pid[j], &sh->wstatus, 0) == -1)
-			perror("waitpid");
-		j++;
-	}
-	if (WIFEXITED(sh->wstatus))
-	{
-		if (WEXITSTATUS(sh->wstatus) != EXIT_NO_ARG)
-			g_exit_code = WEXITSTATUS(sh->wstatus);
-	}
-	sh->pid = free_null(sh->pid);
+	sh->pid = wait_for_children(sh, i);
 	return (cmd);
 }

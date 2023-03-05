@@ -35,7 +35,8 @@ SRCSLIST		:= main.c \
 					free.c \
 					signals.c \
 					debug_helpers.c \
-					syscall_wrappers.c
+					syscall_wrappers.c \
+					wait_for_children.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 
