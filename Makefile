@@ -13,6 +13,7 @@ SRCSLIST		:= main.c \
 					prompt.c \
 					builtins.c \
 					builtin_cd.c \
+					builtin_echo.c \
 					builtin_export.c \
 					builtin_exit.c \
 					builtin_utils.c \

@@ -6,7 +6,7 @@
 /*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 12:03:23 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 14:05:00 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/05 14:17:44 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,13 @@ typedef enum e_pipe_state
 char		*get_cmd_line(void);
 
 /* builtins.c */
-int			bi_echo(char **cmd_args, t_shell *sh, int mode);
 int			bi_pwd(char **cmd_args, t_shell *sh, int mode);
 int			bi_env(char **cmd_args, t_shell *sh, int mode);
 int			bi_unset(char **cmd_args, t_shell *sh, int mode);
+
+/* builtin_echo.c */
+int			bi_echo(char **cmd_args);
+int			parse_echo_options(char **cmd_args, int i, int *new_line);
 
 /* builtin_cd.c */
 int			bi_cd(char **cmd_args, t_shell *sh);

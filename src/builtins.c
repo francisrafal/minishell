@@ -3,52 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:42:06 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:42:27 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/05 14:10:42 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	bi_echo(char **cmd_args, t_shell *sh, int mode)
-{
-	int	i;
-	int	new_line;
-
-	(void)sh;
-	(void)mode;
-	new_line = 1;
-	i = 1;
-	if (cmd_args[i] == NULL)
-	{
-		printf("\n");
-		return (0);
-	}	
-	while (cmd_args[i][0] == '-')
-	{
-		if (cmd_args[i][1] == 'n')
-		{
-			new_line = 0;
-			i++;
-		}
-		else
-			break ;
-		if (cmd_args[i] == NULL)
-			return (0);
-	}
-	while (cmd_args[i])
-	{
-		printf("%s", cmd_args[i]);
-		if (cmd_args[i + 1])
-			printf(" ");
-		i++;
-	}	
-	if (new_line)
-		printf("\n");
-	return (0);
-}
 
 int	bi_pwd(char **cmd_args, t_shell *sh, int mode)
 {
