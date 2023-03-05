@@ -36,25 +36,6 @@ char	*get_cmd_path(t_cmd *cmd)
 	return (cmd_path);
 }
 
-int	is_builtin(t_cmd *cmd)
-{
-	if (ft_strncmp(cmd->opt[0], "echo", 5) == 0)
-		return (1);
-	if (ft_strncmp(cmd->opt[0], "pwd", 4) == 0)
-		return (1);
-	if (ft_strncmp(cmd->opt[0], "cd", 3) == 0)
-		return (1);
-	if (ft_strncmp(cmd->opt[0], "exit", 5) == 0)
-		return (1);
-	if (ft_strncmp(cmd->opt[0], "env", 4) == 0)
-		return (1);
-	if (ft_strncmp(cmd->opt[0], "export", 7) == 0)
-		return (1);
-	if (ft_strncmp(cmd->opt[0], "unset", 6) == 0)
-		return (1);
-	return (0);
-}
-
 int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 {
 	char	*cmd_path;
@@ -122,11 +103,8 @@ void	*exec_pipeline(t_cmd *cmd, t_shell *sh)
 		append_str(&cmd->path, "/");
 		if (cmd->next != NULL)
 		{
-			if (pipe(pipefd) == -1)
-			{
-				perror("pipe");
+			if (pipe_or_print_error(pipefd) == -1)
 				return (cmd);
-			}
 		}
 		sh->pid[i] = fork_or_print_error();
 		if (sh->pid[i] == -1)

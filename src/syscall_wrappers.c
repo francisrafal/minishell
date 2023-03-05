@@ -39,3 +39,13 @@ pid_t	fork_or_print_error(void)
 		perror("fork");
 	return (pid);
 }
+
+int	pipe_or_print_error(int pipefd[2])
+{
+	int	ret;
+
+	ret = pipe(pipefd);
+	if (pipe(pipefd) == -1)
+		perror("pipe");
+	return (ret);
+}

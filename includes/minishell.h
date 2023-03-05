@@ -106,16 +106,17 @@ void		print_with_escaped_quotes(char *key, char *value);
 
 /* exec.c */
 int			exec_builtin(t_cmd *cmd, t_shell *sh, int mode);
-void		*exec_single_cmd(t_cmd *cmd, t_shell *sh);
+int			is_builtin(t_cmd *cmd);
+t_cmd		*exec_parsed_cmd_line(t_cmd *cmd, t_shell *sh);
 
 /* exec_pipeline.c */
 void		*exec_pipeline(t_cmd *cmd, t_shell *sh);
 int			child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh);
-int			is_builtin(t_cmd *cmd);
 char		*get_cmd_path(t_cmd *cmd);
 void		append_str(char ***paths, char *str);
 
 /* exec_single_cmd.c */
+void		*exec_single_cmd(t_cmd *cmd, t_shell *sh);
 void		*exec_one_child(t_cmd *cmd, t_shell *sh);
 int			child_process_single_cmd(t_cmd *cmd, t_shell *sh);
 
@@ -220,6 +221,7 @@ void		close_or_print_error(int fd);
 int			dup2_or_print_error(int oldfd, int newfd);
 void		unlink_heredoc(t_cmd *cmd);
 pid_t		fork_or_print_error(void);
+int			pipe_or_print_error(int pipefd[2]);
 
 /* wait_for_children.c */
 pid_t		*wait_for_children(t_shell *sh, int children);

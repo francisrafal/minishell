@@ -25,20 +25,10 @@ int	main(int argc, char **argv, char **envp)
 		}
 		add_history(cmd_line);
 		cmd = split_input(cmd_line, sh->env);
-		if (!cmd)
-		{
-			cmd_line = free_null(cmd_line);
-			continue ;
-		}
 		cmd_line = free_null(cmd_line);
-		if (cmd->ncmds == 1)
-			cmd = exec_single_cmd(cmd, sh);
-		else
-		{
-			set_signal_action(EXEC_AS_CHILD);
-			cmd = exec_pipeline(cmd, sh);
-		}
-		cmd = free_lst_null(cmd);
+		if (!cmd)
+			continue ;
+		cmd = exec_parsed_cmd_line(cmd, sh);
 	}
 	return (0);
 }
