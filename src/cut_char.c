@@ -1,96 +1,103 @@
 #include "minishell.h"
 
+void	help_replace_dq2(char *str, char *line, int *i, t_env *env)
+{
+	char	*tmp;
+
+	i[3] = check_str_env(&str[i[0] + 1], env, i[2]);
+	if (i[3])
+	{	
+		tmp = get_str_env(&str[i[0] + 1], env, i[2]);
+		ft_strlcpy(&line[i[4]], tmp, i[3] + 1);
+		if (str[i[0] + 1] == '?' && i[3] == 1)
+			tmp = free_null(tmp);
+		i[4] += i[3];
+		i[0] += i[2];
+	}
+	else
+		i[0] += i[2];
+}
+
+void	help_replace_dq(char *str, char *line, int *i, t_env *env)
+{
+	int	k;
+
+	i[1] = get_next_char(&str[i[0] + 1], "$") + 1;
+	while (i[1] < get_end_quote(&str[i[0] + 1], '"'))
+	{
+		ft_strlcpy(&line[i[4]], &str[i[0] + 1], i[1]);
+		i[0] += i[1];
+		i[4] += i[1] - 1;
+		i[2] = get_next_char(&str[i[0] + 1], "\t \"\'");
+		if (i[2] != 0)
+			help_replace_dq2(str, line, i, env);
+		i[1] += get_next_char(&str[i[0] + 1], "$");
+	}
+	k = get_end_quote(&str[i[0] + 1], '"');
+	ft_strlcpy(&line[i[4]], &str[i[0] + 1], k + 1);
+	i[4] += k;
+	i[0] += k + 2;
+}
+
+void	help_replace_dollar(char *str, char *line, int *i, t_env *env)
+{
+	char	*tmp;
+
+	i[2] = get_next_char(&str[i[0] + 1], "\t \"\'\0");
+	if (i[2] != 0)
+	{
+		i[3] = check_str_env(&str[i[0] + 1], env, i[2]);
+		if (i[3])
+		{
+			tmp = get_str_env(&str[i[0] + 1], env, i[2]);
+			ft_strlcpy(&line[i[4]], tmp, i[3] + 1);
+			if (str[i[0] + 1] == '?' && i[3] > 0)
+				tmp = free_null(tmp);
+			i[4] += i[3];
+			i[0] += i[2] + 1;
+		}
+		else
+			i[0] += i[2] + 1;
+	}
+}
+
+void	help_replace(char *str, char *line, int *i, t_env *env)
+{
+	if (str[i[0]] == '\'')
+	{
+		i[3] = get_end_quote(&str[i[0] + 1], '\'');
+		ft_strlcpy(&line[i[4]], &str[i[0] + 1], i[3] + 1);
+		i[4] += i[3];
+		i[0] += i[3] + 2;
+	}
+	else if (str[i[0]] == '$')
+		help_replace_dollar(str, line, i, env);
+	else
+	{
+		ft_strlcpy(&line[i[4]], &str[i[0]], 2);
+		i[0]++;
+		i[4]++;
+	}
+}
+
 char	*replace_chars(char *str, t_env *env)
 {
 	char	*line;
-	int		size;
-	int		i;
-	int		m;
-	int		j;
-	int		k;
-	int		l;
- //   int     i[5];
-	char 	*tmp;
-	
-	//init_idx(i,5);
-	size = (int)ft_strlen(str) - count_chars(str, env);
-	line = (char *)malloc(sizeof(char) *(size +1));
+	int		i[6];
+
+	init_idx(i, 6);
+	i[5] = (int)ft_strlen(str) - count_chars(str, env);
+	line = (char *)malloc(sizeof(char) * (i[5] + 1));
 	if (!line)
 		return (NULL);
-	if (size == 0)
+	if (i[5] == 0)
 		line[0] = '\0';
-	m = 0;
-	i = 0;
-	while (str[i] && i < (int)ft_strlen(str))
+	while (str[i[0]] && i[0] < (int)ft_strlen(str))
 	{
-		if (str[i] == '"')
-		{
-			j = get_next_char(&str[i + 1], "$") + 1;
-			while (j < get_end_quote(&str[i + 1], '"'))
-			{
-				ft_strlcpy(&line[m], &str[i+1], j);
-				//printf("%s\n %s\n", &str[i], line);
-				i += j;
-				m += j - 1;
-				//printf("%s\n %s\n", &str[i], line);
-				k = get_next_char(&str[i + 1], "\t \"\'");
-				if (k != 0)
-				{
-					//printf("%s\n %s\n", &str[i], line);
-					l = check_str_env(&str[i + 1], env, k);
-					if (l)
-					{	
-						tmp = get_str_env(&str[i + 1], env, k);
-						ft_strlcpy(&line[m], tmp, l + 1);
-						if (str[i + 1] == '?' && l == 1)
-							tmp = free_null(tmp);
-						m += l;
-						i += k;
-						//printf("%s\n %s\n", &str[i], line);
-					}
-					else
-						i += k;
-				}
-				j += get_next_char(&str[i + 1], "$");
-			}
-			ft_strlcpy(&line[m], &str[i + 1], get_end_quote(&str[i + 1], '"') + 1);
-			m += get_end_quote(&str[i + 1], '"');
-			i += get_end_quote(&str[i + 1], '"') + 2;
-		}
-		else if (str[i] == '\'')
-		{
-			l = get_end_quote(&str[i + 1], '\'');
-			ft_strlcpy(&line[m], &str[i + 1], l + 1);
-			m += l;
-			i += l + 2;
-		}
-		else if (str[i] == '$')
-		{
-			k = get_next_char(&str[i + 1], "\t \"\'\0");
-			if (k != 0)
-			{
-				//printf("%s\n %s\n", &str[i+1], line);
-				l = check_str_env(&str[i + 1], env, k);
-				if (l)
-				{
-					tmp = get_str_env(&str[i + 1], env, k);
-					ft_strlcpy(&line[m], tmp, l + 1);
-					if (str[i + 1] == '?' && l > 0)
-							tmp = free_null(tmp);
-					m += l;
-					i += k + 1;
-					 // tmp = free_null(tmp);
-				}
-				else
-					i += k + 1;
-			}
-		}
+		if (str[i[0]] == '"')
+			help_replace_dq(str, line, i, env);
 		else
-		{
-			ft_strlcpy(&line[m], &str[i], 2);
-			i++;
-			m++;
-		}
+			help_replace(str, line, i, env);
 	}
 	str = free_null(str);
 	return (line);
