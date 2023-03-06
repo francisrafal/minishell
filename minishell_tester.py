@@ -1,6 +1,21 @@
+### How to use:
+### python3 minishell_tester.py <absolute path to your minishell executable>
+
 import pexpect
 import sys
 import os
+
+### ADD NEW TESTS HERE ###
+testcmds = [
+    ["/bin/ls"],
+    [""],
+    ["/bin/uname"],
+    ["/bin/uname -a"],
+    ["     "],
+    ["abc"],
+    ["echo hello world    how are you??"],
+    [" echo -n hello"]
+    ]
 
 class bcolors:
     HEADER = '\033[95m'
@@ -13,67 +28,28 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-path = os.environ.get("PATH")
-pwd = os.environ.get("PWD")
 prompt = "minishell$ "
-testcmds_hardcoded = [[["echo hello", "hello"]],
-            [["exit", "exit"]],
-            [["cat nonexistingfile", "cat: nonexistingfile: No such file or directory"]],
-            [
-             ["env | grep \"^PATH=\"", "PATH=" + path],
-             ["export PATH=$PWD:$PATH", prompt],
-             ["env | grep \"^PATH=\"", "PATH=" + pwd + ":" + path],
-             ["ls", "this is my ls"]
-             ]
-            ]
 
-testcmds = [
-    ["/bin/ls"],
-    [""],
-    ["/bin/uname"],
-    ["/bin/uname -a"],
-    ["     "],
-    ["abc"],
-    ["echo hello world    how are you??"],
-    [" echo -n hello"]
-    ]
-
-def result(minishell, str):
-    try:
-        if (str == prompt):
-            minishell.expect_exact("\r\n" + str, timeout=1)
-        else:
-            minishell.expect_exact("\r\n" + str + "\r\n", timeout=1)
-        return bcolors.OKGREEN + "OK" + bcolors.ENDC
-    except:
-        return bcolors.FAIL + "KO" + bcolors.ENDC
-
-def referenceresult(minishell, str):
+def referenceresult(minishell, bash_result):
     try:
         minishell.expect_exact(prompt, timeout=1)
-        if (minishell.before.decode() == str):
+        if (minishell.before.decode() == bash_result):
             return bcolors.OKGREEN + "OK" + bcolors.ENDC
         return bcolors.FAIL + "KO" + bcolors.ENDC
     except:
         return bcolors.FAIL + "KO" + bcolors.ENDC
 
+def get_bash_result(bash, cmd):
+    bash.sendline("export PS1=\"minishell$ \"")
+    bash.expect_exact("\r\n" + prompt)
+    bash.sendline(cmd)
+    bash.expect_exact(cmd + "\r\n")
+    bash.expect_exact(prompt)
+    return bash.before.decode()
+
 def test(cmdlist, testnum):
     minishell = pexpect.spawn(sys.argv[1])
-    logfile = "testlogs/minishell_tester_" + str(testnum).zfill(3) + ".log"
-    os.makedirs(os.path.dirname(logfile), exist_ok=True)
-    minishell.logfile_read = open(logfile, "wb")
-    print(bcolors.HEADER + bcolors.BOLD + f"\nTest {testnum:03d}" + bcolors.ENDC)
-    for cmd in cmdlist:
-        print(f"{'Command:':10}{cmd[0]}")
-        minishell.sendline(cmd[0])
-        print(f"{'Expected:':10}{cmd[1]}")
-        print(result(minishell, cmd[1]))
-    minishell.logfile_read.close()
-
-def referencetest(cmdlist, testnum):
-    minishell = pexpect.spawn(sys.argv[1])
     minishell_logfile = "testlogs/" + str(testnum).zfill(3) + "_testoutput_minishell.log"
-    os.makedirs(os.path.dirname(minishell_logfile), exist_ok=True)
     minishell.logfile_read = open(minishell_logfile, "wb")
 
     bash = pexpect.spawn("bash")
@@ -82,24 +58,24 @@ def referencetest(cmdlist, testnum):
 
     print(bcolors.HEADER + bcolors.BOLD + f"\nTest {testnum:03d}" + bcolors.ENDC)
     for i, cmd in enumerate(cmdlist):
-        bash.sendline("export PS1=\"minishell$ \"")
-        bash.expect_exact("\r\n" + prompt)
-        bash.sendline(cmd)
-        bash.expect_exact(cmd + "\r\n")
-        bash.expect_exact(prompt)
+        bash_result = get_bash_result(bash, cmd)
         print(f"{'Command:':10}{cmd}")
-        print(f"{'Expected:':10}{bash.before.decode()}")
+        print(f"{'Expected:':10}{bash_result}")
         minishell.sendline(cmd)
         minishell.expect_exact(cmd + "\r\n")
-        print(referenceresult(minishell, bash.before.decode()))
+        print(referenceresult(minishell, bash_result)) 
     minishell.logfile_read.close()
     bash.logfile_read.close()
     minishell.sendline("exit")
     bash.sendline("exit")
 
 def main():
+    print(bcolors.UNDERLINE + bcolors.BOLD + bcolors.OKBLUE + "\nminishell Tester\n" + bcolors.ENDC)
+    print("All results will be compared to your machine's bash")
+    print("Test logs can be found in ./testlogs")
+    os.makedirs("testlogs/", exist_ok=True)
     for testnum, cmdlist in enumerate(testcmds):
-        referencetest(cmdlist, testnum)
+        test(cmdlist, testnum)
 
 if __name__ == "__main__":
     main()
