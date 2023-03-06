@@ -16,7 +16,14 @@ testcmds = [
     ["echo hello world    how are you??"],
     [" echo -n hello"],
     ["echo \"cat lol.c | cat > lol.c\""],
-    ["ls \"\""]
+    ["ls \"\""],
+    ["export PATH=$PWD/tests:$PATH", "ls"],
+    ["echo $"],
+    ["$"],
+    ["echo $US"],
+    ["echo $USER"],
+    ["echo $USER:$USER"],
+    ["echo \"$USER:$USER\""]
     ]
 
 class bcolors:
