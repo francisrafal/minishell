@@ -40,7 +40,7 @@ void	help_replace_dq(char *str, char *line, int *i, t_env *env)
 		ft_strlcpy(&line[i[4]], &str[i[0] + 1], i[1]);
 		i[0] += i[1];
 		i[4] += i[1] - 1;
-		i[2] = get_next_char(&str[i[0] + 1], "\t \"\'");
+		i[2] = get_next_char(&str[i[0] + 1], ":\t \"\'");
 		if (i[2] != 0)
 			help_replace_dq2(str, line, i, env);
 		i[1] += get_next_char(&str[i[0] + 1], "$");
@@ -55,7 +55,7 @@ void	help_replace_dollar(char *str, char *line, int *i, t_env *env)
 {
 	char	*tmp;
 
-	i[2] = get_next_char(&str[i[0] + 1], "\t \"\'\0");
+	i[2] = get_next_char(&str[i[0] + 1], ":\t \"\'\0");
 	if (i[2] != 0)
 	{
 		i[3] = check_str_env(&str[i[0] + 1], env, i[2]);
@@ -70,6 +70,11 @@ void	help_replace_dollar(char *str, char *line, int *i, t_env *env)
 		}
 		else
 			i[0] += i[2] + 1;
+	}
+	else{
+			ft_strlcpy(&line[i[4]], &str[i[0]], 2);
+			i[0]++;
+			i[4]++;
 	}
 }
 

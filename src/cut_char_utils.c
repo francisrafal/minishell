@@ -67,7 +67,7 @@ void	help_count_dq(char *str, int *i, t_env *env)
 	i[1] = get_next_char(&str[i[0] + 1], "$") + 1;
 	while (i[1] < get_end_quote(&str[i[0] + 1], '"'))
 	{
-		i[2] = get_next_char(&str[i[0] + i[1] +1], "\t \"\'");
+		i[2] = get_next_char(&str[i[0] + i[1] +1], ":\t \"\'");
 		if (i[2] != 0)
 		{
 			i[3] = check_str_env(&str[i[0] + i[1] + 1], env, i[2]);
@@ -80,7 +80,7 @@ void	help_count_dq(char *str, int *i, t_env *env)
 
 void	help_count_dollar(char *str, int *i, t_env *env)
 {
-	i[2] = get_next_char(&str[i[0] + 1], "\t \"\'\0");
+	i[2] = get_next_char(&str[i[0] + 1], ":\t \"\'\0");
 	if (i[2] != 0)
 	{
 		i[3] = check_str_env(&str[i[0] + 1], env, i[2]);
