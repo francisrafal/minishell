@@ -14,7 +14,9 @@ testcmds = [
     ["     "],
     ["abc"],
     ["echo hello world    how are you??"],
-    [" echo -n hello"]
+    [" echo -n hello"],
+    ["echo \"cat lol.c | cat > lol.c\""],
+    ["ls \"\""]
     ]
 
 class bcolors:
@@ -74,8 +76,11 @@ def main():
     print("All results will be compared to your machine's bash")
     print("Test logs can be found in ./testlogs")
     os.makedirs("testlogs/", exist_ok=True)
-    for testnum, cmdlist in enumerate(testcmds):
-        test(cmdlist, testnum)
+    if len(sys.argv) > 2:
+        test(testcmds[int(sys.argv[2])], int(sys.argv[2]))
+    else:
+        for testnum, cmdlist in enumerate(testcmds):
+            test(cmdlist, testnum)
 
 if __name__ == "__main__":
     main()
