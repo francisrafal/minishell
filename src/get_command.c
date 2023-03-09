@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_command.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: celgert <celgert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:47:20 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:47:22 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/09 11:38:45 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,6 @@ char	*get_command(t_cmd *cmd, char *cmd_str, t_env *env)
 			return (NULL);
 		i++;
 	}
-	cmd->opt = cut_empty_opt(cmd->opt, nopt);
+	//cmd->opt = cut_empty_opt(cmd->opt, nopt);
 	return (str);
 }
