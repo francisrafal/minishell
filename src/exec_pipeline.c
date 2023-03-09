@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:46:22 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:41:59 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/09 13:41:57 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	redirect_fds_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 	}
 	if (dup2_or_print_error(cmd->fd_in, STDIN_FILENO) == -1)
 		return (-1);
-	if (cmd->re_in)
+	if (cmd->re_in || cmd->read_in)
 		close_or_print_error(cmd->fd_in);
 	if (dup2_or_print_error(cmd->fd_out, STDOUT_FILENO) == -1)
 		return (-1);
@@ -48,7 +48,7 @@ int	child_process_pipeline(int *pipefd, t_cmd *cmd, t_shell *sh)
 
 int	parent_process_pipeline(int *pipefd, t_cmd *cmd)
 {
-	if (cmd->re_in)
+	if (cmd->re_in || cmd->read_in)
 		close_or_print_error(cmd->fd_in);
 	if (cmd->re_out)
 		close_or_print_error(cmd->fd_out);
