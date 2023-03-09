@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_single_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:46:34 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 13:54:41 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/09 13:42:24 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	*exec_one_child(t_cmd *cmd, t_shell *sh)
 	}
 	else
 	{
-		if (cmd->re_in)
+		if (cmd->re_in || cmd->read_in)
 			close_or_print_error(cmd->fd_in);
 		if (cmd->re_out)
 			close_or_print_error(cmd->fd_out);
@@ -61,7 +61,7 @@ int	redirect_fds_single_cmd(t_cmd *cmd, t_shell *sh)
 		exit_on_file_error(cmd, sh);
 	if (dup2_or_print_error(cmd->fd_in, STDIN_FILENO) == -1)
 		return (-1);
-	if (cmd->re_in)
+	if (cmd->re_in || cmd->read_in)
 		close_or_print_error(cmd->fd_in);
 	if (dup2_or_print_error(cmd->fd_out, STDOUT_FILENO) == -1)
 		return (-1);
