@@ -6,7 +6,7 @@
 /*   By: celgert <celgert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:47:27 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/09 16:00:10 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/09 16:11:57 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,10 @@ char	*get_infile(t_cmd *cmd, char *line)
 		if (tmp)
 		{
 			if (fd_in)
-					close_or_print_error(fd_in);
+			{
+				close_or_print_error(fd_in);
+				unlink_heredoc(cmd);
+			}
 			file = free_null(file);
 		}
 	}
