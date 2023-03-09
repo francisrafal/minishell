@@ -23,6 +23,7 @@ SRCSLIST		:= main.c \
 					split_input.c \
 					split_input_utils.c \
 					files_utils.c \
+					files_utils2.c \
 					get_outfile.c \
 					get_infile.c \
 					prun_str.c \

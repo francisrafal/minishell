@@ -6,54 +6,73 @@
 /*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:46:55 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:46:58 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/09 10:07:23 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	get_next_char(char *line, char *cset)
+int	get_charoq(char *line, char *cset)
 {
 	int	i;
 
 	i = 0;
 	while (line[i])
 	{
-		if (ft_strchr(cset, line[i]))
+		if (line[i] == '"')
+			i += get_end_quote(&line[i + 1], '"') + 2;
+		else if (line[i] == '\'')
+			i += get_end_quote(&line[i + 1], '\'') + 2;
+		else if (ft_strchr(cset, line[i]))
 		{
-			if (i > 0 && line[i - 1] == '\\'
-				&& line[i] != '\t' && line[i] != ' ')
+			if (i > 0 && line[i - 1] == '\\')
 			{
 				i++;
 				continue ;
 			}
 			return (i);
 		}
-		i++;
+		else
+			i++;
 	}
 	return (i);
 }
 
-int	get_char(char *line, char c)
+void	help_getstrcoq(char *line, int *i, char c)
+{
+	if (line[*i] == '"')
+		*i += get_end_quote(&line[*i + 1], '"') + 2;
+	else if (line[*i] == '\'')
+		*i += get_end_quote(&line[*i + 1], '\'') + 2;
+	else if (line[*i] != c)
+		*i += 1;
+}
+
+char	*get_strchroq(char *line, char c)
 {
 	int	i;
 
+	if (line == NULL)
+		return (NULL);
 	i = 0;
 	while (line[i])
 	{
 		if (line[i] == c)
 		{
-			if (i > 0 && line[i - 1] == '\\'
-				&& line[i] != '\t' && line[i] != ' ')
+			if (i > 0 && line[i - 1] == '\\')
 			{
 				i++;
 				continue ;
 			}
-			return (i);
+			return (&line[i]);
 		}
-		i++;
+		help_getstrcoq(line, &i, c);
 	}
-	return (i);
+	if ((char)c == 0)
+		return (&line[i]);
+	if (!line[i])
+		return (NULL);
+	return (&line[i]);
 }
 
 char	*cut_word(char *str, char c)
@@ -63,13 +82,13 @@ char	*cut_word(char *str, char c)
 	char	*trim;
 
 	init_idx(i, 4);
-	i[2] = get_char(str, c);
+	i[2] = get_charoq(str, &c);
 	i[0] = i[2] + 1;
 	if (str[i[0]] && str[i[0]] == c)
 		i[0]++;
 	while (str[i[0]] && (str[i[0]] == '\t' || str[i[0]] == ' '))
 		i[0]++;
-	i[1] = get_next_char(&str[i[0]], "\t ><");
+	i[1] = get_charoq(&str[i[0]], "\t ><");
 	i[3] = (int)ft_strlen(str) - i[0] - i[1] + i[2];
 	new = (char *)malloc(sizeof(char) * (i[3] + 1));
 	if (!new)
@@ -92,13 +111,13 @@ char	*get_file_name(char *str, char c)
 	char	*file;
 	char	*trim;
 
-	k = get_char(str, c);
+	k = get_charoq(str, &c);
 	i = k + 1;
 	if (str[i] && str[i] == c)
 		i++;
 	while (str[i] && (str[i] == '\t' || str[i] == ' '))
 		i++;
-	j = get_next_char(&str[i], "\t ><");
+	j = get_charoq(&str[i], "\t ><");
 	file = (char *)malloc(sizeof(char) * (j + 1));
 	if (!file)
 		return (NULL);

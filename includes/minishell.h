@@ -192,6 +192,8 @@ int			get_next_char(char *line, char *cset);
 int			get_char(char *line, char c);
 char		*cut_word(char *str, char c);
 char		*get_file_name(char *str, char c);
+char		*get_strchroq(char *line, char c);
+int			get_charoq(char *line, char *c);
 
 /* get_outfile.c */
 int			open_close_outfile(char *tmp, char *file, t_cmd *cmd);

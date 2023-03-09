@@ -44,7 +44,7 @@ char	*get_outfile(t_cmd *cmd, char *line)
 	char	*file;
 
 	file = NULL;
-	tmp = ft_strchr(line, '>');
+	tmp = get_strchroq(line, '>');
 	if (!tmp)
 		return (line);
 	while (tmp)
@@ -56,7 +56,7 @@ char	*get_outfile(t_cmd *cmd, char *line)
 			return (NULL);
 		}
 		line = cut_word(line, '>');
-		tmp = ft_strchr(line, '>');
+		tmp = get_strchroq(line, '>');
 		if (tmp)
 			file = free_null(file);
 	}

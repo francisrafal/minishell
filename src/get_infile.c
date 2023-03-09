@@ -6,7 +6,7 @@
 /*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:47:27 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:47:29 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/09 09:50:31 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	*get_infile(t_cmd *cmd, char *line)
 	char	*file;
 
 	file = NULL;
-	tmp = ft_strchr(line, '<');
+	tmp = get_strchroq(line, '<');
 	if (!tmp)
 		return (line);
 	while (tmp)
@@ -104,7 +104,7 @@ char	*get_infile(t_cmd *cmd, char *line)
 		file = get_file_name(line, '<');
 		fd_in = handle_infile(tmp, file, cmd);
 		line = cut_word(line, '<');
-		tmp = ft_strchr(line, '<');
+		tmp = get_strchroq(line, '<');
 		if (tmp)
 		{
 			if (fd_in)
