@@ -25,10 +25,10 @@ testcmds = [
     ["echo $USER:$USER"],
     ["echo \"$USER:$USER\""],
     ["echo \"<<< Hello again >>>  What is up!\" > test4 | cat test4"],
-    ["echo \"\$USER\""],
-    ["echo \'\$USER\'"],
-    ["echo \"\'\$USER\'\""],
-    ["echo \'\"\$USER\"\'"]
+    ["echo \"$USER\""],
+    ["echo \'$USER\'"],
+    ["echo \"\'$USER\'\""],
+    ["echo \'\"$USER\"\'"]
     ]
 
 class bcolors:
