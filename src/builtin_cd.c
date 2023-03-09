@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 13:13:47 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 14:02:39 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/09 13:02:53 by frafal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	bi_cd(char **cmd_args, t_shell *sh)
 	int			argc;
 
 	if (cmd_args == NULL || cmd_args[1] == NULL)
+		return (0);
+	if (cmd_args[1][0] == '\0')
 		return (0);
 	argc = get_arr_size(cmd_args);
 	if (argc > 2)
