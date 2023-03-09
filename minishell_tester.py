@@ -29,7 +29,8 @@ testcmds = [
     ["echo \'\$USER\'"],
     ["echo \"\'\$USER\'\""],
     ["echo \'\"\$USER\"\'"],
-    ['echo $US hello "" ""']
+    ['echo $US hello "" ""'],
+    ['cd ""']
     ]
 
 class bcolors:
