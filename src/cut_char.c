@@ -6,7 +6,7 @@
 /*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:43:54 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:43:59 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/09 09:49:45 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,11 @@ void	help_replace_dollar(char *str, char *line, int *i, t_env *env)
 		else
 			i[0] += i[2] + 1;
 	}
-	else{
-			ft_strlcpy(&line[i[4]], &str[i[0]], 2);
-			i[0]++;
-			i[4]++;
+	else
+	{
+		ft_strlcpy(&line[i[4]], &str[i[0]], 2);
+		i[0]++;
+		i[4]++;
 	}
 }
 

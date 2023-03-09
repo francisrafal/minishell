@@ -1,0 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   files_utils2.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/05 11:46:55 by celgert           #+#    #+#             */
+/*   Updated: 2023/03/09 09:56:06 by celgert          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+int	get_next_char(char *line, char *cset)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (ft_strchr(cset, line[i]))
+		{
+			if (i > 0 && line[i - 1] == '\\'
+				&& line[i] != '\t' && line[i] != ' ')
+			{
+				i++;
+				continue ;
+			}
+			return (i);
+		}
+		i++;
+	}
+	return (i);
+}
+
+int	get_char(char *line, char c)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == c)
+		{
+			if (i > 0 && line[i - 1] == '\\'
+				&& line[i] != '\t' && line[i] != ' ')
+			{
+				i++;
+				continue ;
+			}
+			return (i);
+		}
+		i++;
+	}
+	return (i);
+}
