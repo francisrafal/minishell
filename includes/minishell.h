@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: frafal <frafal@student.42vienna.com>       +#+  +:+       +#+        */
+/*   By: celgert <celgert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 12:03:23 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 14:17:44 by frafal           ###   ########.fr       */
+/*   Updated: 2023/03/09 10:40:46 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ char		**split_char(char *line, int *ncmds, char c);
 /* files_utils.c */
 int			get_next_char(char *line, char *cset);
 int			get_char(char *line, char c);
+int			get_len_var(char *line);
 char		*cut_word(char *str, char c);
 char		*get_file_name(char *str, char c);
 char		*get_strchroq(char *line, char c);
