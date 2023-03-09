@@ -2,7 +2,7 @@ NAME			:= minishell
 CC				:= cc
 RM		    	:= rm -f
 FLAGS			:= -Wall -Wextra -Werror
-DEBUG			:= -g
+DEBUG			?= 
 
 HEADDIR			:= ./includes/
 HEADLIST		:= minishell.h
