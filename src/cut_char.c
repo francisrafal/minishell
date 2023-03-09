@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cut_char.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: celgert <celgert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:43:54 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/09 09:49:45 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/09 10:43:34 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	help_replace_dq(char *str, char *line, int *i, t_env *env)
 		ft_strlcpy(&line[i[4]], &str[i[0] + 1], i[1]);
 		i[0] += i[1];
 		i[4] += i[1] - 1;
-		i[2] = get_next_char(&str[i[0] + 1], ":\t \"\'");
+		i[2] = get_len_var(&str[i[0] + 1]);
 		if (i[2] != 0)
 			help_replace_dq2(str, line, i, env);
 		i[1] += get_next_char(&str[i[0] + 1], "$");
@@ -55,7 +55,7 @@ void	help_replace_dollar(char *str, char *line, int *i, t_env *env)
 {
 	char	*tmp;
 
-	i[2] = get_next_char(&str[i[0] + 1], ":\t \"\'\0");
+	i[2] = get_len_var(&str[i[0] + 1]);
 	if (i[2] != 0)
 	{
 		i[3] = check_str_env(&str[i[0] + 1], env, i[2]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cut_char_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: celgert <celgert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:44:19 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/05 11:44:23 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/09 10:43:28 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	help_count_dq(char *str, int *i, t_env *env)
 	i[1] = get_next_char(&str[i[0] + 1], "$") + 1;
 	while (i[1] < get_end_quote(&str[i[0] + 1], '"'))
 	{
-		i[2] = get_next_char(&str[i[0] + i[1] +1], ":\t \"\'");
+		i[2] = get_len_var(&str[i[0] + 1]);
 		if (i[2] != 0)
 		{
 			i[3] = check_str_env(&str[i[0] + i[1] + 1], env, i[2]);
@@ -80,7 +80,7 @@ void	help_count_dq(char *str, int *i, t_env *env)
 
 void	help_count_dollar(char *str, int *i, t_env *env)
 {
-	i[2] = get_next_char(&str[i[0] + 1], ":\t \"\'\0");
+	i[2] = get_len_var(&str[i[0] + 1]);
 	if (i[2] != 0)
 	{
 		i[3] = check_str_env(&str[i[0] + 1], env, i[2]);

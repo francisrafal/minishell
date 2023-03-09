@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   files_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: celgert <celgert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:46:55 by celgert           #+#    #+#             */
-/*   Updated: 2023/03/09 09:56:06 by celgert          ###   ########.fr       */
+/*   Updated: 2023/03/09 10:44:44 by celgert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,15 @@ int	get_char(char *line, char c)
 		}
 		i++;
 	}
+	return (i);
+}
+
+int	get_len_var(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
+		i++;
 	return (i);
 }
