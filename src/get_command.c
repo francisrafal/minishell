@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   get_command.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: celgert <celgert@student.42.fr>            +#+  +:+       +#+        */
+/*   By: frafal <frafal@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 11:47:20 by celgert           #+#    #+#             */
 /*   Updated: 2023/03/09 15:42:46 by celgert          ###   ########.fr       */
